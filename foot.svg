@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 650" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; rx: 12px; }
+      .anatomy { fill: #cbd5e1; stroke: #94a3b8; stroke-width: 2.5; stroke-linejoin: round; }
+      .bone-ref { fill: #e2e8f0; stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4 4; }
+      
+      /* Measurement Line Styles */
+      .meas-line { stroke-width: 2; stroke-dasharray: 4 3; fill: none; }
+      .meas-solid { stroke-width: 2.5; fill: none; }
+      .arrow { fill: context-fill; }
+      
+      /* Colour Coding per Metric */
+      .c-length { stroke: #ef4444; fill: #ef4444; }      /* Red */
+      .c-instep { stroke: #f59e0b; fill: #f59e0b; }      /* Amber */
+      .c-heel-diag { stroke: #10b981; fill: #10b981; }   /* Emerald */
+      .c-ankle { stroke: #3b82f6; fill: #3b82f6; }       /* Blue */
+      .c-calf { stroke: #8b5cf6; fill: #8b5cf6; }        /* Purple */
+      .c-toe { stroke: #ec4899; fill: #ec489 pink; }      /* Pink */
+      .c-height { stroke: #64748b; fill: #64748b; }      /* Slate */
+      
+      /* Typography */
+      .label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 600; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #1e293b; }
+      .legend-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; fill: #334155; }
+    </style>
+    
+    <!-- Marker definitions for clean dimension arrows -->
+    <marker id="arr-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#ef4444"/></marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#f59e0b"/></marker>
+    <marker id="arr-emerald" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#10b981"/></marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#3b82f6"/></marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#8b5cf6"/></marker>
+    <marker id="arr-pink" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#ec4899"/></marker>
+    <marker id="arr-slate" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 Z" fill="#64748b"/></marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <g transform="translate(40, 20)">
+    <!-- Floor / Ground Line Reference -->
+    <line x1="20" y1="520" x2="480" y2="520" stroke="#94a3b8" stroke-width="2" />
+    
+    <!-- Main Anatomy Path (Side profile lower calf, ankle, heel, instep, toes) -->
+    <path d="M 240,40 C 243,100 245,180 235,260 
+             C 225,310 195,350 195,385 
+             C 195,410 200,430 220,460 
+             C 245,495 240,520 285,520 
+             L 420,520 
+             C 455,520 470,505 470,490 
+             C 470,475 440,465 425,465
+             C 380,455 330,400 300,320
+             C 285,280 295,150 295,40 Z" 
+          class="anatomy" />
+
+    <!-- Joint Node references to anchor three dimensional wraps -->
+    <circle cx="258" cy="385" r="14" class="bone-ref" /> <!-- Ankle joint internal visual -->
+
+    <!-- ================= MEASUREMENT LINES ================= -->
+
+    <!-- 1. Foot Length -->
+    <path d="M 233,520 L 233,550" class="c-length meas-solid" />
+    <path d="M 470,490 L 470,550" class="c-length meas-solid" />
+    <line x1="233" y1="542" x2="470" y2="542" class="c-length meas-solid" marker-start="url(#arr-red)" marker-end="url(#arr-red)" />
+    <text x="315" y="535" class="label c-length">Foot Length</text>
+
+    <!-- 2. Foot Circumference (Ball of foot) -->
+    <ellipse cx="410" cy="492" rx="14" ry="28" transform="rotate(-20 410 492)" class="c-instep meas-line" />
+    <path d="M 398,518 C 405,515 423,475 413,467" class="c-instep meas-solid" marker-end="url(#arr-amber)" />
+    <text x="425" y="455" class="label c-instep">Foot Circumference</text>
+
+    <!-- 3. Instep / Gusset Circumference -->
+    <ellipse cx="325" cy="440" rx="22" ry="55" transform="rotate(-35 325 440)" class="c-instep meas-line" />
+    <path d="M 310,488 C 340,470 350,410 310,392" class="c-instep meas-solid" marker-end="url(#arr-amber)" />
+    <text x="345" y="390" class="label c-instep">Instep / Gusset</text>
+
+    <!-- 4. Heel Diagonal -->
+    <ellipse cx="282" cy="450" rx="25" ry="68" transform="rotate(38 282 450)" class="c-heel-diag meas-line" />
+    <path d="M 230,482 C 260,420 310,380 325,402" class="c-heel-diag meas-solid" marker-end="url(#arr-emerald)" />
+    <text x="300" y="420" class="label c-heel-diag" transform="rotate(38 300 420)">Heel Diagonal</text>
+
+    <!-- 5. Ankle Circumference -->
+    <ellipse cx="258" cy="385" rx="35" ry="14" transform="rotate(-10 258 385)" class="c-ankle meas-line" />
+    <path d="M 223,390 C 240,395 285,390 292,378" class="c-ankle meas-solid" marker-end="url(#arr-blue)" />
+    <text x="302" y="382" class="label c-blue c-ankle">Ankle Circumference</text>
+
+    <!-- 6. Heel Height -->
+    <line x1="210" y1="465" x2="170" y2="465" class="c-height meas-solid" />
+    <line x1="210" y1="520" x2="170" y2="520" class="c-height meas-solid" />
+    <line x1="178" y1="465" x2="178" y2="520" class="c-height meas-solid" marker-start="url(#arr-slate)" marker-end="url(#arr-slate)" />
+    <text x="90" y="500" class="label c-height">Heel Height</text>
+
+    <!-- 7. Toe Length -->
+    <line x1="425" y1="520" x2="425" y2="580" class="c-toe meas-solid" />
+    <line x1="470" y1="520" x2="470" y2="580" class="c-toe meas-solid" />
+    <line x1="425" y1="570" x2="470" y2="570" class="c-toe meas-solid" marker-start="url(#arr-pink)" marker-end="url(#arr-pink)" />
+    <text x="400" y="600" class="label c-toe">Toe Length</text>
+
+    <!-- 8. Low Calf Circumference -->
+    <ellipse cx="264" cy="220" rx="41" ry="14" transform="rotate(-5 264 220)" class="c-calf meas-line" />
+    <path d="M 223,222 C 240,225 295,220 305,215" class="c-calf meas-solid" marker-end="url(#arr-purple)" />
+    <text x="315" y="222" class="label c-calf">Low Calf</text>
+
+    <!-- 9. High Calf Circumference -->
+    <ellipse cx="267" cy="80" rx="44" ry="14" transform="rotate(-5 267 80)" class="c-calf meas-line" />
+    <path d="M 223,82 C 240,85 300,80 311,75" class="c-calf meas-solid" marker-end="url(#arr-purple)" />
+    <text x="320" y="82" class="label c-calf">High Calf</text>
+  </g>
+
+  <!-- Title & Legend Group -->
+  <g transform="translate(30, 40)">
+    <text x="0" y="0" class="title">Foot &amp; Leg Measurement Guide</text>
+    
+    <!-- Legend items -->
+    <g transform="translate(0, 20)">
+      <circle cx="5" cy="5" r="5" fill="#ef4444" />
+      <text x="18" y="9" class="legend-text">Standard Dimensions</text>
+      
+      <circle cx="5" cy="25" r="5" fill="#f59e0b" />
+      <text x="18" y="29" class="legend-text">Joint &amp; Body Girths (Circumference)</text>
+      
+      <circle cx="5" cy="45" r="5" fill="#8b5cf6" />
+      <text x="18" y="49" class="legend-text">Calf &amp; Shaft Extensions</text>
+    </g>
+  </g>
+</svg>

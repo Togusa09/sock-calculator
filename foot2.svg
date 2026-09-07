@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #fdfdfd; }
+      .blueprint-grid { stroke: #f1f5f9; stroke-width: 1; }
+      .floor-line { stroke: #475569; stroke-width: 2; }
+      
+      /* Proportional Foot and Leg Outline */
+      .foot-profile { fill: #f1f5f9; stroke: #334155; stroke-width: 2.5; stroke-linejoin: round; }
+      
+      /* Technical Measurement Line Types */
+      .meas-wrap { fill: none; stroke-width: 2; stroke-dasharray: 4 3; }
+      .meas-dimension { fill: none; stroke-width: 2; }
+      .leader-line { fill: none; stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 2 2; }
+      
+      /* Color Assignment per Specification */
+      .color-length { stroke: #dc2626; fill: #dc2626; }       /* Red */
+      .color-toe { stroke: #db2777; fill: #db2777; }          /* Pink */
+      .color-ball { stroke: #ea580c; fill: #ea580c; }         /* Orange */
+      .color-instep { stroke: #d97706; fill: #d97706; }       /* Amber */
+      .color-diagonal { stroke: #0d9488; fill: #0d9488; }     /* Teal */
+      .color-ankle { stroke: #2563eb; fill: #2563eb; }        /* Blue */
+      .color-calf { stroke: #7c3aed; fill: #7c3aed; }         /* Purple */
+      .color-height { stroke: #4b5563; fill: #4b5563; }       /* Slate */
+      
+      /* Text Formatting */
+      .txt-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #1e293b; }
+      .txt-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .txt-subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+    </style>
+
+    <!-- Sharp Arrowheads for Dimensions -->
+    <marker id="arr-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#dc2626"/></marker>
+    <marker id="arr-pink" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#db2777"/></marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#ea580c"/></marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#d97706"/></marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#0d9488"/></marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#2563eb"/></marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#7c3aed"/></marker>
+    <marker id="arr-slate" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,2 L10,5 L0,8 Z" fill="#4b5563"/></marker>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <!-- Background Technical Grid Lines -->
+  <g class="blueprint-grid">
+    <line x1="100" y1="0" x2="100" y2="680" /> <line x1="300" y1="0" x2="300" y2="680" />
+    <line x1="500" y1="0" x2="500" y2="680" /> <line x1="700" y1="0" x2="700" y2="680" />
+    <line x1="0" y1="120" x2="900" y2="120" /> <line x1="0" y1="260" x2="900" y2="260" />
+    <line x1="0" y1="400" x2="900" y2="400" /> <line x1="0" y1="510" x2="900" y2="510" />
+  </g>
+
+  <!-- Title block -->
+  <g transform="translate(40, 45)">
+    <text class="txt-title" x="0" y="0">Anatomical Specification &amp; Measurement Chart</text>
+    <text class="txt-subtitle" x="0" y="20">Proportional profile reference for bespoke pattern making and footwear grading.</text>
+  </g>
+
+  <!-- MAIN DIAGRAM GROUP -->
+  <g transform="translate(120, 20)">
+    
+    <!-- Ground Baseline Reference -->
+    <line x1="50" y1="510" x2="600" y2="510" class="floor-line" />
+    
+    <!-- Proportional Foot & Leg Path Outline -->
+    <path d="M 330,60 
+             C 330,140 325,240 310,320 
+             C 298,365 265,415 265,460 
+             C 265,495 280,510 315,510 
+             L 510,510 
+             C 545,510 565,495 565,475 
+             C 565,455 535,445 515,440 
+             C 465,425 410,375 390,320 
+             C 375,240 380,140 380,60 Z" 
+          class="foot-profile" />
+
+    <!-- ================= MEASUREMENT VECTORS ================= -->
+
+    <!-- 1. Foot Length -->
+    <line x1="265" y1="510" x2="265" y2="560" class="color-length leader-line" />
+    <line x1="565" y1="475" x2="565" y2="560" class="color-length leader-line" />
+    <line x1="265" y1="545" x2="565" y2="545" class="color-length meas-dimension" marker-start="url(#arr-red)" marker-end="url(#arr-red)" />
+    <text x="380" y="538" class="txt-label">Foot Length</text>
+
+    <!-- 2. Toe Length (Horizontal segment from ball curve step) -->
+    <line x1="495" y1="510" x2="495" y2="610" class="color-toe leader-line" />
+    <line x1="565" y1="560" x2="565" y2="610" class="color-toe leader-line" />
+    <line x1="495" y1="595" x2="565" y2="595" class="color-toe meas-dimension" marker-start="url(#arr-pink)" marker-end="url(#arr-pink)" />
+    <text x="502" y="588" class="txt-label">Toe Length</text>
+
+    <!-- 3. Foot Circumference (Around Ball of Foot) -->
+    <ellipse cx="505" cy="475" rx="14" ry="34" transform="rotate(-22, 505, 475)" class="color-ball meas-wrap" />
+    <path d="M 493,506 C 502,504 522,460 511,443" class="color-ball meas-dimension" marker-end="url(#arr-orange)" />
+    <text x="535" y="455" class="txt-label">Foot Circumference (Ball)</text>
+
+    <!-- 4. Instep / Gusset Circumference -->
+    <ellipse cx="420" cy="425" rx="20" ry="60" transform="rotate(-36, 420, 425)" class="color-instep meas-wrap" />
+    <path d="M 405,475 C 435,455 448,390 410,370" class="color-instep meas-dimension" marker-end="url(#arr-amber)" />
+    <text x="445" y="365" class="txt-label">Instep Circumference</text>
+
+    <!-- 5. Heel Diagonal -->
+    <ellipse cx="342" cy="428" rx="22" ry="74" transform="rotate(42, 342, 428)" class="color-diagonal meas-wrap" />
+    <path d="M 285,478 C 315,405 378,358 392,382" class="color-diagonal meas-dimension" marker-end="url(#arr-teal)" />
+    <text x="280" y="415" class="txt-label" transform="rotate(42, 280, 415)">Heel Diagonal</text>
+
+    <!-- 6. Ankle Circumference (At narrowest junction) -->
+    <ellipse cx="350" cy="340" rx="40" ry="14" transform="rotate(-12, 350, 340)" class="color-ankle meas-wrap" />
+    <path d="M 311,348 C 330,352 385,342 390,328" class="color-ankle meas-dimension" marker-end="url(#arr-blue)" />
+    <text x="400" y="342" class="txt-label">Ankle Circumference</text>
+
+    <!-- 7. Heel Height -->
+    <line x1="265" y1="460" x2="200" y2="460" class="color-height leader-line" />
+    <line x1="265" y1="510" x2="200" y2="510" class="color-height leader-line" />
+    <line x1="215" y1="460" x2="215" y2="510" class="color-height meas-dimension" marker-start="url(#arr-slate)" marker-end="url(#arr-slate)" />
+    <text x="132" y="490" class="txt-label">Heel Height</text>
+
+    <!-- 8. Low Calf Circumference -->
+    <ellipse cx="347" cy="240" rx="44" ry="15" transform="rotate(-3, 347, 240)" class="color-calf meas-wrap" />
+    <path d="M 303,242 C 320,245 385,242 391,234" class="color-calf meas-dimension" marker-end="url(#arr-purple)" />
+    <text x="402" y="244" class="txt-label">Low Calf Circumference</text>
+
+    <!-- 9. High Calf Circumference -->
+    <ellipse cx="353" cy="120" rx="47" ry="15" transform="rotate(-3, 353, 120)" class="color-calf meas-wrap" />
+    <path d="M 306,122 C 325,125 390,122 398,114" class="color-calf meas-dimension" marker-end="url(#arr-purple)" />
+    <text x="410" y="124" class="txt-label">High Calf Circumference</text>
+  </g>
+</svg>

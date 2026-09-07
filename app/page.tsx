@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { Construction } from "@/components/Construction";
 import { FootMeasurements } from "@/components/FootMeasurements";
 import { ResultsPanel } from "@/components/ResultsPanel";
+import { SavedItemsControl } from "@/components/SavedItemsControl";
 import { YarnTension } from "@/components/YarnTension";
 import { calculateStitches } from "@/lib/calculations";
 import {
@@ -102,6 +103,16 @@ export default function Home() {
     event.target.value = "";
   }
 
+  function loadProject(loaded: CalculatorRecord) {
+    const errors = validateRecord(loaded);
+    if (errors.length > 0) {
+      setMessage(errors[0]);
+      return;
+    }
+    setRecord(loaded);
+    setMessage("Project loaded.");
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -126,6 +137,11 @@ export default function Home() {
               <option value="imperial">Imperial</option>
             </select>
           </label>
+          <SavedItemsControl
+            type="project"
+            data={record}
+            onLoad={loadProject}
+          />
           <button className="button secondary" onClick={exportRecord}>
             Export JSON
           </button>

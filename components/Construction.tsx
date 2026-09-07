@@ -1,5 +1,6 @@
 "use client";
 
+import { SavedItemsControl } from "@/components/SavedItemsControl";
 import type {
   ConstructionOptions,
   CuffStyle,
@@ -22,11 +23,18 @@ export function Construction({
   return (
     <section className="panel">
       <div className="section-heading">
-        <span className="step">03</span>
-        <div>
-          <h2>Construction</h2>
-          <p>Choose the shape you plan to knit.</p>
+        <div className="section-heading-main">
+          <span className="step">03</span>
+          <div>
+            <h2>Construction</h2>
+            <p>Choose the shape you plan to knit.</p>
+          </div>
         </div>
+        <SavedItemsControl
+          type="construction"
+          data={construction}
+          onLoad={onChange}
+        />
       </div>
       <div className="construction-fields">
         <div className="construction-row">

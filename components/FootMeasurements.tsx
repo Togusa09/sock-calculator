@@ -1,5 +1,6 @@
 "use client";
 
+import { SavedItemsControl } from "@/components/SavedItemsControl";
 import type { Measurements, DisplayUnit } from "@/lib/domain";
 import { fromCentimetres, measurementLabel, toCentimetres } from "@/lib/units";
 
@@ -54,11 +55,18 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
   return (
     <section className="panel">
       <div className="section-heading">
-        <span className="step">01</span>
-        <div>
-          <h2>Foot measurements</h2>
-          <p>Two measurements are enough to begin.</p>
+        <div className="section-heading-main">
+          <span className="step">01</span>
+          <div>
+            <h2>Foot measurements</h2>
+            <p>Two measurements are enough to begin.</p>
+          </div>
         </div>
+        <SavedItemsControl
+          type="measurements"
+          data={measurements}
+          onLoad={onChange}
+        />
       </div>
       <div className="field-grid">
         <NumberField

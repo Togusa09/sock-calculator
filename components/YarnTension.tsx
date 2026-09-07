@@ -1,5 +1,6 @@
 "use client";
 
+import { SavedItemsControl } from "@/components/SavedItemsControl";
 import type { YarnTension } from "@/lib/domain";
 
 type Props = {
@@ -11,11 +12,14 @@ export function YarnTension({ tension, onChange }: Props) {
   return (
     <section className="panel">
       <div className="section-heading">
-        <span className="step">02</span>
-        <div>
-          <h2>Yarn tension</h2>
-          <p>Gauge and ease shape the fit.</p>
+        <div className="section-heading-main">
+          <span className="step">02</span>
+          <div>
+            <h2>Yarn tension</h2>
+            <p>Gauge and ease shape the fit.</p>
+          </div>
         </div>
+        <SavedItemsControl type="tension" data={tension} onLoad={onChange} />
       </div>
       <div className="field-grid">
         <label className="field">
