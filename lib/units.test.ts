@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { formatMeasurement, fromCentimetres, measurementLabel, toCentimetres } from "./units";
+import {
+  formatMeasurement,
+  fromCentimetres,
+  measurementLabel,
+  toCentimetres,
+} from "./units";
 
 describe("unit conversions", () => {
   it("round-trips imperial measurements through canonical centimetres", () => {

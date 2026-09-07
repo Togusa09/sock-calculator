@@ -104,8 +104,23 @@ export const DEFAULT_RECORD: CalculatorRecord = {
   schemaVersion: 1,
   displayUnit: "metric",
   measurements: { footLengthCm: 25, footCircumferenceCm: 22, toeLengthCm: 5 },
-  tension: { stitchesPer10Cm: 30, rowsPer10Cm: 42, needleSizeMm: 2.5, negativeEasePercent: 10 },
-  construction: { ribbing: "2x2", cuffStyle: "ribbed", heelStyle: "gussetted", toeStyle: "round" },
+  tension: {
+    stitchesPer10Cm: 30,
+    rowsPer10Cm: 42,
+    needleSizeMm: 2.5,
+    negativeEasePercent: 10,
+  },
+  construction: {
+    ribbing: "2x2",
+    cuffStyle: "ribbed",
+    heelStyle: "gussetted",
+    toeStyle: "round",
+  },
 };
 
-export const RIBBING_REPEAT: Record<Ribbing, number> = { "1x1": 2, "1x2": 3, "2x2": 4, "3x3": 6 };
+export const RIBBING_REPEAT: Record<Ribbing, number> = {
+  "1x1": 2,
+  "1x2": 3,
+  "2x2": 4,
+  "3x3": 6,
+};

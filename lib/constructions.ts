@@ -19,12 +19,20 @@ export type CuffDefinition = {
 
 export type HeelDefinition = {
   style: HeelStyle;
-  calculate: (record: CalculatorRecord, fit: FitResult, derived: DerivedMeasurements) => HeelCalculation;
+  calculate: (
+    record: CalculatorRecord,
+    fit: FitResult,
+    derived: DerivedMeasurements,
+  ) => HeelCalculation;
 };
 
 export type ToeDefinition = {
   style: ToeStyle;
-  calculate: (record: CalculatorRecord, fit: FitResult, derived: DerivedMeasurements) => ToeCalculation;
+  calculate: (
+    record: CalculatorRecord,
+    fit: FitResult,
+    derived: DerivedMeasurements,
+  ) => ToeCalculation;
 };
 
 const ribbedCuff: CuffDefinition = {
@@ -52,22 +60,36 @@ const gussettedHeel: HeelDefinition = {
     const heelFlapStitches = Math.max(1, Math.round(fit.roundedStitches / 2));
     const instepStitches = fit.roundedStitches - heelFlapStitches;
     const heelTurnStitches = Math.round(heelFlapStitches / 2) + 2;
-    const targetGussetStitches = measurements.heelDiagonalCm === undefined
-      ? fit.roundedStitches
-      : Math.max(1, Math.round(measurements.heelDiagonalCm * (1 - fit.easePercent / 100) * tension.stitchesPer10Cm / 10));
-    const pickupStitches = Math.max(0, targetGussetStitches - instepStitches - heelTurnStitches);
+    const targetGussetStitches =
+      measurements.heelDiagonalCm === undefined
+        ? fit.roundedStitches
+        : Math.max(
+            1,
+            Math.round(
+              (measurements.heelDiagonalCm *
+                (1 - fit.easePercent / 100) *
+                tension.stitchesPer10Cm) /
+                10,
+            ),
+          );
+    const pickupStitches = Math.max(
+      0,
+      targetGussetStitches - instepStitches - heelTurnStitches,
+    );
     const pickupsPerSide = pickupStitches / 2;
-    const heelFlapLengthCm = pickupsPerSide * 10 / tension.stitchesPer10Cm;
-    const heelFlapRows = record.construction.heelFlapRows
-      ?? Math.max(1, Math.round(heelFlapLengthCm * tension.rowsPer10Cm / 10));
+    const heelFlapLengthCm = (pickupsPerSide * 10) / tension.stitchesPer10Cm;
+    const heelFlapRows =
+      record.construction.heelFlapRows ??
+      Math.max(1, Math.round((heelFlapLengthCm * tension.rowsPer10Cm) / 10));
 
     return {
       stitches: heelFlapStitches,
       lengthCm: heelFlapLengthCm,
       heelFlapRows,
-      detail: measurements.heelDiagonalCm === undefined
-        ? `Gusset flap fallback: ${heelFlapStitches} sts, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`
-        : `Heel diagonal method: ${targetGussetStitches} sts at gusset, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`,
+      detail:
+        measurements.heelDiagonalCm === undefined
+          ? `Gusset flap fallback: ${heelFlapStitches} sts, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`
+          : `Heel diagonal method: ${targetGussetStitches} sts at gusset, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`,
       heelFlapStitches,
       instepStitches,
       heelTurnStitches,
@@ -144,27 +166,53 @@ export const TOE_DEFINITIONS: Record<ToeStyle, ToeDefinition> = {
   star: starToe,
 };
 
-export function calculateConstruction(record: CalculatorRecord, fit: FitResult, derived: DerivedMeasurements): ConstructionCalculation {
-  const cuff = CUFF_DEFINITIONS[record.construction.cuffStyle].calculate(record, fit);
-  const heel = HEEL_DEFINITIONS[record.construction.heelStyle].calculate(record, fit, derived);
-  const toe = TOE_DEFINITIONS[record.construction.toeStyle].calculate(record, fit, derived);
+export function calculateConstruction(
+  record: CalculatorRecord,
+  fit: FitResult,
+  derived: DerivedMeasurements,
+): ConstructionCalculation {
+  const cuff = CUFF_DEFINITIONS[record.construction.cuffStyle].calculate(
+    record,
+    fit,
+  );
+  const heel = HEEL_DEFINITIONS[record.construction.heelStyle].calculate(
+    record,
+    fit,
+    derived,
+  );
+  const toe = TOE_DEFINITIONS[record.construction.toeStyle].calculate(
+    record,
+    fit,
+    derived,
+  );
 
   return {
     cuff,
     leg: {
       stitches: fit.roundedStitches,
-      lengthCm: Math.max(8, derived.highCalfCircumference.value - derived.ankleCircumference.value),
+      lengthCm: Math.max(
+        8,
+        derived.highCalfCircumference.value - derived.ankleCircumference.value,
+      ),
     },
     heel,
     foot: {
       stitches: fit.roundedStitches,
-      lengthCm: Math.max(0, record.measurements.footLengthCm - derived.heelHeight.value - toe.lengthCm),
+      lengthCm: Math.max(
+        0,
+        record.measurements.footLengthCm -
+          derived.heelHeight.value -
+          toe.lengthCm,
+      ),
     },
     toe,
   };
 }
 
-export function roundStitchesToRibbing(stitches: number, ribbing: CalculatorRecord["construction"]["ribbing"]): number {
+export function roundStitchesToRibbing(
+  stitches: number,
+  ribbing: CalculatorRecord["construction"]["ribbing"],
+): number {
   const repeat = RIBBING_REPEAT[ribbing];
   return Math.max(repeat, Math.round(stitches / repeat) * repeat);
 }

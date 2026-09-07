@@ -26,7 +26,9 @@ describe("record validation", () => {
   it("rejects unsupported record versions and malformed JSON", () => {
     const unsupported = JSON.stringify({ ...DEFAULT_RECORD, schemaVersion: 2 });
 
-    expect(() => parseImportedRecord(unsupported)).toThrow("This calculator record version is not supported.");
+    expect(() => parseImportedRecord(unsupported)).toThrow(
+      "This calculator record version is not supported.",
+    );
     expect(() => parseImportedRecord("not json")).toThrow();
   });
 });

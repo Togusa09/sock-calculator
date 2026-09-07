@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { calculateFit, calculateFootSize, calculateStitches } from "./calculations";
+import {
+  calculateFit,
+  calculateFootSize,
+  calculateStitches,
+} from "./calculations";
 import { DEFAULT_RECORD, type CalculatorRecord } from "./domain";
 
 function recordWithHeelDiagonal(heelDiagonalCm: number): CalculatorRecord {
@@ -19,7 +23,9 @@ describe("gussetted heel flap", () => {
 
     expect(shorterDiagonal.sections.heel.heelFlapRows).toBe(15);
     expect(longerDiagonal.sections.heel.heelFlapRows).toBe(27);
-    expect(longerDiagonal.sections.heel.heelFlapRows).toBeGreaterThan(shorterDiagonal.sections.heel.heelFlapRows);
+    expect(longerDiagonal.sections.heel.heelFlapRows).toBeGreaterThan(
+      shorterDiagonal.sections.heel.heelFlapRows,
+    );
   });
 
   it("keeps flap stitch width separate from the diagonal-derived row count", () => {
@@ -55,13 +61,23 @@ describe("foot-size stage", () => {
   it("preserves explicit optional measurements over calculated values", () => {
     const record: CalculatorRecord = {
       ...DEFAULT_RECORD,
-      measurements: { ...DEFAULT_RECORD.measurements, ankleCircumferenceCm: 21.5, heelHeightCm: 6.25 },
+      measurements: {
+        ...DEFAULT_RECORD.measurements,
+        ankleCircumferenceCm: 21.5,
+        heelHeightCm: 6.25,
+      },
     };
 
     const result = calculateFootSize(record);
 
-    expect(result.derived.ankleCircumference).toEqual({ value: 21.5, source: "entered" });
-    expect(result.derived.heelHeight).toEqual({ value: 6.25, source: "entered" });
+    expect(result.derived.ankleCircumference).toEqual({
+      value: 21.5,
+      source: "entered",
+    });
+    expect(result.derived.heelHeight).toEqual({
+      value: 6.25,
+      source: "entered",
+    });
   });
 });
 
@@ -89,11 +105,17 @@ describe("fit stage", () => {
     const record: CalculatorRecord = {
       ...DEFAULT_RECORD,
       measurements: { ...DEFAULT_RECORD.measurements, footCircumferenceCm: 10 },
-      tension: { ...DEFAULT_RECORD.tension, stitchesPer10Cm: 10, negativeEasePercent: 0 },
+      tension: {
+        ...DEFAULT_RECORD.tension,
+        stitchesPer10Cm: 10,
+        negativeEasePercent: 0,
+      },
       construction: { ...DEFAULT_RECORD.construction, ribbing },
     };
 
-    expect(calculateFit(record, calculateFootSize(record)).roundedStitches).toBe(expected);
+    expect(
+      calculateFit(record, calculateFootSize(record)).roundedStitches,
+    ).toBe(expected);
   });
 });
 
@@ -112,7 +134,10 @@ describe("construction definitions", () => {
   it("selects afterthought and short-row heel definitions", () => {
     const afterthought = calculateStitches({
       ...DEFAULT_RECORD,
-      construction: { ...DEFAULT_RECORD.construction, heelStyle: "afterthought" },
+      construction: {
+        ...DEFAULT_RECORD.construction,
+        heelStyle: "afterthought",
+      },
     });
     const shortRow = calculateStitches({
       ...DEFAULT_RECORD,

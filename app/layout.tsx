@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sock calculator",
-  description: "Calculate sock stitch counts from foot measurements and yarn tension.",
+  description:
+    "Calculate sock stitch counts from foot measurements and yarn tension.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
