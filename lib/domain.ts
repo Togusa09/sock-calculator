@@ -55,6 +55,51 @@ export type DerivedMeasurements = {
   highCalfCircumference: MeasurementValue;
 };
 
+export type FootSizeResult = {
+  targetCircumferenceCm: number;
+  derived: DerivedMeasurements;
+};
+
+export type FitResult = {
+  easedCircumferenceCm: number;
+  baseStitches: number;
+  roundedStitches: number;
+  easePercent: number;
+};
+
+export type CuffCalculation = {
+  stitches: number;
+  lengthCm: number;
+  detail: string;
+};
+
+export type HeelCalculation = {
+  stitches: number;
+  lengthCm: number;
+  heelFlapRows: number;
+  detail: string;
+  heelFlapStitches: number;
+  instepStitches: number;
+  heelTurnStitches: number;
+  targetGussetStitches: number;
+  pickupStitches: number;
+  pickupsPerSide: number;
+};
+
+export type ToeCalculation = {
+  finalStitches: number;
+  lengthCm: number;
+  detail: string;
+};
+
+export type ConstructionCalculation = {
+  cuff: CuffCalculation;
+  leg: { stitches: number; lengthCm: number };
+  heel: HeelCalculation;
+  foot: { stitches: number; lengthCm: number };
+  toe: ToeCalculation;
+};
+
 export const DEFAULT_RECORD: CalculatorRecord = {
   schemaVersion: 1,
   displayUnit: "metric",

@@ -1,4 +1,5 @@
-import { RIBBING_REPEAT, type CalculatorRecord, type DerivedMeasurements, type MeasurementValue } from "./domain";
+import { calculateConstruction, roundStitchesToRibbing } from "./constructions";
+import type { CalculatorRecord, DerivedMeasurements, FitResult, FootSizeResult, MeasurementValue } from "./domain";
 
 const DEFAULT_HEEL_HEIGHT_RATIO = 0.28;
 const DEFAULT_TOE_LENGTH_RATIO = 0.2;
@@ -10,10 +11,11 @@ function derivedOrEntered(entered: number | undefined, calculated: number): Meas
   return entered === undefined ? { value: calculated, source: "calculated" } : { value: entered, source: "entered" };
 }
 
-export function calculateFootSize(record: CalculatorRecord): DerivedMeasurements {
+/** Stage 1: model the wearer's foot and leg in canonical centimetres. */
+export function calculateFootSize(record: CalculatorRecord): FootSizeResult {
   const { measurements } = record;
   const foot = measurements.footCircumferenceCm;
-  return {
+  const derived: DerivedMeasurements = {
     ankleCircumference: derivedOrEntered(measurements.ankleCircumferenceCm, foot * DEFAULT_ANKLE_RATIO),
     heelHeight: derivedOrEntered(measurements.heelHeightCm, measurements.footLengthCm * DEFAULT_HEEL_HEIGHT_RATIO),
     instepCircumference: derivedOrEntered(measurements.instepCircumferenceCm, foot),
@@ -21,64 +23,37 @@ export function calculateFootSize(record: CalculatorRecord): DerivedMeasurements
     lowCalfCircumference: derivedOrEntered(measurements.lowCalfCircumferenceCm, foot * DEFAULT_LOW_CALF_RATIO),
     highCalfCircumference: derivedOrEntered(measurements.highCalfCircumferenceCm, foot * DEFAULT_HIGH_CALF_RATIO),
   };
+
+  return { targetCircumferenceCm: foot, derived };
 }
 
-function roundToRepeat(stitches: number, repeat: number): number {
-  return Math.max(repeat, Math.round(stitches / repeat) * repeat);
-}
-
-export function calculateStitches(record: CalculatorRecord) {
-  const { measurements, tension, construction } = record;
-  const derived = calculateFootSize(record);
-  const easePercent = construction.negativeEasePercent ?? tension.negativeEasePercent;
-  const easedCircumferenceCm = measurements.footCircumferenceCm * (1 - easePercent / 100);
-  const baseStitches = easedCircumferenceCm * tension.stitchesPer10Cm / 10;
-  const roundedStitches = roundToRepeat(baseStitches, RIBBING_REPEAT[construction.ribbing]);
-  const toeLengthCm = construction.toeLengthCm ?? derived.toeLength.value;
-  const heelLengthCm = derived.heelHeight.value;
-  const heelFlapStitches = Math.max(1, Math.round(roundedStitches / 2));
-  const instepStitches = roundedStitches - heelFlapStitches;
-  const heelTurnStitches = Math.round(heelFlapStitches / 2) + 2;
-  const targetGussetStitches = measurements.heelDiagonalCm === undefined
-    ? roundedStitches
-    : Math.max(1, Math.round(measurements.heelDiagonalCm * (1 - easePercent / 100) * tension.stitchesPer10Cm / 10));
-  const pickupStitches = Math.max(0, targetGussetStitches - instepStitches - heelTurnStitches);
-  const pickupsPerSide = pickupStitches / 2;
-  const heelFlapLengthCm = construction.heelStyle === "gussetted"
-    ? pickupsPerSide * 10 / tension.stitchesPer10Cm
-    : heelLengthCm;
-  const heelStitches = construction.heelStyle === "gussetted" ? heelFlapStitches : roundedStitches;
-  const toeFinalStitches = construction.toeStyle === "star" ? 8 : Math.max(8, Math.round(roundedStitches / 3));
+/** Stage 2: apply ease, gauge, and ribbing constraints to the foot-size model. */
+export function calculateFit(record: CalculatorRecord, footSize: FootSizeResult): FitResult {
+  const easePercent = record.construction.negativeEasePercent ?? record.tension.negativeEasePercent;
+  const easedCircumferenceCm = footSize.targetCircumferenceCm * (1 - easePercent / 100);
+  const baseStitches = easedCircumferenceCm * record.tension.stitchesPer10Cm / 10;
 
   return {
-    targetCircumferenceCm: measurements.footCircumferenceCm,
     easedCircumferenceCm,
     baseStitches,
-    roundedStitches,
+    roundedStitches: roundStitchesToRibbing(baseStitches, record.construction.ribbing),
     easePercent,
-    derived,
-    sections: {
-      cuff: { stitches: roundedStitches, lengthCm: construction.cuffStyle === "folded" ? 6 : 5, detail: construction.cuffStyle === "folded" ? "Folded cuff: 6 cm default" : `${construction.ribbing} rib: 5 cm default` },
-      leg: { stitches: roundedStitches, lengthCm: Math.max(8, derived.highCalfCircumference.value - derived.ankleCircumference.value) },
-      heel: {
-        stitches: heelStitches,
-        lengthCm: heelFlapLengthCm,
-        detail: construction.heelStyle === "gussetted"
-          ? measurements.heelDiagonalCm === undefined
-            ? `Gusset flap fallback: ${heelFlapStitches} sts, ${pickupsPerSide.toFixed(1)} pickups per side`
-            : `Heel diagonal method: ${targetGussetStitches} sts at gusset, ${pickupsPerSide.toFixed(1)} pickups per side`
-          : construction.heelStyle === "afterthought"
-            ? "Afterthought heel: standard half-round shaping"
-            : "Short-row heel: standard wedge shaping",
-        heelFlapStitches,
-        instepStitches,
-        heelTurnStitches,
-        targetGussetStitches,
-        pickupStitches,
-        pickupsPerSide,
-      },
-      foot: { stitches: roundedStitches, lengthCm: Math.max(0, measurements.footLengthCm - heelLengthCm - toeLengthCm) },
-      toe: { finalStitches: toeFinalStitches, lengthCm: toeLengthCm, detail: construction.toeStyle === "round" ? "Round toe: decrease 4 stitches every second row" : "Star toe: decrease evenly to 8 stitches" },
-    },
+  };
+}
+
+/** Stage 3: fit the selected cuff, heel, leg, foot, and toe constructions. */
+export function calculateStitches(record: CalculatorRecord) {
+  const footSize = calculateFootSize(record);
+  const fit = calculateFit(record, footSize);
+  const sections = calculateConstruction(record, fit, footSize.derived);
+
+  return {
+    targetCircumferenceCm: footSize.targetCircumferenceCm,
+    easedCircumferenceCm: fit.easedCircumferenceCm,
+    baseStitches: fit.baseStitches,
+    roundedStitches: fit.roundedStitches,
+    easePercent: fit.easePercent,
+    derived: footSize.derived,
+    sections,
   };
 }
