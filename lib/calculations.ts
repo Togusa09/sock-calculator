@@ -36,8 +36,18 @@ export function calculateStitches(record: CalculatorRecord) {
   const roundedStitches = roundToRepeat(baseStitches, RIBBING_REPEAT[construction.ribbing]);
   const toeLengthCm = construction.toeLengthCm ?? derived.toeLength.value;
   const heelLengthCm = derived.heelHeight.value;
-  const flapRows = construction.heelFlapRows ?? Math.max(1, Math.round(roundedStitches / 2));
-  const heelStitches = construction.heelStyle === "gussetted" ? roundedStitches * 2 : roundedStitches;
+  const heelFlapStitches = Math.max(1, Math.round(roundedStitches / 2));
+  const instepStitches = roundedStitches - heelFlapStitches;
+  const heelTurnStitches = Math.round(heelFlapStitches / 2) + 2;
+  const targetGussetStitches = measurements.heelDiagonalCm === undefined
+    ? roundedStitches
+    : Math.max(1, Math.round(measurements.heelDiagonalCm * (1 - easePercent / 100) * tension.stitchesPer10Cm / 10));
+  const pickupStitches = Math.max(0, targetGussetStitches - instepStitches - heelTurnStitches);
+  const pickupsPerSide = pickupStitches / 2;
+  const heelFlapLengthCm = construction.heelStyle === "gussetted"
+    ? pickupsPerSide * 10 / tension.stitchesPer10Cm
+    : heelLengthCm;
+  const heelStitches = construction.heelStyle === "gussetted" ? heelFlapStitches : roundedStitches;
   const toeFinalStitches = construction.toeStyle === "star" ? 8 : Math.max(8, Math.round(roundedStitches / 3));
 
   return {
@@ -50,7 +60,23 @@ export function calculateStitches(record: CalculatorRecord) {
     sections: {
       cuff: { stitches: roundedStitches, lengthCm: construction.cuffStyle === "folded" ? 6 : 5, detail: construction.cuffStyle === "folded" ? "Folded cuff: 6 cm default" : `${construction.ribbing} rib: 5 cm default` },
       leg: { stitches: roundedStitches, lengthCm: Math.max(8, derived.highCalfCircumference.value - derived.ankleCircumference.value) },
-      heel: { stitches: heelStitches, lengthCm: heelLengthCm, detail: construction.heelStyle === "gussetted" ? `Gusset heel flap: ${flapRows} rows default` : construction.heelStyle === "afterthought" ? "Afterthought heel: standard half-round shaping" : "Short-row heel: standard wedge shaping" },
+      heel: {
+        stitches: heelStitches,
+        lengthCm: heelFlapLengthCm,
+        detail: construction.heelStyle === "gussetted"
+          ? measurements.heelDiagonalCm === undefined
+            ? `Gusset flap fallback: ${heelFlapStitches} sts, ${pickupsPerSide.toFixed(1)} pickups per side`
+            : `Heel diagonal method: ${targetGussetStitches} sts at gusset, ${pickupsPerSide.toFixed(1)} pickups per side`
+          : construction.heelStyle === "afterthought"
+            ? "Afterthought heel: standard half-round shaping"
+            : "Short-row heel: standard wedge shaping",
+        heelFlapStitches,
+        instepStitches,
+        heelTurnStitches,
+        targetGussetStitches,
+        pickupStitches,
+        pickupsPerSide,
+      },
       foot: { stitches: roundedStitches, lengthCm: Math.max(0, measurements.footLengthCm - heelLengthCm - toeLengthCm) },
       toe: { finalStitches: toeFinalStitches, lengthCm: toeLengthCm, detail: construction.toeStyle === "round" ? "Round toe: decrease 4 stitches every second row" : "Star toe: decrease evenly to 8 stitches" },
     },
