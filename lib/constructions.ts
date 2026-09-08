@@ -63,7 +63,7 @@ const gussettedHeel: HeelDefinition = {
     const instepStitches = fit.roundedStitches - heelFlapStitches;
     const heelTurnStitches = Math.round(heelFlapStitches / 2) + 2;
 
-    const ease = (1 - fit.easePercent / 100);
+    const ease = 1 - fit.easePercent / 100;
 
     const heelDiagonalStitches =
       measurements.heelDiagonalCm === undefined
@@ -71,23 +71,17 @@ const gussettedHeel: HeelDefinition = {
         : Math.max(
             1,
             Math.round(
-              (measurements.heelDiagonalCm *
-                ease *
-                tension.stitchesPer10Cm) /
+              (measurements.heelDiagonalCm * ease * tension.stitchesPer10Cm) /
                 10,
             ),
           );
 
+    const pickupStitches =
+      measurements.heelDiagonalCm === undefined
+        ? heelFlapStitches
+        : Math.max(0, heelDiagonalStitches - heelTurnStitches - instepStitches);
 
-    const pickupStitches = 
-    measurements.heelDiagonalCm === undefined
-      ? heelFlapStitches
-      : Math.max(
-          0,
-          heelDiagonalStitches - heelTurnStitches - instepStitches,
-        );
- 
-    const pickupsPerSide =  Math.round(pickupStitches / 2);
+    const pickupsPerSide = Math.round(pickupStitches / 2);
     const evenPickupStitches = pickupsPerSide * 2;
 
     const heelFlapLengthCm = (pickupsPerSide * 10) / tension.stitchesPer10Cm;
