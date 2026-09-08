@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   deleteItem,
   listItems,
@@ -17,11 +17,13 @@ type Props<T> = {
 };
 
 export function SavedItemsControl<T>({ type, data, onLoad }: Props<T>) {
-  const [items, setItems] = useState<LibraryItem<T>[]>(() =>
-    listItems<T>(type),
-  );
+  const [items, setItems] = useState<LibraryItem<T>[]>([]);
   const [nameDraft, setNameDraft] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    setItems(listItems<T>(type));
+  }, [type]);
 
   function refresh() {
     setItems(listItems<T>(type));
