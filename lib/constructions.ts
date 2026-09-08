@@ -57,30 +57,35 @@ const gussettedHeel: HeelDefinition = {
   style: "gussetted",
   calculate: (record, fit) => {
     const { measurements, tension } = record;
+
+    // Width of heel flap in stitches
     const heelFlapStitches = Math.max(1, Math.round(fit.roundedStitches / 2));
     const instepStitches = fit.roundedStitches - heelFlapStitches;
     const heelTurnStitches = Math.round(heelFlapStitches / 2) + 2;
-    const targetGussetStitches =
+
+    const ease = 1 - fit.easePercent / 100;
+
+    const heelDiagonalStitches =
       measurements.heelDiagonalCm === undefined
         ? fit.roundedStitches
         : Math.max(
             1,
             Math.round(
-              (measurements.heelDiagonalCm *
-                (1 - fit.easePercent / 100) *
-                tension.stitchesPer10Cm) /
+              (measurements.heelDiagonalCm * ease * tension.stitchesPer10Cm) /
                 10,
             ),
           );
-    const pickupStitches = Math.max(
-      0,
-      targetGussetStitches - instepStitches - heelTurnStitches,
-    );
-    const pickupsPerSide = pickupStitches / 2;
+
+    const pickupStitches =
+      measurements.heelDiagonalCm === undefined
+        ? heelFlapStitches
+        : Math.max(0, heelDiagonalStitches - heelTurnStitches - instepStitches);
+
+    const pickupsPerSide = Math.round(pickupStitches / 2);
+    const evenPickupStitches = pickupsPerSide * 2;
+
     const heelFlapLengthCm = (pickupsPerSide * 10) / tension.stitchesPer10Cm;
-    const heelFlapRows =
-      record.construction.heelFlapRows ??
-      Math.max(1, Math.round((heelFlapLengthCm * tension.rowsPer10Cm) / 10));
+    const heelFlapRows = record.construction.heelFlapRows ?? evenPickupStitches;
 
     return {
       stitches: heelFlapStitches,
@@ -88,13 +93,13 @@ const gussettedHeel: HeelDefinition = {
       heelFlapRows,
       detail:
         measurements.heelDiagonalCm === undefined
-          ? `Gusset flap fallback: ${heelFlapStitches} sts, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`
-          : `Heel diagonal method: ${targetGussetStitches} sts at gusset, ${heelFlapRows} rows, ${pickupsPerSide.toFixed(1)} pickups per side`,
+          ? `Gusset flap fallback: ${heelFlapStitches} sts x ${heelFlapRows} rows, ${pickupsPerSide} pickups per side`
+          : `Heel diagonal method: ${heelFlapStitches} sts x ${heelFlapRows} rows, ${pickupsPerSide} pickups per side, ${heelDiagonalStitches} sts at gusset, `,
       heelFlapStitches,
       instepStitches,
       heelTurnStitches,
-      targetGussetStitches,
-      pickupStitches,
+      targetGussetStitches: heelDiagonalStitches,
+      pickupStitches: evenPickupStitches,
       pickupsPerSide,
     };
   },
