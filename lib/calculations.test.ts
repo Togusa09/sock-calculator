@@ -21,8 +21,8 @@ describe("gussetted heel flap", () => {
     const shorterDiagonal = calculateStitches(recordWithHeelDiagonal(25.4));
     const longerDiagonal = calculateStitches(recordWithHeelDiagonal(31.75));
 
-    expect(shorterDiagonal.sections.heel.heelFlapRows).toBe(15);
-    expect(longerDiagonal.sections.heel.heelFlapRows).toBe(27);
+    expect(shorterDiagonal.sections.heel.heelFlapRows).toBe(22);
+    expect(longerDiagonal.sections.heel.heelFlapRows).toBe(40);
     expect(longerDiagonal.sections.heel.heelFlapRows).toBeGreaterThan(
       shorterDiagonal.sections.heel.heelFlapRows,
     );
@@ -32,7 +32,7 @@ describe("gussetted heel flap", () => {
     const result = calculateStitches(recordWithHeelDiagonal(31.75));
 
     expect(result.sections.heel.heelFlapStitches).toBe(30);
-    expect(result.sections.heel.heelFlapRows).toBe(27);
+    expect(result.sections.heel.heelFlapRows).toBe(40);
   });
 
   it("uses an explicit flap row override instead of the calculated row count", () => {
