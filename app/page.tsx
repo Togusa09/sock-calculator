@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { Construction } from "@/components/Construction";
 import { FootMeasurements } from "@/components/FootMeasurements";
 import { ResultsPanel } from "@/components/ResultsPanel";
-import { SavedItemsControl } from "@/components/SavedItemsControl";
+import {
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
 import { YarnTension } from "@/components/YarnTension";
 import { calculateStitches } from "@/lib/calculations";
 import {
@@ -20,6 +23,7 @@ export default function Home() {
   const [record, setRecord] = useState<CalculatorRecord>(DEFAULT_RECORD);
   const [hydrated, setHydrated] = useState(false);
   const [message, setMessage] = useState("");
+  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
   const importRef = useRef<HTMLInputElement>(null);
   const unit = record.displayUnit;
   const result = useMemo(() => calculateStitches(record), [record]);
@@ -118,7 +122,16 @@ export default function Home() {
       <header className="topbar">
         <div>
           <p className="eyebrow">FIELD NOTES / KNIT PLANNING</p>
-          <h1>Sock calculator</h1>
+          <h1>
+            Sock calculator
+            {loadedItem && (
+              <span className="loaded-item-name">
+                {" "}
+                — {loadedItem.name}
+                {loadedItem.dirty ? " (edited)" : ""}
+              </span>
+            )}
+          </h1>
           <p className="intro">
             A calm starting point for a better-fitting pair. Enter the
             essentials and the construction math stays visible.
@@ -140,7 +153,9 @@ export default function Home() {
           <SavedItemsControl
             type="project"
             data={record}
+            defaultData={DEFAULT_RECORD}
             onLoad={loadProject}
+            onLoadedItemChange={setLoadedItem}
           />
           <button className="button secondary" onClick={exportRecord}>
             Export JSON

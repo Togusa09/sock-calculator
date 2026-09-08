@@ -178,35 +178,69 @@ h3 {
   padding-top: 8px;
 }
 .saved-items {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 8px;
 }
-.saved-items select,
-.saved-items input {
-  background: #faf8f2;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 13px;
+.loaded-item-name {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.4em;
 }
-.saved-items input {
-  min-width: 0;
-  flex: 1 1 140px;
+.saved-items-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--panel);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  padding: 0;
 }
-.saved-items-dialog {
+.chevron {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--ink);
+}
+.chevron-up {
+  transform: rotate(180deg);
+}
+.saved-items-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: 360px;
+  max-width: 90vw;
+  max-height: min(70vh, 520px);
+  display: flex;
+  flex-direction: column;
   background: var(--panel);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 24px;
-  width: 90vw;
-  max-width: 360px;
-  margin: auto;
+  box-shadow: 0 12px 32px rgba(36, 35, 31, 0.18);
 }
-.saved-items-dialog::backdrop {
-  background: rgba(36, 35, 31, 0.4);
+.saved-items-save-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex: 0 0 auto;
+}
+.saved-items-save-row input {
+  background: #faf8f2;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 .saved-items-empty {
   color: var(--muted);
@@ -219,7 +253,7 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 40vh;
+  flex: 1 1 auto;
   overflow-y: auto;
 }
 .saved-items-list li {
@@ -247,9 +281,38 @@ h3 {
 .saved-items-name:hover {
   color: var(--orange);
 }
-.saved-items-dialog-actions {
+.saved-items-panel-actions {
   display: flex;
   justify-content: flex-end;
+  flex: 0 0 auto;
+}
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(36, 35, 31, 0.4);
+}
+.confirm-dialog {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+  width: 90vw;
+  max-width: 360px;
+}
+.confirm-dialog p {
+  color: var(--muted);
+  font-size: 13px;
+}
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 30px;
 }
 .field-grid,
 .select-grid {
