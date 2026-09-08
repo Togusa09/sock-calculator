@@ -29,3 +29,16 @@ npm run lint
 npx tsc --noEmit
 npm run build
 ```
+
+## GitHub Pages
+
+The repository includes a GitHub Actions workflow at
+`/home/runner/work/sock-calculator/sock-calculator/.github/workflows/deploy-pages.yml`
+that:
+
+- runs formatting checks, ESLint, tests, and a production build for pull
+  requests
+- deploys the static export to GitHub Pages when changes land on `master`
+
+The Pages build uses `PAGES_BASE_PATH=/sock-calculator` so the exported app is
+served from this repository's project site path.

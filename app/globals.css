@@ -9,6 +9,10 @@
   --orange: #c75b36;
   --sage: #61766b;
   --serif: Georgia, "Times New Roman", serif;
+  --font-geist-sans:
+    Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-geist-mono:
+    "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 * {
   box-sizing: border-box;
