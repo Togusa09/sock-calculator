@@ -1,7 +1,15 @@
 "use client";
 
-import { SavedItemsControl } from "@/components/SavedItemsControl";
-import type { Measurements, DisplayUnit } from "@/lib/domain";
+import { useState } from "react";
+import {
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
+import {
+  DEFAULT_RECORD,
+  type Measurements,
+  type DisplayUnit,
+} from "@/lib/domain";
 import { fromCentimetres, measurementLabel, toCentimetres } from "@/lib/units";
 
 type Props = {
@@ -52,20 +60,32 @@ function NumberField({
 }
 
 export function FootMeasurements({ measurements, unit, onChange }: Props) {
+  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
   return (
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
           <span className="step">01</span>
           <div>
-            <h2>Foot measurements</h2>
+            <h2>
+              Foot measurements
+              {loadedItem && (
+                <span className="loaded-item-name">
+                  {" "}
+                  — {loadedItem.name}
+                  {loadedItem.dirty ? " (edited)" : ""}
+                </span>
+              )}
+            </h2>
             <p>Two measurements are enough to begin.</p>
           </div>
         </div>
         <SavedItemsControl
           type="measurements"
           data={measurements}
+          defaultData={DEFAULT_RECORD.measurements}
           onLoad={onChange}
+          onLoadedItemChange={setLoadedItem}
         />
       </div>
       <div className="field-grid">

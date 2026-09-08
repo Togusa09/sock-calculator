@@ -1,12 +1,17 @@
 "use client";
 
-import { SavedItemsControl } from "@/components/SavedItemsControl";
-import type {
-  ConstructionOptions,
-  CuffStyle,
-  HeelStyle,
-  Ribbing,
-  ToeStyle,
+import { useState } from "react";
+import {
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
+import {
+  DEFAULT_RECORD,
+  type ConstructionOptions,
+  type CuffStyle,
+  type HeelStyle,
+  type Ribbing,
+  type ToeStyle,
 } from "@/lib/domain";
 
 type Props = {
@@ -20,20 +25,32 @@ export function Construction({
   tensionNegativeEase,
   onChange,
 }: Props) {
+  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
   return (
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
           <span className="step">03</span>
           <div>
-            <h2>Construction</h2>
+            <h2>
+              Construction
+              {loadedItem && (
+                <span className="loaded-item-name">
+                  {" "}
+                  — {loadedItem.name}
+                  {loadedItem.dirty ? " (edited)" : ""}
+                </span>
+              )}
+            </h2>
             <p>Choose the shape you plan to knit.</p>
           </div>
         </div>
         <SavedItemsControl
           type="construction"
           data={construction}
+          defaultData={DEFAULT_RECORD.construction}
           onLoad={onChange}
+          onLoadedItemChange={setLoadedItem}
         />
       </div>
       <div className="construction-fields">

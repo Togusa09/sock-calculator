@@ -1,7 +1,11 @@
 "use client";
 
-import { SavedItemsControl } from "@/components/SavedItemsControl";
-import type { YarnTension } from "@/lib/domain";
+import { useState } from "react";
+import {
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
+import { DEFAULT_RECORD, type YarnTension } from "@/lib/domain";
 
 type Props = {
   tension: YarnTension;
@@ -9,17 +13,33 @@ type Props = {
 };
 
 export function YarnTension({ tension, onChange }: Props) {
+  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
   return (
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
           <span className="step">02</span>
           <div>
-            <h2>Yarn tension</h2>
+            <h2>
+              Yarn tension
+              {loadedItem && (
+                <span className="loaded-item-name">
+                  {" "}
+                  — {loadedItem.name}
+                  {loadedItem.dirty ? " (edited)" : ""}
+                </span>
+              )}
+            </h2>
             <p>Gauge and ease shape the fit.</p>
           </div>
         </div>
-        <SavedItemsControl type="tension" data={tension} onLoad={onChange} />
+        <SavedItemsControl
+          type="tension"
+          data={tension}
+          defaultData={DEFAULT_RECORD.tension}
+          onLoad={onChange}
+          onLoadedItemChange={setLoadedItem}
+        />
       </div>
       <div className="field-grid">
         <label className="field">
