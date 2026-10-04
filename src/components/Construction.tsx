@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/components/SavedItemsControl";
+} from "@/src/components/SavedItemsControl";
 import {
   DEFAULT_RECORD,
   type ConstructionOptions,
@@ -12,7 +12,7 @@ import {
   type HeelStyle,
   type Ribbing,
   type ToeStyle,
-} from "@/lib/domain";
+} from "@/src/lib/domain";
 
 type Props = {
   construction: ConstructionOptions;

@@ -8,7 +8,7 @@ import {
   saveItem,
   type LibraryItem,
   type LibraryItemType,
-} from "@/lib/library";
+} from "@/src/lib/library";
 
 export type LoadedItemInfo = {
   name: string;

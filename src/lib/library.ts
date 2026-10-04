@@ -46,6 +46,12 @@ export function listItems<T>(type: LibraryItemType): LibraryItem<T>[] {
   }
 }
 
+export function readItem<T>(type: LibraryItemType, id: string): LibraryItem<T> | undefined {
+  const items = listItems<T>(type);
+  const item = items.find(i => i.id === id);
+  return item;
+}
+
 function persist<T>(type: LibraryItemType, items: LibraryItem<T>[]): void {
   window.localStorage.setItem(storageKey(type), JSON.stringify(items));
 }

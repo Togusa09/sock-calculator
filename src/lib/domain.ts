@@ -3,6 +3,7 @@ export type Ribbing = "1x1" | "1x2" | "2x2" | "3x3";
 export type CuffStyle = "ribbed" | "folded";
 export type HeelStyle = "gussetted" | "afterthought" | "short-row";
 export type ToeStyle = "round" | "star";
+export type YarnWeightUnit = "fingering" | "DK" | "worsted";
 
 export type MeasurementValue = {
   value: number;
@@ -20,6 +21,16 @@ export type Measurements = {
   lowCalfCircumferenceCm?: number;
   highCalfCircumferenceCm?: number;
 };
+
+export type YarnType = {
+  description: string
+  yarnWeight: YarnWeight
+}
+
+export type YarnWeight = {
+  weight: YarnWeightUnit
+  tensions: YarnTension[]  
+}
 
 export type YarnTension = {
   stitchesPer10Cm: number;

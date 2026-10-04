@@ -4,8 +4,8 @@ import { useState } from "react";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/components/SavedItemsControl";
-import { DEFAULT_RECORD, type YarnTension } from "@/lib/domain";
+} from "@/src/components/SavedItemsControl";
+import { DEFAULT_RECORD, type YarnTension } from "@/src/lib/domain";
 
 type Props = {
   tension: YarnTension;

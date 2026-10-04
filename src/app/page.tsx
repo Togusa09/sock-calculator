@@ -1,82 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { Construction } from "@/components/Construction";
-import { FootMeasurements } from "@/components/FootMeasurements";
-import { ResultsPanel } from "@/components/ResultsPanel";
+import { useMemo, useRef, useState, type ChangeEvent } from "react";
+import { Construction } from "@/src/components/Construction";
+import { FootMeasurements } from "@/src/components/FootMeasurements";
+import { ResultsPanel } from "@/src/components/ResultsPanel";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/components/SavedItemsControl";
-import { YarnTension } from "@/components/YarnTension";
-import { calculateStitches } from "@/lib/calculations";
+} from "@/src/components/SavedItemsControl";
+import { YarnTension } from "@/src/components/YarnTension";
+import { calculateStitches } from "@/src/lib/calculations";
 import {
   DEFAULT_RECORD,
   type CalculatorRecord,
   type DisplayUnit,
-} from "@/lib/domain";
-import { parseImportedRecord, validateRecord } from "@/lib/validation";
-
-const STORAGE_KEY = "sock-calculator-record-v1";
+} from "@/src/lib/domain";
+import { parseImportedRecord, validateRecord } from "@/src/lib/validation";
+import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 export default function Home() {
-  const [record, setRecord] = useState<CalculatorRecord>(DEFAULT_RECORD);
-  const [hydrated, setHydrated] = useState(false);
+
+  const {record, 
+    setRecord, 
+    updateRecord,
+    updateMeasurements,
+    updateTension,
+    updateConstruction
+  } = useDataPersistence()
+
   const [message, setMessage] = useState("");
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
   const importRef = useRef<HTMLInputElement>(null);
   const unit = record.displayUnit;
   const result = useMemo(() => calculateStitches(record), [record]);
-
-  useEffect(() => {
-    const restore = () => {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          setRecord(parseImportedRecord(saved));
-        } catch {
-          window.localStorage.removeItem(STORAGE_KEY);
-        }
-      }
-      setHydrated(true);
-    };
-    const restoreId = window.setTimeout(restore, 0);
-    return () => window.clearTimeout(restoreId);
-  }, []);
-
-  useEffect(() => {
-    if (hydrated)
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(record));
-  }, [hydrated, record]);
-
-  function updateRecord(update: Partial<CalculatorRecord>) {
-    setRecord((current) => ({ ...current, ...update }));
-  }
-
-  function updateMeasurements(
-    update: Partial<CalculatorRecord["measurements"]>,
-  ) {
-    setRecord((current) => ({
-      ...current,
-      measurements: { ...current.measurements, ...update },
-    }));
-  }
-
-  function updateTension(update: Partial<CalculatorRecord["tension"]>) {
-    setRecord((current) => ({
-      ...current,
-      tension: { ...current.tension, ...update },
-    }));
-  }
-
-  function updateConstruction(
-    update: Partial<CalculatorRecord["construction"]>,
-  ) {
-    setRecord((current) => ({
-      ...current,
-      construction: { ...current.construction, ...update },
-    }));
-  }
 
   function exportRecord() {
     const blob = new Blob([JSON.stringify(record, null, 2)], {
