@@ -1,3 +1,5 @@
+# Sock Calculator Design Document
+
 ## Design overview
 
 Sock calculator is designed to calculate stitch count for knitting socks based on given parameters. The intention is for the user to enter foot measurements and yarn tension and the application will calculate the required stitch count. There will be options for each part of the sock, such as the cuff, leg, heel, and toe, that drive the calculation for that section. For example, a gussetted heel will need different stitch counts compared to a short-row heel.

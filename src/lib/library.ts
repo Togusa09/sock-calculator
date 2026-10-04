@@ -108,6 +108,41 @@ export function saveItem<T>(
   return saved;
 }
 
+/** True when another item of this type (ignoring `exceptId`) already uses the name. */
+export function isNameTaken(
+  type: LibraryItemType,
+  name: string,
+  exceptId?: string,
+): boolean {
+  const wanted = name.trim().toLowerCase();
+  return listItems(type).some(
+    (item) => item.id !== exceptId && item.name.trim().toLowerCase() === wanted,
+  );
+}
+
+/** Updates an existing item in place by id, allowing a rename. Returns undefined if the id is unknown. */
+export function updateItem<T>(
+  type: LibraryItemType,
+  id: string,
+  name: string,
+  data: T,
+): LibraryItem<T> | undefined {
+  const items = listItems<T>(type);
+  if (!items.some((item) => item.id === id)) return undefined;
+  const updated: LibraryItem<T> = {
+    id,
+    name: name.trim(),
+    schemaVersion: 1,
+    updatedAt: new Date().toISOString(),
+    data,
+  };
+  persist(
+    type,
+    items.map((item) => (item.id === id ? updated : item)),
+  );
+  return updated;
+}
+
 export function deleteItem(type: LibraryItemType, id: string): void {
   const items = listItems(type);
   persist(

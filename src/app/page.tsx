@@ -7,6 +7,7 @@ import {
   type ChangeEvent,
   type ReactNode,
 } from "react";
+import Link from "next/link";
 import { Construction } from "@/src/components/Construction";
 import { FootMeasurements } from "@/src/components/FootMeasurements";
 import { ResultsPanel } from "@/src/components/ResultsPanel";
@@ -192,6 +193,9 @@ export default function Home() {
             onLoad={loadProject}
             onLoadedItemChange={setLoadedItem}
           />
+          <Link className="button secondary" href="/config">
+            Configuration
+          </Link>
           <button className="button secondary" onClick={exportRecord}>
             Export JSON
           </button>

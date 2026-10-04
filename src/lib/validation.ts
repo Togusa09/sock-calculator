@@ -1,4 +1,4 @@
-import type { CalculatorRecord, YarnProfile } from "./domain";
+import type { CalculatorRecord, Measurements, YarnProfile } from "./domain";
 
 const WEIGHTS = ["fingering", "DK", "worsted"];
 
@@ -16,6 +16,15 @@ export function validateYarnProfile(profile: YarnProfile): string[] {
   const total = profile.materials.reduce((sum, m) => sum + m.percent, 0);
   if (Math.abs(total - 100) > 0.001)
     errors.push("Material percentages must add up to 100%.");
+  return errors;
+}
+
+export function validateMeasurements(measurements: Measurements): string[] {
+  const errors: string[] = [];
+  if (!(measurements.footLengthCm > 0))
+    errors.push("Foot length must be greater than zero.");
+  if (!(measurements.footCircumferenceCm > 0))
+    errors.push("Foot circumference must be greater than zero.");
   return errors;
 }
 
