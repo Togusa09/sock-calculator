@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "format": "prettier --write app components lib",
-    "format:check": "prettier --check app components lib"
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
   },
   "dependencies": {
     "next": "16.3.4",
