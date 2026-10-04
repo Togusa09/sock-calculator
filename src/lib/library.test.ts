@@ -5,6 +5,8 @@ import {
   deleteItem,
   deleteYarnProfile,
   findTension,
+  isNameTaken,
+  updateItem,
   listItems,
   nextAvailableName,
   saveItem,
@@ -93,3 +95,33 @@ describe("yarn profile tensions", () => {
     expect(findTension(keep.id, 2.5)).toBeDefined();
   });
 });
+
+describe("updateItem and isNameTaken", () => {
+  it("renames in place by id without duplicating", () => {
+    const item = saveItem("measurements", { footLengthCm: 25 }, "Old");
+    const updated = updateItem("measurements", item.id, " New ", {
+      footLengthCm: 27,
+    });
+
+    expect(updated?.name).toBe("New");
+    expect(listItems("measurements")).toHaveLength(1);
+    expect(readItemData(item.id)).toEqual({ footLengthCm: 27 });
+  });
+
+  it("returns undefined for an unknown id", () => {
+    expect(updateItem("measurements", "missing", "x", {})).toBeUndefined();
+  });
+
+  it("detects name clashes, ignoring the item being edited", () => {
+    const a = saveItem("yarnProfile", {}, "Alpha");
+    saveItem("yarnProfile", {}, "Beta");
+
+    expect(isNameTaken("yarnProfile", "beta")).toBe(true);
+    expect(isNameTaken("yarnProfile", "Alpha", a.id)).toBe(false);
+    expect(isNameTaken("yarnProfile", "Gamma")).toBe(false);
+  });
+});
+
+function readItemData(id: string) {
+  return listItems("measurements").find((i) => i.id === id)?.data;
+}

@@ -1,8 +1,11 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  resolve: {
+    alias: { "@": process.cwd() },
+  },
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'], // <-- Add this line
+    environment: "jsdom",
+    setupFiles: ["./vitest.setup.ts"],
   },
 });

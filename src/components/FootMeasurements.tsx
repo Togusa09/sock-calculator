@@ -10,58 +10,13 @@ import {
   type Measurements,
   type DisplayUnit,
 } from "@/src/lib/domain";
-import {
-  fromCentimetres,
-  measurementLabel,
-  toCentimetres,
-} from "@/src/lib/units";
+import { NumberField } from "@/src/components/NumberField";
 
 type Props = {
   measurements: Measurements;
   unit: DisplayUnit;
   onChange: (update: Partial<Measurements>) => void;
 };
-
-function NumberField({
-  label,
-  value,
-  unit,
-  onChange,
-  required = false,
-}: {
-  label: string;
-  value: number | undefined;
-  unit: DisplayUnit;
-  onChange: (value: number | undefined) => void;
-  required?: boolean;
-}) {
-  return (
-    <label className="field">
-      <span>
-        {label}
-        {required ? " *" : ""}
-      </span>
-      <input
-        type="number"
-        min="0"
-        step="0.1"
-        value={
-          value === undefined
-            ? ""
-            : Number(fromCentimetres(value, unit).toFixed(2))
-        }
-        onChange={(event) =>
-          onChange(
-            event.target.value === ""
-              ? undefined
-              : toCentimetres(Number(event.target.value), unit),
-          )
-        }
-      />
-      <small>{measurementLabel(unit)}</small>
-    </label>
-  );
-}
 
 export function FootMeasurements({ measurements, unit, onChange }: Props) {
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
