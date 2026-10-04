@@ -8,9 +8,10 @@ import {
   saveItem,
   type LibraryItem,
   type LibraryItemType,
-} from "@/lib/library";
+} from "@/src/lib/library";
 
 export type LoadedItemInfo = {
+  id?: string;
   name: string;
   dirty: boolean;
 };
@@ -19,7 +20,9 @@ type Props<T> = {
   type: LibraryItemType;
   data: T;
   defaultData: T;
-  onLoad: (data: T) => void;
+  onLoad: (data: T, item?: LibraryItem<T>) => void;
+  onSaved?: (item: LibraryItem<T>) => void;
+  onDelete?: (id: string) => void;
   onLoadedItemChange?: (info: LoadedItemInfo | null) => void;
 };
 
@@ -28,6 +31,8 @@ export function SavedItemsControl<T>({
   data,
   defaultData,
   onLoad,
+  onSaved,
+  onDelete,
   onLoadedItemChange,
 }: Props<T>) {
   const [items, setItems] = useState<LibraryItem<T>[]>([]);
@@ -47,7 +52,9 @@ export function SavedItemsControl<T>({
   });
   useEffect(() => {
     onLoadedItemChangeRef.current?.(
-      loadedItem ? { name: loadedItem.name, dirty: isDirty } : null,
+      loadedItem
+        ? { id: loadedItem.id, name: loadedItem.name, dirty: isDirty }
+        : null,
     );
   }, [loadedItem, isDirty]);
 
@@ -94,6 +101,7 @@ export function SavedItemsControl<T>({
     refresh();
     setNameDraft("");
     setLoadedItem(saved);
+    onSaved?.(saved);
   }
 
   function toggleOpen() {
@@ -102,14 +110,16 @@ export function SavedItemsControl<T>({
   }
 
   function handleLoad(item: LibraryItem<T>) {
-    onLoad(item.data);
+    onLoad(item.data, item);
     setLoadedItem(item);
     setNameDraft(item.name);
     setOpen(false);
   }
 
   function handleDelete(id: string) {
-    deleteItem(type, id);
+    if (onDelete) onDelete(id);
+    else deleteItem(type, id);
+    if (loadedItem?.id === id) setLoadedItem(null);
     refresh();
   }
 
@@ -130,7 +140,7 @@ export function SavedItemsControl<T>({
 
   function confirmNewWithSave() {
     if (loadedItem) {
-      saveItem(type, data, loadedItem.name);
+      onSaved?.(saveItem(type, data, loadedItem.name));
       refresh();
     }
     setConfirmingNew(false);

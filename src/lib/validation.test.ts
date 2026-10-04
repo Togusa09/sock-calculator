@@ -23,8 +23,36 @@ describe("record validation", () => {
     ]);
   });
 
+  it("validates yarn profile material mixes", () => {
+    const profile = {
+      manufacturer: "Acme",
+      weight: "DK" as const,
+      materials: [
+        { material: "Wool", percent: 75 },
+        { material: "Acrylic", percent: 25 },
+      ],
+    };
+
+    expect(validateRecord({ ...DEFAULT_RECORD, yarnProfile: profile })).toEqual(
+      [],
+    );
+    expect(
+      validateRecord({
+        ...DEFAULT_RECORD,
+        yarnProfile: {
+          ...profile,
+          manufacturer: " ",
+          materials: [{ material: "Wool", percent: 60 }],
+        },
+      }),
+    ).toEqual([
+      "Yarn manufacturer is required.",
+      "Material percentages must add up to 100%.",
+    ]);
+  });
+
   it("rejects unsupported record versions and malformed JSON", () => {
-    const unsupported = JSON.stringify({ ...DEFAULT_RECORD, schemaVersion: 2 });
+    const unsupported = JSON.stringify({ ...DEFAULT_RECORD, schemaVersion: 3 });
 
     expect(() => parseImportedRecord(unsupported)).toThrow(
       "This calculator record version is not supported.",

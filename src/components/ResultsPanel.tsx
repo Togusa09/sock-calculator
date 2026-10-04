@@ -1,8 +1,8 @@
 "use client";
 
-import type { DisplayUnit } from "@/lib/domain";
-import type { calculateStitches } from "@/lib/calculations";
-import { formatMeasurement } from "@/lib/units";
+import type { DisplayUnit } from "@/src/lib/domain";
+import type { calculateStitches } from "@/src/lib/calculations";
+import { formatMeasurement } from "@/src/lib/units";
 
 type CalculationResult = ReturnType<typeof calculateStitches>;
 

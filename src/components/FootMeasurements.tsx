@@ -4,13 +4,17 @@ import { useState } from "react";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/components/SavedItemsControl";
+} from "@/src/components/SavedItemsControl";
 import {
   DEFAULT_RECORD,
   type Measurements,
   type DisplayUnit,
-} from "@/lib/domain";
-import { fromCentimetres, measurementLabel, toCentimetres } from "@/lib/units";
+} from "@/src/lib/domain";
+import {
+  fromCentimetres,
+  measurementLabel,
+  toCentimetres,
+} from "@/src/lib/units";
 
 type Props = {
   measurements: Measurements;

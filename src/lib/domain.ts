@@ -3,6 +3,7 @@ export type Ribbing = "1x1" | "1x2" | "2x2" | "3x3";
 export type CuffStyle = "ribbed" | "folded";
 export type HeelStyle = "gussetted" | "afterthought" | "short-row";
 export type ToeStyle = "round" | "star";
+export type YarnWeightUnit = "fingering" | "DK" | "worsted";
 
 export type MeasurementValue = {
   value: number;
@@ -21,12 +22,25 @@ export type Measurements = {
   highCalfCircumferenceCm?: number;
 };
 
+export type MaterialComponent = {
+  material: string;
+  percent: number;
+};
+
+export type YarnProfile = {
+  manufacturer: string;
+  materials: MaterialComponent[];
+  weight: YarnWeightUnit;
+};
 export type YarnTension = {
   stitchesPer10Cm: number;
   rowsPer10Cm: number;
   needleSizeMm: number;
   negativeEasePercent: number;
 };
+
+/** A tension saved against a yarn profile library item. */
+export type SavedTension = YarnTension & { yarnProfileId: string };
 
 export type ConstructionOptions = {
   ribbing: Ribbing;
@@ -42,6 +56,8 @@ export type CalculatorRecord = {
   schemaVersion: 1;
   displayUnit: DisplayUnit;
   measurements: Measurements;
+  yarnProfileId?: string;
+  yarnProfile?: YarnProfile;
   tension: YarnTension;
   construction: ConstructionOptions;
 };
@@ -98,6 +114,12 @@ export type ConstructionCalculation = {
   heel: HeelCalculation;
   foot: { stitches: number; lengthCm: number };
   toe: ToeCalculation;
+};
+
+export const DEFAULT_YARN_PROFILE: YarnProfile = {
+  manufacturer: "",
+  materials: [{ material: "Wool", percent: 100 }],
+  weight: "fingering",
 };
 
 export const DEFAULT_RECORD: CalculatorRecord = {

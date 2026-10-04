@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/components/SavedItemsControl";
+} from "@/src/components/SavedItemsControl";
 import {
   DEFAULT_RECORD,
   type ConstructionOptions,
@@ -12,7 +12,7 @@ import {
   type HeelStyle,
   type Ribbing,
   type ToeStyle,
-} from "@/lib/domain";
+} from "@/src/lib/domain";
 
 type Props = {
   construction: ConstructionOptions;
@@ -30,7 +30,7 @@ export function Construction({
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
-          <span className="step">03</span>
+          <span className="step">04</span>
           <div>
             <h2>
               Construction
