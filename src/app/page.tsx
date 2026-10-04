@@ -8,10 +8,12 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/src/components/SavedItemsControl";
+import { YarnProfile } from "@/src/components/YarnProfile";
 import { YarnTension } from "@/src/components/YarnTension";
 import { calculateStitches } from "@/src/lib/calculations";
 import {
   DEFAULT_RECORD,
+  DEFAULT_YARN_PROFILE,
   type CalculatorRecord,
   type DisplayUnit,
 } from "@/src/lib/domain";
@@ -19,14 +21,14 @@ import { parseImportedRecord, validateRecord } from "@/src/lib/validation";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 export default function Home() {
-
-  const {record, 
-    setRecord, 
+  const {
+    record,
+    setRecord,
     updateRecord,
     updateMeasurements,
     updateTension,
-    updateConstruction
-  } = useDataPersistence()
+    updateConstruction,
+  } = useDataPersistence();
 
   const [message, setMessage] = useState("");
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
@@ -143,7 +145,27 @@ export default function Home() {
             unit={unit}
             onChange={updateMeasurements}
           />
-          <YarnTension tension={record.tension} onChange={updateTension} />
+          <YarnProfile
+            profile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
+            profileId={record.yarnProfileId}
+            onChange={(update) =>
+              updateRecord({
+                yarnProfile: {
+                  ...(record.yarnProfile ?? DEFAULT_YARN_PROFILE),
+                  ...update,
+                },
+              })
+            }
+            onSelect={(yarnProfile, yarnProfileId) =>
+              updateRecord({ yarnProfile, yarnProfileId })
+            }
+          />
+          <YarnTension
+            tension={record.tension}
+            yarnProfile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
+            yarnProfileId={record.yarnProfileId}
+            onChange={updateTension}
+          />
           <Construction
             construction={record.construction}
             tensionNegativeEase={record.tension.negativeEasePercent}

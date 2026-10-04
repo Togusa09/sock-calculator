@@ -1,46 +1,96 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  SavedItemsControl,
-  type LoadedItemInfo,
-} from "@/src/components/SavedItemsControl";
-import { DEFAULT_RECORD, type YarnTension } from "@/src/lib/domain";
+  type SavedTension,
+  type YarnProfile,
+  type YarnTension,
+} from "@/src/lib/domain";
+import {
+  describeYarnProfile,
+  findTension,
+  saveTension,
+} from "@/src/lib/library";
 
 type Props = {
   tension: YarnTension;
+  yarnProfile: YarnProfile;
+  yarnProfileId?: string;
   onChange: (update: Partial<YarnTension>) => void;
 };
 
-export function YarnTension({ tension, onChange }: Props) {
-  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
+function toGauge(saved: SavedTension): YarnTension {
+  const { yarnProfileId: _ignored, ...gauge } = saved;
+  void _ignored;
+  return gauge;
+}
+
+export function YarnTension({
+  tension,
+  yarnProfile,
+  yarnProfileId,
+  onChange,
+}: Props) {
+  const [status, setStatus] = useState("");
+  const [lookupFound, setLookupFound] = useState(false);
+
+  // Look up the saved tension whenever the selected yarn or needle size changes.
+  useEffect(() => {
+    const found = yarnProfileId
+      ? findTension(yarnProfileId, tension.needleSizeMm)
+      : undefined;
+    // Syncing UI state with the external localStorage library.
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setStatus("");
+    setLookupFound(!!found);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    if (found) onChange(toGauge(found.data));
+    // Only re-run on selection changes, not on gauge edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yarnProfileId, tension.needleSizeMm]);
+
+  function handleSave() {
+    if (!yarnProfileId) return;
+    saveTension(
+      yarnProfileId,
+      tension,
+      `${yarnProfile.manufacturer} ${yarnProfile.weight} @ ${tension.needleSizeMm} mm`,
+    );
+    setLookupFound(true);
+    setStatus("Tension saved.");
+  }
+
   return (
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
-          <span className="step">02</span>
+          <span className="step">03</span>
           <div>
-            <h2>
-              Yarn tension
-              {loadedItem && (
-                <span className="loaded-item-name">
-                  {" "}
-                  — {loadedItem.name}
-                  {loadedItem.dirty ? " (edited)" : ""}
-                </span>
-              )}
-            </h2>
-            <p>Gauge and ease shape the fit.</p>
+            <h2>Yarn tension</h2>
+            <p>
+              {yarnProfileId
+                ? `${describeYarnProfile(yarnProfile)} — gauge and ease shape the fit.`
+                : "Save a yarn profile to look up and store tensions."}
+            </p>
           </div>
         </div>
-        <SavedItemsControl
-          type="tension"
-          data={tension}
-          defaultData={DEFAULT_RECORD.tension}
-          onLoad={onChange}
-          onLoadedItemChange={setLoadedItem}
-        />
+        <button
+          type="button"
+          className="button secondary"
+          disabled={!yarnProfileId}
+          onClick={handleSave}
+        >
+          Save for this yarn + needle
+        </button>
       </div>
+      {yarnProfileId && (
+        <p className="hint" role="status">
+          {status ||
+            (lookupFound
+              ? "Loaded saved tension for this yarn and needle size."
+              : "No saved tension for this yarn and needle size yet; enter a gauge and save it.")}
+        </p>
+      )}{" "}
       <div className="field-grid">
         <label className="field">
           <span>Stitches per 10 cm *</span>

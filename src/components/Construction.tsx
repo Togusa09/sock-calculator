@@ -30,7 +30,7 @@ export function Construction({
     <section className="panel">
       <div className="section-heading">
         <div className="section-heading-main">
-          <span className="step">03</span>
+          <span className="step">04</span>
           <div>
             <h2>
               Construction

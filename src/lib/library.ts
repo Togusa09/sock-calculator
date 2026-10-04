@@ -1,5 +1,7 @@
+import type { SavedTension, YarnProfile, YarnTension } from "./domain";
+
 export type LibraryItemType =
-  "measurements" | "tension" | "construction" | "project";
+  "measurements" | "tension" | "construction" | "project" | "yarnProfile";
 
 export type LibraryItem<T> = {
   id: string;
@@ -16,6 +18,7 @@ const NAME_PREFIXES: Record<LibraryItemType, string> = {
   tension: "Yarn tension",
   construction: "Construction",
   project: "Project",
+  yarnProfile: "Yarn profile",
 };
 
 function storageKey(type: LibraryItemType): string {
@@ -46,9 +49,12 @@ export function listItems<T>(type: LibraryItemType): LibraryItem<T>[] {
   }
 }
 
-export function readItem<T>(type: LibraryItemType, id: string): LibraryItem<T> | undefined {
+export function readItem<T>(
+  type: LibraryItemType,
+  id: string,
+): LibraryItem<T> | undefined {
   const items = listItems<T>(type);
-  const item = items.find(i => i.id === id);
+  const item = items.find((i) => i.id === id);
   return item;
 }
 
@@ -108,4 +114,45 @@ export function deleteItem(type: LibraryItemType, id: string): void {
     type,
     items.filter((item) => item.id !== id),
   );
+}
+
+const NEEDLE_TOLERANCE_MM = 0.01;
+
+export function findTension(
+  yarnProfileId: string,
+  needleSizeMm: number,
+): LibraryItem<SavedTension> | undefined {
+  return listItems<SavedTension>("tension").find(
+    (item) =>
+      item.data.yarnProfileId === yarnProfileId &&
+      Math.abs(item.data.needleSizeMm - needleSizeMm) < NEEDLE_TOLERANCE_MM,
+  );
+}
+
+/** Saves a tension, replacing any existing one for the same profile and needle size. */
+export function saveTension(
+  yarnProfileId: string,
+  tension: YarnTension,
+  name: string,
+): LibraryItem<SavedTension> {
+  const data: SavedTension = { ...tension, yarnProfileId };
+  const existing = findTension(yarnProfileId, tension.needleSizeMm);
+  return saveItem<SavedTension>("tension", data, existing?.name ?? name);
+}
+
+/** Deletes a yarn profile along with every tension that references it. */
+export function deleteYarnProfile(id: string): void {
+  deleteItem("yarnProfile", id);
+  const tensions = listItems<SavedTension>("tension");
+  persist(
+    "tension",
+    tensions.filter((item) => item.data.yarnProfileId !== id),
+  );
+}
+
+export function describeYarnProfile(profile: YarnProfile): string {
+  const mix = profile.materials
+    .map((m) => `${m.percent}% ${m.material}`)
+    .join(", ");
+  return `${profile.manufacturer} ${profile.weight} (${mix})`;
 }

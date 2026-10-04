@@ -1,4 +1,23 @@
-import type { CalculatorRecord } from "./domain";
+import type { CalculatorRecord, YarnProfile } from "./domain";
+
+const WEIGHTS = ["fingering", "DK", "worsted"];
+
+export function validateYarnProfile(profile: YarnProfile): string[] {
+  const errors: string[] = [];
+  if (!profile.manufacturer.trim())
+    errors.push("Yarn manufacturer is required.");
+  if (!WEIGHTS.includes(profile.weight))
+    errors.push("Yarn weight is not supported.");
+  if (
+    profile.materials.length === 0 ||
+    profile.materials.some((m) => !m.material.trim() || !(m.percent > 0))
+  )
+    errors.push("Each material needs a name and a percentage above zero.");
+  const total = profile.materials.reduce((sum, m) => sum + m.percent, 0);
+  if (Math.abs(total - 100) > 0.001)
+    errors.push("Material percentages must add up to 100%.");
+  return errors;
+}
 
 export function validateRecord(record: CalculatorRecord): string[] {
   const errors: string[] = [];
@@ -17,6 +36,8 @@ export function validateRecord(record: CalculatorRecord): string[] {
     record.tension.negativeEasePercent >= 100
   )
     errors.push("Negative ease must be between 0 and 99%.");
+  if (record.yarnProfile)
+    errors.push(...validateYarnProfile(record.yarnProfile));
   return errors;
 }
 

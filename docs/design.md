@@ -13,7 +13,7 @@ Data will be persisted in the local browser using an industry recommended storag
 To facilitate a mechanism for sharing/restoring data, there will be an option to export the whole record or key entities as JSON files, and an option to import them back into the application. Imported data must be validated and include a schema version so future application versions can migrate it safely.
 
 ### Yarn profiles
-A yarn type can be recorded with it's manufacture and material.
+A yarn profile records the manufacturer, a material mix (percentages summing to 100%, e.g. 75% wool / 25% acrylic) and a yarn weight. Profiles are saved in the local library; tensions reference a profile by id. In the calculator the user selects a yarn profile and needle size, and the matching saved tension is loaded. If none exists, the gauge can be entered manually and saved against that yarn and needle size.
 
 ### Yarn tension
 For a given yarn profile, one or more yarn tensions can be recorded. A yarn tension is a single gauge associated with that yarn, needle size, stitch/pattern type, and whether it was swatched circular or flat. Negative ease is stored on the yarn tension and may be overridden by an individual knitting project.

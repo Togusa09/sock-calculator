@@ -10,7 +10,11 @@ import {
   type Measurements,
   type DisplayUnit,
 } from "@/src/lib/domain";
-import { fromCentimetres, measurementLabel, toCentimetres } from "@/src/lib/units";
+import {
+  fromCentimetres,
+  measurementLabel,
+  toCentimetres,
+} from "@/src/lib/units";
 
 type Props = {
   measurements: Measurements;

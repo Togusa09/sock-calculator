@@ -22,22 +22,25 @@ export type Measurements = {
   highCalfCircumferenceCm?: number;
 };
 
-export type YarnType = {
-  description: string
-  yarnWeight: YarnWeight
-}
+export type MaterialComponent = {
+  material: string;
+  percent: number;
+};
 
-export type YarnWeight = {
-  weight: YarnWeightUnit
-  tensions: YarnTension[]  
-}
-
+export type YarnProfile = {
+  manufacturer: string;
+  materials: MaterialComponent[];
+  weight: YarnWeightUnit;
+};
 export type YarnTension = {
   stitchesPer10Cm: number;
   rowsPer10Cm: number;
   needleSizeMm: number;
   negativeEasePercent: number;
 };
+
+/** A tension saved against a yarn profile library item. */
+export type SavedTension = YarnTension & { yarnProfileId: string };
 
 export type ConstructionOptions = {
   ribbing: Ribbing;
@@ -53,6 +56,8 @@ export type CalculatorRecord = {
   schemaVersion: 1;
   displayUnit: DisplayUnit;
   measurements: Measurements;
+  yarnProfileId?: string;
+  yarnProfile?: YarnProfile;
   tension: YarnTension;
   construction: ConstructionOptions;
 };
@@ -109,6 +114,12 @@ export type ConstructionCalculation = {
   heel: HeelCalculation;
   foot: { stitches: number; lengthCm: number };
   toe: ToeCalculation;
+};
+
+export const DEFAULT_YARN_PROFILE: YarnProfile = {
+  manufacturer: "",
+  materials: [{ material: "Wool", percent: 100 }],
+  weight: "fingering",
 };
 
 export const DEFAULT_RECORD: CalculatorRecord = {
