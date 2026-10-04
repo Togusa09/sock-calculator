@@ -9,13 +9,16 @@ All measurements and calculations will use metric units internally. Metric is th
 ## Features
 
 ### Data Persistence
+
 Data will be persisted in the local browser using an industry recommended storage mechanism. There will not be a backend api or user logins and data will be local to the device.
 To facilitate a mechanism for sharing/restoring data, there will be an option to export the whole record or key entities as JSON files, and an option to import them back into the application. Imported data must be validated and include a schema version so future application versions can migrate it safely.
 
 ### Yarn profiles
+
 A yarn profile records the manufacturer, a material mix (percentages summing to 100%, e.g. 75% wool / 25% acrylic) and a yarn weight. Profiles are saved in the local library; tensions reference a profile by id. In the calculator the user selects a yarn profile and needle size, and the matching saved tension is loaded. If none exists, the gauge can be entered manually and saved against that yarn and needle size.
 
 ### Yarn tension
+
 For a given yarn profile, one or more yarn tensions can be recorded. A yarn tension is a single gauge associated with that yarn, needle size, stitch/pattern type, and whether it was swatched circular or flat. Negative ease is stored on the yarn tension and may be overridden by an individual knitting project.
 
 This will also include a small calculator to assist the user in determining tension from a swatch. Users may choose the measurement size, which defaults to 10 cm. A warning is displayed when the measurement size is below 10 cm because the result may be less accurate. The basic form will accept the measured width and height and the stitch and row counts. An advanced mode may specify the size of a repeating pattern and the number of repeats, such as the number of diamonds in a seersucker pattern.
@@ -37,9 +40,11 @@ When entering measurements, calculated values for optional fields will be displa
 - High calf circumference (optional)
 
 ### Sock pattern
+
 Represents common information for this type of sock that you'd want to share between different pairs, such as a link to the pattern source, notes, recommended yarn weight, and pattern gauge. It may also include default heel, toe, and ribbing styles and yarn to use as defaults, but these are not mandatory.
 
 ### Knitting Project
+
 (Will want a better name)
 Represents an individual knitting project for a pair of socks. This will include references to the sock pattern being used, the yarn profile and yarn tension, and the foot measurements. It will allow the user to override defaults from the sock pattern, including heel, toe, ribbing, section lengths, and negative ease. Calculated values should be distinguishable from inherited defaults and project overrides, with an option to restore a default.
 
@@ -56,12 +61,15 @@ The supported ribbing choices are explicitly 1x1, 1x2, 2x2, and 3x3. Stitch coun
 When an optional measurement is unavailable, the relevant section uses its standard stitch-count formula rather than attempting to calculate a size-specific value. For example, a round toe decreases four stitches every second row, and a gussetted heel flap defaults to a number of rows equal to the stitches across the top of the foot. These formulas should be visible as defaults and replaceable by a project override when the MVP supports that control.
 
 ### Calculation model
+
 The calculation is deliberately separated into two logical stages, similar to the distinction between a model and its generated toolpaths in 3D-printing software.
 
 #### Foot size calculation
+
 This stage models the wearer's foot and leg independently of any knitting construction. It converts entered measurements to metric units, applies any calculated defaults for omitted optional measurements, and produces the target circumferences and lengths for the foot and leg. The MVP produces one constant target circumference for the foot and leg, based on the mandatory ball-of-foot circumference unless a more specific project rule is introduced later.
 
 #### Stitch calculation
+
 This stage fits the selected sock construction to the foot-size model and yarn tension. It applies negative ease, converts the target circumference to stitches using the selected stitch gauge, and applies construction constraints and ribbing rounding. It then calculates the stitch counts at major points for the selected cuff, leg, heel, and toe options. Default section formulas may derive one value from another, such as using the top-of-foot stitch count to determine a gussetted heel flap row count.
 
 The overall flow is:
@@ -75,7 +83,6 @@ The overall flow is:
 
 Rows and section lengths are displayed as measurements in the MVP. Row counts and written knitting instructions are future enhancements.
 
-
 ## Future Enhancements
 
 - Support for increasing/decreasing diameter along foot or leg. The initial MVP keeps the diameter constant within each section.
@@ -83,3 +90,7 @@ Rows and section lengths are displayed as measurements in the MVP. Row counts an
 - User defined calculated fields. For example define that a calf circumference is 1.3x the foot circumference.
 - More detailed heel and toe shaping controls, including configurable short-row shaping.
 - Pattern-repeat-aware rounding and fit adjustments beyond the initial ribbing-based rounding.
+
+## Wizard flow
+
+The calculator is a tabbed wizard. Desktop (>850px) shows four section tabs (Foot, Yarn, Tension, Construction) in a left rail with the results column on the right. At 850px and below, a fifth Results tab appears and results are shown only on that tab. Panels stay mounted when inactive to preserve state; tabs are freely navigable and flag validation errors with a marker.
