@@ -10,7 +10,6 @@ import { useLibraryItem } from "@/src/hooks/UseLibraryItems";
 import {
   isNameTaken,
   updateItem,
-  type LibraryItem,
   type LibraryItemType,
 } from "@/src/lib/library";
 
@@ -52,8 +51,11 @@ export function ConfigEditPage<T>({
       {state.status === "ready" && (
         <ConfigEditor
           type={type}
-          item={state.item}
+          initialName={state.item.name}
+          initialData={state.item.data}
+          exceptId={state.item.id}
           indexHref={indexHref}
+          onSave={(name, data) => updateItem(type, state.item.id, name, data)}
           validate={validate}
           renderFields={renderFields}
         />
@@ -65,23 +67,31 @@ export function ConfigEditPage<T>({
 type EditorProps<T> = Pick<
   Props<T>,
   "type" | "indexHref" | "validate" | "renderFields"
-> & { item: LibraryItem<T> };
+> & {
+  initialName: string;
+  initialData: T;
+  exceptId?: string;
+  onSave: (name: string, data: T) => void;
+};
 
-function ConfigEditor<T>({
+export function ConfigEditor<T>({
   type,
-  item,
+  initialName,
+  initialData,
+  exceptId,
   indexHref,
   validate,
   renderFields,
+  onSave,
 }: EditorProps<T>) {
-  const [name, setName] = useState(item.name);
-  const [data, setData] = useState<T>(item.data);
+  const [name, setName] = useState(initialName);
+  const [data, setData] = useState<T>(initialData);
   const [saved, setSaved] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
 
   const errors = [
     ...(name.trim() ? [] : ["Name is required."]),
-    ...(name.trim() && isNameTaken(type, name, item.id)
+    ...(name.trim() && isNameTaken(type, name, exceptId)
       ? ["Another item already uses that name."]
       : []),
     ...validate(data),
@@ -90,7 +100,7 @@ function ConfigEditor<T>({
   function handleSave() {
     setShowErrors(true);
     if (errors.length > 0) return;
-    updateItem(type, item.id, name, data);
+    onSave(name.trim(), data);
     setSaved(true);
   }
 

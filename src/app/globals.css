@@ -705,3 +705,9 @@ a.button {
   display: inline-block;
   text-decoration: none;
 }
+
+.list-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}

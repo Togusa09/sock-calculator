@@ -25,6 +25,11 @@ export function ConfigListPage<T>({
 
   return (
     <ConfigShell title={title}>
+      <div className="list-actions">
+        <Link className="button" href={`${basePath}/new`}>
+          Create new
+        </Link>
+      </div>
       <section className="panel">
         {state.status === "loading" && <p>Loading…</p>}
         {state.status === "ready" && state.items.length === 0 && (

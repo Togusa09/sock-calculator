@@ -11,9 +11,14 @@ export default function ConfigIndexPage() {
               <strong>Foot sizes</strong>
               <p className="hint">Saved foot measurements.</p>
             </div>
-            <Link className="button secondary" href="/config/foot-sizes">
-              Manage
-            </Link>
+            <div className="top-actions">
+              <Link className="button secondary" href="/config/foot-sizes">
+                Manage
+              </Link>
+              <Link className="button" href="/config/foot-sizes/new">
+                Create new
+              </Link>
+            </div>
           </li>
           <li className="config-list-item">
             <div>
@@ -22,9 +27,14 @@ export default function ConfigIndexPage() {
                 Saved yarn manufacturers, weights and mixes.
               </p>
             </div>
-            <Link className="button secondary" href="/config/yarn-profiles">
-              Manage
-            </Link>
+            <div className="top-actions">
+              <Link className="button secondary" href="/config/yarn-profiles">
+                Manage
+              </Link>
+              <Link className="button" href="/config/yarn-profiles/new">
+                Create new
+              </Link>
+            </div>
           </li>
         </ul>
       </section>
