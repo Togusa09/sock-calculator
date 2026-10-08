@@ -1,0 +1,22 @@
+{
+  "capacitor": {
+    "version": "1.0.0",
+    "description": "Sock Calculator Mobile App",
+    "main": "index.js",
+    "scripts": {
+      "start": "npm run build && npx cap sync",
+      "android": "npx cap open android",
+      "ios": "npx cap open ios",
+      "lint": "eslint .",
+      "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\""
+    },
+    "keywords": [
+      "sock",
+      "calculator",
+      "knitting",
+      "capacitor"
+    ],
+    "author": "Togusa",
+    "license": "MIT"
+  }
+}
