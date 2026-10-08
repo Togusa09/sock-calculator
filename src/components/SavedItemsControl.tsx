@@ -154,69 +154,73 @@ export function SavedItemsControl<T>({
 
   return (
     <div className="saved-items" ref={containerRef}>
-      <button type="button" className="button reset" onClick={handleNew}>
-        New
-      </button>
-      <button
-        type="button"
-        className="saved-items-toggle"
-        aria-expanded={open}
-        aria-label="Save or load"
-        onClick={toggleOpen}
-      >
-        <span className={open ? "chevron chevron-up" : "chevron"} />
-      </button>
+      <div className="saved-items-header">
+        <button type="button" className="button reset" onClick={handleNew}>
+          New
+        </button>
+        <button
+          type="button"
+          className="saved-items-toggle"
+          aria-expanded={open}
+          aria-label="Save or load"
+          onClick={toggleOpen}
+        >
+          <span className={open ? "chevron chevron-up" : "chevron"} />
+        </button>
+      </div>
       {open && (
-        <div className="saved-items-panel">
-          <div className="saved-items-save-row">
-            <input
-              type="text"
-              placeholder="Name to save as…"
-              value={nameDraft}
-              onChange={(event) => setNameDraft(event.target.value)}
-              aria-label="Name to save as"
-            />
-            <button
-              type="button"
-              className="button secondary"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-          </div>
-          <h3>Load saved item</h3>
-          {items.length === 0 ? (
-            <p className="saved-items-empty">Nothing saved yet.</p>
-          ) : (
-            <ul className="saved-items-list">
-              {items.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    className="saved-items-name"
-                    onClick={() => handleLoad(item)}
-                  >
-                    {item.name}
-                  </button>
-                  <button
-                    type="button"
-                    className="button reset"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="saved-items-panel-actions">
-            <button
-              type="button"
-              className="button reset"
-              onClick={() => setOpen(false)}
-            >
-              Close
-            </button>
+        <div className="saved-items-overlay-container">
+          <div className="saved-items-panel">
+            <div className="saved-items-save-row">
+              <input
+                type="text"
+                placeholder="Name to save as…"
+                value={nameDraft}
+                onChange={(event) => setNameDraft(event.target.value)}
+                aria-label="Name to save as"
+              />
+              <button
+                type="button"
+                className="button secondary"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+            <h3>Load saved item</h3>
+            {items.length === 0 ? (
+              <p className="saved-items-empty">Nothing saved yet.</p>
+            ) : (
+              <ul className="saved-items-list">
+                {items.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className="saved-items-name"
+                      onClick={() => handleLoad(item)}
+                    >
+                      {item.name}
+                    </button>
+                    <button
+                      type="button"
+                      className="button reset"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="saved-items-panel-actions">
+              <button
+                type="button"
+                className="button reset"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

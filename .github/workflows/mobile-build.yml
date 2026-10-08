@@ -1,0 +1,55 @@
+name: Mobile Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Java and Android SDK
+        uses: android/setup-with-google@v2
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build and Sync Capacitor
+        run: |
+          npm run build
+          npx cap sync android
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: android/app/build/outputs
+
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby and CocoaPods
+        run: |
+          sudo gem install cocoapods --no-document
+          cd ios && pod install && cd ..
+      
+      - name: Build and Sync Capacitor
+        run: |
+          npm run build
+          npx cap sync ios
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ios/Pods

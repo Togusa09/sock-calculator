@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { CalculatorRecord, DEFAULT_RECORD } from "../lib/domain";
-import { parseImportedRecord, validateRecord } from "@/src/lib/validation";
+import { parseImportedRecord } from "@/src/lib/validation";
 
 const STORAGE_KEY = "sock-calculator-record-v1";
 
