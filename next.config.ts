@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const pagesBasePath = process.env.PAGES_BASE_PATH?.trim();
-
 const isMobileBuild = process.env.IS_EMBEDDED_SHELL  === "true";
 
 const basePath =

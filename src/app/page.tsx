@@ -28,6 +28,8 @@ import {
 } from "@/src/lib/domain";
 import { parseImportedRecord, validateRecord } from "@/src/lib/validation";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
+import { FeatureToggle } from "../components/FeatureToggle";
+import { useFeatureToggle } from "../hooks/UseFeatureToggle";
 
 type SectionId = "measurements" | "yarn" | "tension" | "construction";
 type TabId = SectionId | "results";
@@ -56,6 +58,8 @@ export default function Home() {
   const importRef = useRef<HTMLInputElement>(null);
   const unit = record.displayUnit;
   const result = useMemo(() => calculateStitches(record), [record]);
+
+  const [isFeatureEnabled] = useFeatureToggle();
 
   const errors = validateRecord(record);
   const tabs: WizardTab[] = [
@@ -154,6 +158,7 @@ export default function Home() {
   }
 
   return (
+
     <main className="app-shell">
       <header className="topbar">
         <div>
@@ -193,9 +198,13 @@ export default function Home() {
             onLoad={loadProject}
             onLoadedItemChange={setLoadedItem}
           />
-          <Link className="button secondary" href="/config">
-            Configuration
-          </Link>
+      
+          {isFeatureEnabled('', 1) &&
+            <Link className="button secondary" href="/config">
+              Configuration
+            </Link>
+          }
+          
           <button className="button secondary" onClick={exportRecord}>
             Export JSON
           </button>
