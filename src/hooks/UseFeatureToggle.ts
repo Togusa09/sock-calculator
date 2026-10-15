@@ -2,11 +2,16 @@ import { useContext } from "react"
 import { FeatureToggleContext } from "../context/FeatureToggleContext"
 
 export const useFeatureToggle = () => {
-    const {enabledFeatures, publicFeatureSet} = useContext(FeatureToggleContext);
+    const {enabledFeatures, paidFeatureList, paidFeaturesEnabled } = useContext(FeatureToggleContext);
     
-    function isEnabled(featureName: string, featureSet: number){
-        return enabledFeatures.includes(featureName) && featureSet == publicFeatureSet;
+    function isEnabled(featureName: string){
+        return enabledFeatures.includes(featureName);
     }
 
-    return [ isEnabled ];
+    function isPurchased(featureName: string){
+        return !paidFeatureList.includes(featureName) &&
+            (paidFeaturesEnabled && paidFeatureList.includes(featureName));
+    }
+
+    return [ isEnabled, isPurchased ];
 }

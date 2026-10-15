@@ -1,16 +1,20 @@
-import { ReactNode } from "react";
-import { FeatureToggleContext } from "../context/FeatureToggleContext";
+import { ReactNode, useContext } from "react";
+import { useFeatureToggle } from "../hooks/UseFeatureToggle";
 
 type Props = {
+    feature: string,
     children: ReactNode;
-    enabledFeatures: string[],
-    publicFeatureSet: number,
 }
 
-export function FeatureToggle({children, enabledFeatures, publicFeatureSet}: Props) {
+export function FeatureToggle({feature, children}: Props){
+    const [isEnabled, isPurchased] = useFeatureToggle();
+    
     return (
-        <FeatureToggleContext.Provider value={{enabledFeatures, publicFeatureSet}}>
-            {children}
-        </FeatureToggleContext.Provider>
-    )
+        <>
+            { isEnabled(feature) && isPurchased(feature) && children}
+            { isEnabled(feature) && !isPurchased(feature) && 
+            <>
+                Buy Premium
+            </>}
+        </>)
 }

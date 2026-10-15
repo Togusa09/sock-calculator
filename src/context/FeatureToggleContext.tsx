@@ -2,7 +2,8 @@ import { createContext } from "react";
 
 interface IFeatureTogglecontext{
     enabledFeatures: string[],
-    publicFeatureSet: number,
+    paidFeatureList: string[],
+    paidFeaturesEnabled: boolean,
 }
 
 function splitFeatures(envVar: string | undefined) : string[]{
@@ -13,5 +14,6 @@ function splitFeatures(envVar: string | undefined) : string[]{
 
 export const FeatureToggleContext = createContext<IFeatureTogglecontext>({
     enabledFeatures: splitFeatures(process.env.FEATURES) || [] as string[],
-    publicFeatureSet: Number(process.env.FEATURE_SET)
+    paidFeaturesEnabled: true, // Need to get from payment service
+    paidFeatureList: splitFeatures(process.env.PAID_FEATURES) || [] as string[]
 })

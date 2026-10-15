@@ -199,7 +199,7 @@ export default function Home() {
             onLoadedItemChange={setLoadedItem}
           />
       
-          {isFeatureEnabled('', 1) &&
+          {isFeatureEnabled('config') &&
             <Link className="button secondary" href="/config">
               Configuration
             </Link>
