@@ -13,7 +13,7 @@ function splitFeatures(envVar: string | undefined) : string[]{
 }
 
 export const FeatureToggleContext = createContext<IFeatureTogglecontext>({
-    enabledFeatures: splitFeatures(process.env.FEATURES) || [] as string[],
+    enabledFeatures: splitFeatures(process.env.NEXT_PUBLIC_FEATURES) || [] as string[],
     paidFeaturesEnabled: true, // Need to get from payment service
     paidFeatureList: splitFeatures(process.env.PAID_FEATURES) || [] as string[]
 })
