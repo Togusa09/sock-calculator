@@ -28,6 +28,7 @@ import {
 } from "@/src/lib/domain";
 import { parseImportedRecord, validateRecord } from "@/src/lib/validation";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
+import { FeatureToggle } from "../components/FeatureToggle";
 
 type SectionId = "measurements" | "yarn" | "tension" | "construction";
 type TabId = SectionId | "results";
@@ -193,9 +194,13 @@ export default function Home() {
             onLoad={loadProject}
             onLoadedItemChange={setLoadedItem}
           />
-          <Link className="button secondary" href="/config">
-            Configuration
-          </Link>
+
+          <FeatureToggle feature="config">
+            <Link className="button secondary" href="/config">
+              Configuration
+            </Link>
+          </FeatureToggle>
+
           <button className="button secondary" onClick={exportRecord}>
             Export JSON
           </button>
