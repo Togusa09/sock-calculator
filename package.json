@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run export",
-    "export": "npx @capacitor/cli sync",
-    "sync": "npx @capacitor/cli sync",
+    "build": "next build",
+    "build:staging": "next build --mode staging",
+    "build:prod": "next build --mode production",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
