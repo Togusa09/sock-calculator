@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PAGES_BASE_PATH: /sock-calculator
+      PAGES_BASE_PATH: /
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
