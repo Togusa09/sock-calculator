@@ -11,6 +11,7 @@
     "build:prod": "npm run build:privacy && next build --mode production",
     "start": "next start",
     "lint": "eslint",
+    "pretest": "npm run build:privacy",
     "test": "vitest run",
     "format": "prettier --write src",
     "format:check": "prettier --check src"
