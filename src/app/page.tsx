@@ -292,7 +292,11 @@ export default function Home() {
         >
           <ResultsPanel result={result} unit={unit} validation={errors} />
         </div>
-      </div>{" "}
+      </div>
+      <footer className="page-footer">
+        <span>Sock calculator</span>
+        <a href="PrivacyPolicy.html">Privacy Policy</a>
+      </footer>
     </main>
   );
 }
