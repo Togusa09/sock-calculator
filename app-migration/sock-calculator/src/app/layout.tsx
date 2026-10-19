@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sock calculator",
+  title: "Sock calculator Meta",
   description:
     "Calculate sock stitch counts from foot measurements and yarn tension.",
 };

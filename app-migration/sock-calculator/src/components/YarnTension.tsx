@@ -1,22 +1,26 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-
 import {
   type SavedTension,
   type YarnProfile,
-  type YarnTension,
+  type YarnTension as YarnTensionType,
 } from "@/lib/domain";
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
-import { palette } from "@/theme/colors";
 import { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type Props = {
-  tension: YarnTension;
+  tension: YarnTensionType;
   yarnProfile: YarnProfile;
   yarnProfileId?: string;
-  onChange: (update: Partial<YarnTension>) => void;
+  onChange: (update: Partial<YarnTensionType>) => void;
 };
 
-function toGauge(saved: SavedTension): YarnTension {
+function toGauge(saved: SavedTension): YarnTensionType {
   const { yarnProfileId: _ignored, ...gauge } = saved;
   void _ignored;
   return gauge;
@@ -31,19 +35,13 @@ export function YarnTension({
   const [status, setStatus] = useState("");
   const [lookupFound, setLookupFound] = useState(false);
 
-  // Look up the saved tension whenever the selected yarn or needle size changes.
   useEffect(() => {
     const found = yarnProfileId
       ? findTension(yarnProfileId, tension.needleSizeMm)
       : undefined;
-    // Syncing UI state with the external localStorage library.
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setStatus("");
-    setLookupFound(!!found);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    // setStatus("");
+    // setLookupFound(!!found);
     if (found) onChange(toGauge(found.data));
-    // Only re-run on selection changes, not on gauge edits.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yarnProfileId, tension.needleSizeMm]);
 
   function handleSave() {
@@ -61,10 +59,8 @@ export function YarnTension({
     <View style={styles.panel}>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepText}>03</Text>
-          </View>
-          <View style={styles.headingText}>
+          <Text style={styles.step}>03</Text>
+          <View style={styles.headingContent}>
             <Text style={styles.h2}>Yarn tension</Text>
             <Text style={styles.p}>
               {yarnProfileId
@@ -73,79 +69,46 @@ export function YarnTension({
             </Text>
           </View>
         </View>
-        <Pressable
-          style={[styles.button, styles.buttonSecondary]}
+        <TouchableOpacity
+          style={[
+            styles.button,
+            styles.secondary,
+            !yarnProfileId && styles.disabled,
+          ]}
           disabled={!yarnProfileId}
           onPress={handleSave}
         >
-          <Text style={styles.buttonText}>Save for this yarn + needle</Text>
-        </Pressable>
+          <Text style={styles.secondaryButtonText}>Save for yarn + needle</Text>
+        </TouchableOpacity>
       </View>
       {yarnProfileId && (
-        <Text style={styles.hint} role="status">
+        <Text style={styles.hint}>
           {status ||
             (lookupFound
               ? "Loaded saved tension for this yarn and needle size."
               : "No saved tension for this yarn and needle size yet; enter a gauge and save it.")}
         </Text>
       )}
-
       <View style={styles.fieldGrid}>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.labelText}>Stitches per 10 cm *</Text>
+        <View style={styles.field}>
+          <Text style={styles.fieldLabel}>Stitches per 10 cm *</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
-            maxLength={5}
-            onChangeText={(text) => {
-              const value = Number(text);
-              onChange({ stitchesPer10Cm: value });
-            }}
-            value={tension.stitchesPer10Cm.toString()}
+            value={String(tension.stitchesPer10Cm)}
+            onChangeText={(text) => onChange({ stitchesPer10Cm: Number(text) })}
           />
-          <Text style={styles.smallText}>sts</Text>
+          <Text style={styles.fieldSmall}>sts</Text>
         </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.labelText}>Rows per 10 cm *</Text>
+        <View style={styles.field}>
+          <Text style={styles.fieldLabel}>Rows per 10 cm *</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
-            maxLength={5}
-            onChangeText={(text) => {
-              const value = Number(text);
-              onChange({ rowsPer10Cm: value });
-            }}
-            value={tension.rowsPer10Cm.toString()}
+            value={String(tension.rowsPer10Cm)}
+            onChangeText={(text) => onChange({ rowsPer10Cm: Number(text) })}
           />
-          <Text style={styles.smallText}>rows</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.labelText}>Needle size</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={6}
-            onChangeText={(text) => {
-              const value = Number(text);
-              onChange({ needleSizeMm: value });
-            }}
-            value={tension.needleSizeMm.toString()}
-          />
-          <Text style={styles.smallText}>mm</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.labelText}>Negative ease</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={4}
-            onChangeText={(text) => {
-              const value = Number(text);
-              onChange({ negativeEasePercent: value });
-            }}
-            value={tension.negativeEasePercent.toString()}
-          />
-          <Text style={styles.smallText}>%</Text>
+          <Text style={styles.fieldSmall}>rows</Text>
         </View>
       </View>
       <Text style={styles.hint}>
@@ -158,91 +121,93 @@ export function YarnTension({
 
 const styles = StyleSheet.create({
   panel: {
-    backgroundColor: palette.panel,
-    padding: 16,
-    borderRadius: 8,
-    marginVertical: 8,
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    padding: 27,
+    borderRadius: 2,
   },
   sectionHeading: {
-    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 24,
   },
   sectionHeadingMain: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  stepContainer: {
-    marginRight: 12,
-  },
-  stepText: {
-    backgroundColor: palette.border,
-    color: palette.textPrimary,
-    borderRadius: 16,
-    paddingHorizontal: 4,
-    paddingVertical: 8,
-    fontWeight: "bold",
-    minWidth: 40,
-    textAlign: "center",
-  },
-  headingText: {
+    gap: 15,
     flex: 1,
   },
+  headingContent: {
+    flex: 1,
+  },
+  step: {
+    color: "#c75b36",
+    fontSize: 14,
+    fontFamily: "monospace",
+    paddingTop: 8,
+  },
   h2: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: palette.textPrimary,
-    marginBottom: 4,
+    fontFamily: "Georgia",
+    fontSize: 28,
+    fontWeight: "400",
+    color: "#24231f",
+    marginBottom: 6,
   },
   p: {
-    fontSize: 14,
-    color: palette.textPrimary,
-    lineHeight: 20,
+    color: "#77746b",
+    fontSize: 13,
+    lineHeight: 18,
   },
   button: {
-    paddingVertical: 8,
+    borderRadius: 2,
+    paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 6,
-    minWidth: 200,
   },
-  buttonSecondary: {
-    backgroundColor: palette.border,
+  secondary: {
+    backgroundColor: "#24231f",
   },
-  buttonText: {
-    color: palette.textPrimary,
-    fontWeight: "500",
+  disabled: {
+    opacity: 0.5,
+  },
+  secondaryButtonText: {
+    color: "#fffdf8",
+    fontSize: 12,
+    fontWeight: "700",
   },
   hint: {
-    fontSize: 13,
-    color: palette.hintText,
-    marginBottom: 8,
+    color: "#77746b",
+    fontSize: 12,
+    lineHeight: 18,
+    marginVertical: 18,
   },
   fieldGrid: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 16,
+    gap: 18,
   },
-  fieldContainer: {
+  field: {
     flex: 1,
-    minWidth: 120,
+    position: "relative",
+    gap: 7,
   },
-  labelText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: palette.textPrimary,
-    marginBottom: 4,
+  fieldLabel: {
+    fontSize: 12,
+    color: "#77746b",
   },
   input: {
+    backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 4,
-    padding: 8,
-    fontSize: 14,
-    backgroundColor: palette.panel,
-    color: palette.textPrimary,
+    borderColor: "#ddd8ca",
+    borderRadius: 2,
+    color: "#24231f",
+    minHeight: 44,
+    paddingHorizontal: 12,
   },
-  smallText: {
-    fontSize: 12,
-    color: palette.hintText,
-    marginTop: 4,
+  fieldSmall: {
+    position: "absolute",
+    right: 12,
+    bottom: 13,
+    color: "#77746b",
+    fontSize: 11,
   },
 });

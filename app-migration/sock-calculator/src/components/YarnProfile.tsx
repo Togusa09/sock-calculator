@@ -1,14 +1,16 @@
+import { MaterialMixEditor } from "@/components/MaterialMixEditor";
+import {
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
 import {
   DEFAULT_YARN_PROFILE,
   type YarnProfile as YarnProfileData,
 } from "@/lib/domain";
 import { deleteYarnProfile, type LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
-import { palette } from "@/theme/colors";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { MaterialMixEditor } from "./MaterialMixEditor";
-import { LoadedItemInfo, SavedItemsControl } from "./SavedItemsControl";
 
 type Props = {
   profile: YarnProfileData;
@@ -27,12 +29,12 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
   }
 
   return (
-    <View style={styles.section}>
+    <View style={styles.panel}>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
           <Text style={styles.step}>02</Text>
-          <View>
-            <Text style={styles.heading}>
+          <View style={styles.headingContent}>
+            <Text style={styles.h2}>
               Yarn profile
               {loadedItem && (
                 <Text style={styles.loadedItemName}>
@@ -42,7 +44,7 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
                 </Text>
               )}
             </Text>
-            <Text style={styles.subheading}>
+            <Text style={styles.p}>
               Save a profile to link tensions to this yarn.
             </Text>
           </View>
@@ -60,49 +62,13 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
         />
       </View>
       <View style={styles.fieldGrid}>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Manufacturer *</Text>
+        <View style={styles.field}>
+          <Text style={styles.fieldLabel}>Manufacturer *</Text>
           <TextInput
             style={styles.input}
             value={profile.manufacturer}
             onChangeText={(text) => onChange({ manufacturer: text })}
-            placeholder="Enter manufacturer"
-            accessible={true}
-            accessibilityLabel="Manufacturer field for yarn profile"
           />
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Weight</Text>
-          <View style={[styles.select]}>
-            {["fingering", "DK", "worsted"].map((weight) => (
-              <View
-                key={weight}
-                style={[
-                  styles.option,
-                  {
-                    backgroundColor:
-                      profile.weight === weight
-                        ? palette.border
-                        : "transparent",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.optionText,
-                    {
-                      color:
-                        profile.weight === weight
-                          ? palette.textPrimary
-                          : palette.hintText,
-                    },
-                  ]}
-                >
-                  {weight}
-                </Text>
-              </View>
-            ))}
-          </View>
         </View>
       </View>
       <MaterialMixEditor
@@ -115,86 +81,76 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
 }
 
 const styles = StyleSheet.create({
-  section: {
-    backgroundColor: palette.panel,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 8,
+  panel: {
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    padding: 27,
+    borderRadius: 2,
   },
   sectionHeading: {
-    marginBottom: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 24,
   },
   sectionHeadingMain: {
-    marginBottom: 8,
+    flexDirection: "row",
+    gap: 15,
+    flex: 1,
+  },
+  headingContent: {
+    flex: 1,
   },
   step: {
-    backgroundColor: palette.border,
-    color: palette.textPrimary,
-    borderRadius: 4,
-    paddingHorizontal: 4,
-    paddingVertical: 8,
-    marginRight: 12,
-    fontWeight: "600",
-  },
-  heading: {
-    fontSize: 20,
-    color: palette.textPrimary,
-    margin: 0,
-    fontFamily: "sans-serif",
-  },
-  subheading: {
-    color: palette.hintText,
-    marginTop: 4,
+    color: "#c75b36",
     fontSize: 14,
+    fontFamily: "monospace",
+    paddingTop: 8,
+  },
+  h2: {
+    fontFamily: "Georgia",
+    fontSize: 28,
+    fontWeight: "400",
+    color: "#24231f",
+    marginBottom: 6,
   },
   loadedItemName: {
-    color: palette.textPrimary,
-    fontStyle: "italic",
+    color: "#77746b",
+    fontWeight: "400",
+    fontSize: 11,
+  },
+  p: {
+    color: "#77746b",
+    fontSize: 13,
+    lineHeight: 18,
   },
   fieldGrid: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 16,
+    gap: 18,
     marginBottom: 16,
   },
-  fieldContainer: {
+  field: {
     flex: 1,
-    minWidth: 150,
+    gap: 7,
   },
-  label: {
-    display: "contents",
-    fontSize: 14,
-    fontWeight: "600",
-    color: palette.textPrimary,
-    marginBottom: 8,
+  fieldLabel: {
+    fontSize: 12,
+    color: "#77746b",
   },
   input: {
+    backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: palette.border,
-    padding: 12,
-    borderRadius: 6,
-    fontSize: 16,
-    backgroundColor: palette.inputBackground,
-    color: palette.textPrimary,
-  },
-  select: {
-    borderWidth: 1,
-    borderColor: palette.border,
-    padding: 8,
-    borderRadius: 6,
-    backgroundColor: palette.inputBackground,
-  },
-  option: {
-    padding: 8,
-    borderRadius: 4,
-  },
-  optionText: {
-    fontSize: 14,
+    borderColor: "#ddd8ca",
+    borderRadius: 2,
+    color: "#24231f",
+    minHeight: 44,
+    paddingHorizontal: 12,
   },
   hint: {
-    color: palette.hintText,
+    color: "#77746b",
     fontSize: 12,
-    fontStyle: "italic",
-    marginTop: 8,
+    lineHeight: 18,
+    marginTop: 20,
   },
 });

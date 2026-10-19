@@ -3,16 +3,8 @@ import {
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
 import { DEFAULT_RECORD, type ConstructionOptions } from "@/lib/domain";
-import { palette } from "@/theme/colors";
 import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 
 type Props = {
   construction: ConstructionOptions;
@@ -28,15 +20,12 @@ export function Construction({
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
 
   return (
-    <View style={styles.panel} className="panel">
-      <View style={styles.sectionHeading} className="section-heading">
-        <View
-          style={styles.sectionHeadingMain}
-          className="section-heading-main"
-        >
-          <Text style={[styles.step, { color: palette.orange }]}>04</Text>
-          <View>
-            <Text style={styles.headingTitle}>
+    <View style={styles.panel}>
+      <View style={styles.sectionHeading}>
+        <View style={styles.sectionHeadingMain}>
+          <Text style={styles.step}>04</Text>
+          <View style={styles.headingContent}>
+            <Text style={styles.h2}>
               Construction
               {loadedItem && (
                 <Text style={styles.loadedItemName}>
@@ -46,9 +35,7 @@ export function Construction({
                 </Text>
               )}
             </Text>
-            <Text style={styles.sectionSubtitle}>
-              Choose the shape you plan to knit.
-            </Text>
+            <Text style={styles.p}>Choose the shape you plan to knit.</Text>
           </View>
         </View>
         <SavedItemsControl
@@ -59,185 +46,116 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </View>
-
-      <ScrollView contentContainerStyle={styles.fieldsContainer}>
-        {/* Cuff and Ribbing */}
-        <View style={styles.rowContainer}>
+      <View style={styles.override}>
+        <Switch
+          value={construction.negativeEasePercent !== undefined}
+          onValueChange={(checked) =>
+            onChange({
+              negativeEasePercent: checked ? tensionNegativeEase : undefined,
+            })
+          }
+        />
+        <Text style={styles.overrideText}>Override project ease</Text>
+      </View>
+      {construction.negativeEasePercent !== undefined && (
+        <View style={[styles.field, styles.compact]}>
+          <Text style={styles.fieldLabel}>Project negative ease</Text>
           <TextInput
-            placeholder="Cuff"
-            editable={false}
-            style={styles.fieldLabel}
-          />
-
-          <Pressable onPress={() => {}}>
-            <Text
-              style={[
-                styles.select,
-                construction.cuffStyle === "ribbed" && styles.selectActive,
-              ]}
-            >
-              {construction.cuffStyle === "ribbed"
-                ? "Ribbed cuff"
-                : "Folded cuff"}
-            </Text>
-          </Pressable>
-
-          {construction.cuffStyle === "ribbed" && (
-            <>
-              <Text style={styles.fieldLabel}>Ribbing repeat</Text>
-              <Pressable onPress={() => {}}>
-                <Text style={[styles.select, styles.conditionalSelect]}>
-                  {["1x1", "1x2", "2x2", "3x3"][
-                    Math.max(0, construction.ribbing - 1)
-                  ] || "1x1"}
-                </Text>
-              </Pressable>
-            </>
-          )}
-        </View>
-
-        {/* Heel */}
-        <View style={styles.rowContainer}>
-          <Text style={styles.fieldLabel}>Heel</Text>
-          <Pressable onPress={() => {}}>
-            <Text style={[styles.select, styles.conditionalSelect]}>
-              {construction.heelStyle === "gussetted"
-                ? "Gussetted"
-                : construction.heelStyle === "afterthought"
-                  ? "Afterthought"
-                  : "Short-row"}
-            </Text>
-          </Pressable>
-        </View>
-
-        {/* Toe */}
-        <View style={styles.rowContainer}>
-          <Text style={styles.fieldLabel}>Toe</Text>
-          <Pressable onPress={() => {}}>
-            <Text style={[styles.select, styles.conditionalSelect]}>
-              {construction.toeStyle === "round" ? "Round" : "Star"}
-            </Text>
-          </Pressable>
-        </View>
-
-        {/* Override checkbox */}
-        <Pressable
-          onPress={() => onChange({ negativeEasePercent: tensionNegativeEase })}
-          style={styles.override}
-          className="override"
-        >
-          <Text style={styles.overrideText}>Override project ease</Text>
-          {construction.negativeEasePercent !== undefined && (
-            <TextInput
-              style={styles.percentageInput}
-              value={`${construction.negativeEasePercent}%`}
-              editable={false}
-            />
-          )}
-        </Pressable>
-
-        {/* Negative ease input */}
-        {construction.negativeEasePercent !== undefined && (
-          <TextInput
-            style={[styles.compactInput, styles.percentageCompact]}
-            placeholder="Project negative ease"
+            style={styles.input}
             keyboardType="numeric"
             value={String(construction.negativeEasePercent)}
-            onChangeText={(value) =>
-              onChange({ negativeEasePercent: Number(value) })
+            onChangeText={(text) =>
+              onChange({ negativeEasePercent: Number(text) })
             }
-            // placeholderTextColor=palette.muted
           />
-        )}
-      </ScrollView>
+          <Text style={styles.fieldSmall}>%</Text>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   panel: {
-    backgroundColor: palette.panel,
+    backgroundColor: "#fffdf8",
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: "#ddd8ca",
     padding: 27,
+    borderRadius: 2,
   },
   sectionHeading: {
-    marginBottom: 24,
-    display: "flex",
+    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    flexDirection: "row",
-    gap: 15,
+    marginBottom: 24,
   },
   sectionHeadingMain: {
+    flexDirection: "row",
+    gap: 15,
+    flex: 1,
+  },
+  headingContent: {
     flex: 1,
   },
   step: {
-    fontFamily: "monospace",
+    color: "#c75b36",
     fontSize: 14,
-    color: palette.orange,
+    fontFamily: "monospace",
     paddingTop: 8,
   },
-  headingTitle: {},
-  loadedItemName: {
+  h2: {
+    fontFamily: "Georgia",
+    fontSize: 28,
     fontWeight: "400",
+    color: "#24231f",
+    marginBottom: 6,
+  },
+  loadedItemName: {
+    color: "#77746b",
+    fontWeight: "400",
+    fontSize: 11,
+  },
+  p: {
+    color: "#77746b",
     fontSize: 13,
-    color: palette.muted,
-  },
-  sectionSubtitle: {
-    color: palette.muted,
-    fontSize: 13,
-    marginBottom: 0,
-  },
-  fieldsContainer: {},
-  rowContainer: {
-    flexDirection: "row",
-    gap: 18,
-    marginBottom: 16,
-  },
-  fieldLabel: {
-    flex: 1,
-    fontSize: 12,
-    color: palette.muted,
-  },
-  select: {
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    padding: 10,
-    backgroundColor: palette.inputBackground,
-    fontSize: 13,
-    color: palette.textPrimary,
-    flex: 1,
-  },
-  selectActive: {},
-  conditionalSelect: {
-    minHeight: 44,
+    lineHeight: 18,
   },
   override: {
-    marginTop: 22,
     flexDirection: "row",
     alignItems: "center",
     gap: 9,
+    marginTop: 22,
   },
   overrideText: {
-    fontSize: 13,
-    color: palette.muted,
-  },
-  percentageInput: {
-    width: 80,
-    fontWeight: "600",
+    color: "#77746b",
     fontSize: 13,
   },
-  compactInput: {
-    marginTop: 20,
-    padding: 10,
+  compact: {
+    maxWidth: 210,
+    marginTop: 18,
+  },
+  field: {
+    position: "relative",
+    gap: 7,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    color: "#77746b",
+  },
+  input: {
+    backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: "#ddd8ca",
     borderRadius: 2,
-    backgroundColor: palette.inputBackground,
-    fontSize: 13,
-    color: palette.textPrimary,
+    color: "#24231f",
     minHeight: 44,
+    paddingHorizontal: 12,
+  },
+  fieldSmall: {
+    position: "absolute",
+    right: 12,
+    bottom: 13,
+    color: "#77746b",
+    fontSize: 11,
   },
 });

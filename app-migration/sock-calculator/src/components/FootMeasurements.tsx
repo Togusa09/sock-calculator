@@ -1,16 +1,15 @@
-import { palette } from "@/theme/colors";
-import { useState } from "react";
+import { NumberField } from "@/components/NumberField";
 import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import type { DisplayUnit, Measurements } from "../lib/domain";
-import { NumberField } from "./NumberField";
-import type { LoadedItemInfo } from "./SavedItemsControl";
+  SavedItemsControl,
+  type LoadedItemInfo,
+} from "@/components/SavedItemsControl";
+import {
+  DEFAULT_RECORD,
+  type DisplayUnit,
+  type Measurements,
+} from "@/lib/domain";
+import { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   measurements: Measurements;
@@ -20,19 +19,15 @@ type Props = {
 
 export function FootMeasurements({ measurements, unit, onChange }: Props) {
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
-
-  const handleLoadSaved = async () => {
-    // Placeholder for saved items loading logic
-    Alert.alert("Saved Items", "Loading feature not yet implemented");
-  };
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <View style={styles.panel} testID="foot-measurements">
+    <View style={styles.panel}>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepNumber}>01</Text>
-            <Text style={styles.sectionTitle}>
+          <Text style={styles.step}>01</Text>
+          <View style={styles.headingContent}>
+            <Text style={styles.h2}>
               Foot measurements
               {loadedItem && (
                 <Text style={styles.loadedItemName}>
@@ -42,135 +37,190 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
                 </Text>
               )}
             </Text>
-            <Text style={styles.sectionSubtitle}>
-              Two measurements are enough to begin.
-            </Text>
+            <Text style={styles.p}>Two measurements are enough to begin.</Text>
           </View>
         </View>
-
-        <Pressable onPress={handleLoadSaved} style={styles.skeletonContainer}>
-          <View style={styles.skeleton} testID="saved-items-skeleton" />
-        </Pressable>
+        <SavedItemsControl
+          type="measurements"
+          data={measurements}
+          defaultData={DEFAULT_RECORD.measurements}
+          onLoad={onChange}
+          onLoadedItemChange={setLoadedItem}
+        />
       </View>
 
-      <ScrollView contentContainerStyle={styles.fieldGridContent}>
-        {[
-          "footLengthCm",
-          "footCircumferenceCm",
-          "heelDiagonalCm",
-          "ankleCircumferenceCm",
-          "heelHeightCm",
-          "instepCircumferenceCm",
-          "toeLengthCm",
-          "lowCalfCircumferenceCm",
-          "highCalfCircumferenceCm",
-        ].map((field) => {
-          const labelMap: Record<string, string> = {
-            footLengthCm: "Foot length",
-            footCircumferenceCm: "Ball circumference",
-            heelDiagonalCm: "Heel diagonal",
-            ankleCircumferenceCm: "Ankle circumference",
-            heelHeightCm: "Heel height",
-            instepCircumferenceCm: "Instep circumference",
-            toeLengthCm: "Toe length",
-            lowCalfCircumferenceCm: "Low calf circumference",
-            highCalfCircumferenceCm: "High calf circumference",
-          };
+      <View style={styles.fieldGrid}>
+        <View style={styles.fieldGridItem}>
+          <NumberField
+            label="Foot length"
+            value={measurements.footLengthCm}
+            unit={unit}
+            required
+            onChange={(value) => onChange({ footLengthCm: value ?? 0 })}
+          />
+        </View>
+        <View style={styles.fieldGridItem}>
+          <NumberField
+            label="Ball circumference"
+            value={measurements.footCircumferenceCm}
+            unit={unit}
+            required
+            onChange={(value) => onChange({ footCircumferenceCm: value ?? 0 })}
+          />
+        </View>
+      </View>
 
-          const valueMap: Record<string, number | undefined> = {
-            footLengthCm: measurements.footLengthCm,
-            footCircumferenceCm: measurements.footCircumferenceCm,
-            heelDiagonalCm: measurements.heelDiagonalCm,
-            ankleCircumferenceCm: measurements.ankleCircumferenceCm,
-            heelHeightCm: measurements.heelHeightCm,
-            instepCircumferenceCm: measurements.instepCircumferenceCm,
-            toeLengthCm: measurements.toeLengthCm,
-            lowCalfCircumferenceCm: measurements.lowCalfCircumferenceCm,
-            highCalfCircumferenceCm: measurements.highCalfCircumferenceCm,
-          };
+      <View style={styles.detailsContainer}>
+        <TouchableOpacity
+          onPress={() => setIsExpanded(!isExpanded)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.summary}>
+            {isExpanded ? "▼ More measurements" : "▶ More measurements"}
+          </Text>
+        </TouchableOpacity>
 
-          const label = labelMap[field];
-          const value = valueMap[field];
-
-          return (
-            <NumberField
-              key={field}
-              label={label}
-              value={value ?? 0}
-              unit={unit}
-              required={["footLengthCm", "footCircumferenceCm"].includes(field)}
-              onChange={(newValue) =>
-                onChange({ [field]: newValue ?? 0 }) as Partial<Measurements>
-              }
-            />
-          );
-        })}
-      </ScrollView>
+        {isExpanded && (
+          <View style={[styles.fieldGrid, styles.expandedGrid]}>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Heel diagonal"
+                value={measurements.heelDiagonalCm}
+                unit={unit}
+                onChange={(value) => onChange({ heelDiagonalCm: value })}
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Ankle circumference"
+                value={measurements.ankleCircumferenceCm}
+                unit={unit}
+                onChange={(value) => onChange({ ankleCircumferenceCm: value })}
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Heel height"
+                value={measurements.heelHeightCm}
+                unit={unit}
+                onChange={(value) => onChange({ heelHeightCm: value })}
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Instep circumference"
+                value={measurements.instepCircumferenceCm}
+                unit={unit}
+                onChange={(value) => onChange({ instepCircumferenceCm: value })}
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Toe length"
+                value={measurements.toeLengthCm}
+                unit={unit}
+                onChange={(value) => onChange({ toeLengthCm: value })}
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="Low calf circumference"
+                value={measurements.lowCalfCircumferenceCm}
+                unit={unit}
+                onChange={(value) =>
+                  onChange({ lowCalfCircumferenceCm: value })
+                }
+              />
+            </View>
+            <View style={styles.fieldGridItem}>
+              <NumberField
+                label="High calf circumference"
+                value={measurements.highCalfCircumferenceCm}
+                unit={unit}
+                onChange={(value) =>
+                  onChange({ highCalfCircumferenceCm: value })
+                }
+              />
+            </View>
+          </View>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   panel: {
-    backgroundColor: palette.panelBg,
-    paddingVertical: 16,
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    padding: 24,
+    borderRadius: 2,
   },
   sectionHeading: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: palette.panel,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.headingBorder,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 15,
+    marginBottom: 24,
   },
   sectionHeadingMain: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  stepContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepNumber: {
-    backgroundColor: palette.border,
-    borderRadius: 2,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    fontSize: 14,
-    fontWeight: "700",
-    color: palette.textPrimary,
-    width: 24,
-    textAlign: "center",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    gap: 15,
     flex: 1,
+    minWidth: 0,
+  },
+  headingContent: {
+    flex: 1,
+    minWidth: 0,
+  },
+  step: {
+    color: "#c75b36",
+    fontSize: 14,
+    fontFamily: "monospace",
+    paddingTop: 8,
+  },
+  h2: {
+    fontFamily: "Georgia",
+    fontSize: 24,
+    fontWeight: "400",
+    color: "#24231f",
+    marginBottom: 6,
   },
   loadedItemName: {
+    color: "#77746b",
+    fontWeight: "400",
     fontSize: 14,
-    color: palette.textPrimary,
-    fontStyle: "italic",
   },
-  sectionSubtitle: {
-    fontSize: 14,
-    color: palette.hintText,
-    marginTop: 4,
+  p: {
+    color: "#77746b",
+    fontSize: 13,
+    marginBottom: 0,
+    lineHeight: 18,
   },
-  skeletonContainer: {
-    flex: 0,
-    marginLeft: "auto",
+  fieldGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 16,
   },
-  skeleton: {
-    width: 80,
-    height: 32,
-    backgroundColor: palette.skeletonBackground,
-    borderRadius: 4,
+  fieldGridItem: {
+    width: "48%",
+    minWidth: 140,
+    flexGrow: 1,
   },
-  fieldGridContent: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    gap: 12,
+  expandedGrid: {
+    marginTop: 16,
+  },
+  detailsContainer: {
+    borderTopWidth: 1,
+    borderColor: "#ddd8ca",
+    marginTop: 24,
+    paddingTop: 16,
+  },
+  summary: {
+    color: "#61766b",
+    fontSize: 13,
+    fontWeight: "700",
   },
 });

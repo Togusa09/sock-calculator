@@ -1,5 +1,4 @@
-import { palette } from "@/theme/colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   onBack?: () => void;
@@ -9,41 +8,24 @@ type Props = {
 
 export function WizardNav({ onBack, onNext, nextLabel = "Next" }: Props) {
   return (
-    <View style={styles.wizardNav} className="wizard-nav">
+    <View style={styles.wizardNav}>
       {onBack ? (
-        <Pressable
-          className="button reset"
+        <TouchableOpacity
+          style={[styles.button, styles.reset]}
           onPress={onBack}
-          style={({ pressed }) => [
-            styles.button,
-            styles.buttonReset,
-            pressed && styles.buttonPressed,
-          ]}
         >
-          {({ pressed }) => (
-            <Text
-              style={[styles.buttonText, pressed && styles.buttonTextPressed]}
-            >
-              Back
-            </Text>
-          )}
-        </Pressable>
+          <Text style={styles.resetText}>Back</Text>
+        </TouchableOpacity>
       ) : (
         <View />
       )}
       {onNext && (
-        <Pressable
+        <TouchableOpacity
+          style={[styles.button, styles.secondary]}
           onPress={onNext}
-          style={({ pressed }) => [
-            styles.button,
-            styles.buttonSecondary,
-            pressed && styles.buttonPressed,
-          ]}
         >
-          <Text style={[styles.buttonText, styles.textSecondary]}>
-            {nextLabel}
-          </Text>
-        </Pressable>
+          <Text style={styles.secondaryText}>{nextLabel}</Text>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -55,37 +37,27 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 16,
   },
-  // Base button design
   button: {
     borderRadius: 2,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    alignItems: "center",
-    justifyContent: "center",
   },
-  // Active/Pressed State (Alternative to hover on mobile)
-  buttonPressed: {
-    transform: [{ translateY: -1 }],
-  },
-  buttonText: {
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 12 * 0.04, // Em maps to numeric multiplication in React Native
-    color: palette.textPrimary, // was #000000
-  },
-  buttonTextPressed: {
-    opacity: 0.8,
-  },
-  // Modifiers
-  buttonReset: {
+  reset: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: "#ddd8ca",
   },
-  buttonSecondary: {
-    backgroundColor: palette.textPrimary,
+  resetText: {
+    color: "#77746b",
+    fontSize: 12,
+    fontWeight: "700",
   },
-  textSecondary: {
-    color: palette.textSecondary,
+  secondary: {
+    backgroundColor: "#24231f",
+  },
+  secondaryText: {
+    color: "#fffdf8",
+    fontSize: 12,
+    fontWeight: "700",
   },
 });

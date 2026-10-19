@@ -1,5 +1,3 @@
-"use client";
-
 import { Construction } from "@/components/Construction";
 import { FootMeasurements } from "@/components/FootMeasurements";
 import { ResultsPanel } from "@/components/ResultsPanel";
@@ -12,22 +10,16 @@ import { WizardTabs, type WizardTab } from "@/components/WizardTabs";
 import { YarnProfile } from "@/components/YarnProfile";
 import { YarnTension } from "@/components/YarnTension";
 import { calculateStitches } from "@/lib/calculations";
+import { DEFAULT_RECORD, DEFAULT_YARN_PROFILE } from "@/lib/domain";
+import { validateRecord } from "@/lib/validation";
+import React, { useMemo, useState } from "react";
 import {
-  DEFAULT_RECORD,
-  DEFAULT_YARN_PROFILE,
-  type CalculatorRecord,
-  type DisplayUnit,
-} from "@/lib/domain";
-import { parseImportedRecord, validateRecord } from "@/lib/validation";
-import { Link } from "expo-router";
-import {
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type ReactNode,
-} from "react";
-import { FeatureToggle } from "../components/FeatureToggle";
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 type SectionId = "measurements" | "yarn" | "tension" | "construction";
@@ -54,7 +46,6 @@ export default function Home() {
   const [lastSection, setLastSection] = useState<SectionId>("measurements");
   const [message, setMessage] = useState("");
   const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
-  const importRef = useRef<HTMLInputElement>(null);
   const unit = record.displayUnit;
   const result = useMemo(() => calculateStitches(record), [record]);
 
@@ -96,10 +87,9 @@ export default function Home() {
     return SECTION_ORDER[SECTION_ORDER.indexOf(section) + offset];
   }
 
-  // Desktop has no results tab, so it keeps showing the last section.
   const desktopSection = activeTab === "results" ? lastSection : activeTab;
 
-  function panel(section: SectionId, children: ReactNode) {
+  function panel(section: SectionId, children: React.ReactNode) {
     const prev = stepFrom(section, -1);
     const next = stepFrom(section, 1);
     return (
@@ -115,118 +105,60 @@ export default function Home() {
       </WizardPanel>
     );
   }
-  function exportRecord() {
-    const blob = new Blob([JSON.stringify(record, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "sock-calculator-record.json";
-    link.click();
-    URL.revokeObjectURL(url);
-    setMessage("Record exported.");
-  }
-
-  async function importRecord(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    try {
-      setRecord(parseImportedRecord(await file.text()));
-      setMessage("Record imported.");
-    } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Could not import that record.",
-      );
-    }
-    event.target.value = "";
-  }
-
-  function loadProject(loaded: CalculatorRecord) {
-    const errors = validateRecord(loaded);
-    if (errors.length > 0) {
-      setMessage(errors[0]);
-      return;
-    }
-    setRecord(loaded);
-    setMessage("Project loaded.");
-  }
 
   return (
-    <main className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">FIELD NOTES / KNIT PLANNING</p>
-          <h1>
+    <ScrollView
+      style={styles.appShell}
+      contentContainerStyle={styles.scrollContent}
+    >
+      <View style={styles.topbar}>
+        <View style={styles.topbarLeft}>
+          <Text style={styles.eyebrow}>FIELD NOTES / KNIT PLANNING</Text>
+          <Text style={styles.h1}>
             Sock calculator
             {loadedItem && (
-              <span className="loaded-item-name">
+              <Text style={styles.loadedItemName}>
                 {" "}
                 — {loadedItem.name}
                 {loadedItem.dirty ? " (edited)" : ""}
-              </span>
+              </Text>
             )}
-          </h1>
-          <p className="intro">
+          </Text>
+          <Text style={styles.intro}>
             A calm starting point for a better-fitting pair. Enter the
             essentials and the construction math stays visible.
-          </p>
-        </div>
-        <div className="top-actions">
-          <label className="unit-toggle">
-            Display{" "}
-            <select
-              value={unit}
-              onChange={(event) =>
-                updateRecord({ displayUnit: event.target.value as DisplayUnit })
-              }
-            >
-              <option value="metric">Metric</option>
-              <option value="imperial">Imperial</option>
-            </select>
-          </label>
+          </Text>
+        </View>
+
+        <View style={styles.topActions}>
           <SavedItemsControl
             type="project"
             data={record}
             defaultData={DEFAULT_RECORD}
-            onLoad={loadProject}
+            onLoad={(loaded) => {
+              const validationErrors = validateRecord(loaded);
+              if (validationErrors.length > 0) {
+                setMessage(validationErrors[0]);
+                return;
+              }
+              setRecord(loaded);
+              setMessage("Project loaded.");
+            }}
             onLoadedItemChange={setLoadedItem}
           />
+        </View>
+      </View>
 
-          <FeatureToggle feature="config">
-            <Link className="button secondary" href="/config">
-              Configuration
-            </Link>
-          </FeatureToggle>
-
-          <button className="button secondary" onClick={exportRecord}>
-            Export JSON
-          </button>
-          <button
-            className="button secondary"
-            onClick={() => importRef.current?.click()}
-          >
-            Import JSON
-          </button>
-          <input
-            ref={importRef}
-            type="file"
-            accept="application/json"
-            hidden
-            onChange={importRecord}
-          />
-        </div>
-      </header>
-      {message && (
-        <p className="notice" role="status">
+      {message !== "" && (
+        <Text style={styles.notice} accessibilityRole="text">
           {message}
-        </p>
+        </Text>
       )}
-      <div className="workspace wizard" data-tab={activeTab}>
+
+      <View style={styles.workspace}>
         <WizardTabs tabs={tabs} activeId={activeTab} onSelect={selectTab} />
-        <section className="form-column">
+
+        <View style={styles.formColumn}>
           {panel(
             "measurements",
             <FootMeasurements
@@ -270,33 +202,141 @@ export default function Home() {
               onChange={updateConstruction}
             />,
           )}
-          <button
-            className="button reset"
-            onClick={() => {
+
+          <TouchableOpacity
+            style={[styles.button, styles.reset]}
+            onPress={() => {
               setRecord(DEFAULT_RECORD);
               setMessage("Defaults restored.");
             }}
           >
-            Restore defaults
-          </button>
-        </section>
-        <div
-          id="tabpanel-results"
-          role="tabpanel"
-          aria-labelledby="tab-results"
-          className={
-            activeTab === "results"
-              ? "wizard-results is-active"
-              : "wizard-results"
-          }
-        >
-          <ResultsPanel result={result} unit={unit} validation={errors} />
-        </div>
-      </div>
-      <footer className="page-footer">
-        <span>Sock calculator</span>
-        <a href="PrivacyPolicy.html">Privacy Policy</a>
-      </footer>
-    </main>
+            <Text style={styles.resetText}>Restore defaults</Text>
+          </TouchableOpacity>
+        </View>
+
+        {(activeTab === "results" || desktopSection) && (
+          <View
+            style={[
+              styles.wizardResults,
+              activeTab === "results" && styles.isActiveResults,
+            ]}
+          >
+            <ResultsPanel result={result} unit={unit} validation={errors} />
+          </View>
+        )}
+      </View>
+
+      <View style={styles.pageFooter}>
+        <Text style={styles.footerText}>Sock calculator STd</Text>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  appShell: {
+    flex: 1,
+    backgroundColor: "#f4f1ea",
+  },
+  scrollContent: {
+    paddingHorizontal: "5%",
+    paddingTop: 42,
+    paddingBottom: 72,
+  },
+  topbar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    gap: 32,
+    borderBottomWidth: 1,
+    borderColor: "#ddd8ca",
+    paddingBottom: 32,
+    flexWrap: "wrap",
+  },
+  topbarLeft: {
+    flex: 2,
+    minWidth: 280,
+  },
+  eyebrow: {
+    color: "#c75b36",
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 1.96,
+    marginBottom: 10,
+  },
+  h1: {
+    fontFamily: "Georgia",
+    fontSize: 48,
+    fontWeight: "400",
+    color: "#24231f",
+    lineHeight: 48,
+    marginBottom: 18,
+  },
+  loadedItemName: {
+    color: "#77746b",
+    fontWeight: "400",
+    fontSize: 18,
+  },
+  intro: {
+    color: "#77746b",
+    maxWidth: 470,
+    lineHeight: 22,
+    fontSize: 14,
+  },
+  topActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+    gap: 10,
+  },
+  notice: {
+    backgroundColor: "#e4eee8",
+    color: "#61766b",
+    padding: 16,
+    marginTop: 18,
+    fontSize: 13,
+  },
+  workspace: {
+    marginTop: 28,
+    gap: 28,
+  },
+  formColumn: {
+    gap: 16,
+  },
+  button: {
+    borderRadius: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  reset: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+  },
+  resetText: {
+    color: "#77746b",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  wizardResults: {
+    display: "none",
+  },
+  isActiveResults: {
+    display: "flex",
+  },
+  pageFooter: {
+    marginTop: 48,
+    paddingTop: 24,
+    borderTopWidth: 1,
+    borderColor: "#ddd8ca",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: 13,
+    color: "#77746b",
+  },
+});

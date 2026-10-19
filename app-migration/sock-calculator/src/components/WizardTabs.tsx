@@ -1,12 +1,10 @@
-import { palette } from "@/theme/colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export type WizardTab = {
   id: string;
   label: string;
   step: string;
   hasError?: boolean;
-  /** Only shown in the compact (mobile) layout. */
   mobileOnly?: boolean;
 };
 
@@ -17,31 +15,38 @@ type Props = {
 };
 
 export function WizardTabs({ tabs, activeId, onSelect }: Props) {
-  // Keyboard navigation simplified for React Native
-  // Accessibility handled via accessibilityProps on elements
-
   return (
-    <View className="wizard-tabs" accessible={true}>
+    <View style={styles.wizardTabs} accessibilityRole="tablist">
       {tabs.map((tab) => {
         const selected = tab.id === activeId;
         return (
-          <Pressable
+          <TouchableOpacity
             key={tab.id}
+            accessibilityRole="tab"
+            accessibilityState={{ selected }}
+            style={[
+              styles.wizardTab,
+              selected && styles.isActive,
+              tab.mobileOnly && styles.mobileOnly,
+            ]}
             onPress={() => onSelect(tab.id)}
-            className={[
-              "wizard-tab",
-              selected ? "is-active" : "",
-              tab.mobileOnly ? "mobile-only" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
           >
-            <Text style={styles.wizardTab}>
-              <Text style={styles.wizardTabStep}>{tab.step}</Text>
-              <Text style={styles.wizardTabLabel}>{tab.label}</Text>
-              {tab.hasError && <Text style={styles.wizardTabError}>!</Text>}
+            <Text style={styles.wizardTabStep}>{tab.step}</Text>
+            <Text
+              style={[styles.wizardTabLabel, selected && styles.isActiveLabel]}
+            >
+              {tab.label}
             </Text>
-          </Pressable>
+            {tab.hasError && (
+              <Text
+                style={styles.wizardTabError}
+                accessibilityRole="image"
+                accessibilityLabel="Needs attention"
+              >
+                !
+              </Text>
+            )}
+          </TouchableOpacity>
         );
       })}
     </View>
@@ -57,25 +62,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    padding: 12,
-    borderRadius: 2,
-    backgroundColor: palette.panel,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: "#ddd8ca",
+    borderRadius: 2,
   },
-  wizardTabActive: {
-    fontWeight: "600",
-    borderColor: palette.textPrimary,
+  isActive: {
+    backgroundColor: "#fffdf8",
+    borderColor: "#24231f",
   },
   wizardTabStep: {
     fontSize: 11,
     opacity: 0.6,
+    color: "#24231f",
   },
   wizardTabLabel: {
-    flex: 1,
+    color: "#24231f",
+  },
+  isActiveLabel: {
+    fontWeight: "600",
   },
   wizardTabError: {
-    color: palette.error,
+    marginLeft: "auto",
+    color: "#7d3320",
     fontWeight: "700",
+  },
+  mobileOnly: {
+    display: "none",
   },
 });

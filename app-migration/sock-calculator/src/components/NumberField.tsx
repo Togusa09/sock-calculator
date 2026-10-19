@@ -1,7 +1,6 @@
-import { palette } from "@/theme/colors";
+import type { DisplayUnit } from "@/lib/domain";
+import { fromCentimetres, measurementLabel, toCentimetres } from "@/lib/units";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import type { DisplayUnit } from "../lib/domain";
-import { fromCentimetres, measurementLabel, toCentimetres } from "../lib/units";
 
 type Props = {
   label: string;
@@ -18,62 +17,55 @@ export function NumberField({
   onChange,
   required = false,
 }: Props) {
-  const displayValue =
-    value === undefined ? "" : Number(fromCentimetres(value, unit).toFixed(2));
-
   return (
-    <View
-      style={styles.field}
-      testID={`number-field-${label.replace(/\s+/g, "-").toLowerCase()}`}
-    >
-      <Text style={styles.label}>
+    <View style={styles.field}>
+      <Text style={styles.fieldLabel}>
         {label}
         {required ? " *" : ""}
       </Text>
       <TextInput
-        style={[styles.input, required && styles.requiredInput]}
-        keyboardType="decimal-pad"
-        placeholder={`0 ${measurementLabel(unit)}`}
-        value={String(displayValue)}
-        onChangeText={(text) => {
-          const numericValue = text === "" ? undefined : Number(text);
-          onChange(
-            numericValue === NaN
-              ? undefined
-              : toCentimetres(numericValue, unit),
-          );
-        }}
+        style={styles.input}
+        keyboardType="numeric"
+        value={
+          value === undefined
+            ? ""
+            : String(Number(fromCentimetres(value, unit).toFixed(2)))
+        }
+        onChangeText={(text) =>
+          onChange(text === "" ? undefined : toCentimetres(Number(text), unit))
+        }
       />
+      <Text style={styles.fieldSmall}>{measurementLabel(unit)}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   field: {
-    marginBottom: 12,
+    position: "relative",
+    flexDirection: "column",
+    gap: 7,
   },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 4,
-    color: palette.textPrimary,
+  fieldLabel: {
+    fontSize: 12,
+    color: "#77746b",
   },
   input: {
+    width: "100%",
+    backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: "#ddd8ca",
     borderRadius: 2,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    fontSize: 14,
-    backgroundColor: palette.panel,
+    color: "#24231f",
+    minHeight: 44,
+    paddingLeft: 12,
+    paddingRight: 38,
   },
-  requiredInput: {
-    borderWidth: 2,
-    borderColor: palette.textPrimary,
-  },
-  unitLabel: {
-    fontSize: 12,
-    color: palette.hintText,
-    marginLeft: 4,
+  fieldSmall: {
+    position: "absolute",
+    right: 12,
+    bottom: 13,
+    color: "#77746b",
+    fontSize: 11,
   },
 });
