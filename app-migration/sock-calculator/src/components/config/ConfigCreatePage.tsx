@@ -2,7 +2,7 @@ import { ConfigEditor } from "@/components/config/ConfigEditPage";
 import { ConfigShell } from "@/components/config/ConfigShell";
 import { saveItem, type LibraryItemType } from "@/lib/library";
 import { Href, useRouter } from "expo-router";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 type Props<T> = {
   type: LibraryItemType;

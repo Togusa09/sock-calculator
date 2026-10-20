@@ -1,6 +1,8 @@
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
+import { Picker } from "@expo/ui";
 import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 type Props = {
   measurements: Measurements;
@@ -30,33 +32,71 @@ export function FootSizeForm({ measurements, onChange }: Props) {
 
   return (
     <>
-      <label className="unit-toggle">
-        Display{" "}
-        <select
-          value={unit}
-          onChange={(event) => setUnit(event.target.value as DisplayUnit)}
-        >
-          <option value="metric">Metric</option>
-          <option value="imperial">Imperial</option>
-        </select>
-      </label>
-      <div className="field-grid">
+      <View style={styles.unitToggle}>
+        <Text style={styles.unitToggleLabel}>Display</Text>
+        <View style={styles.selectWrapper}>
+          <Picker
+            selectedValue={unit}
+            onValueChange={(itemValue) => setUnit(itemValue as DisplayUnit)}
+          >
+            <Picker.Item label="Metric" value="metric" />
+            <Picker.Item label="Imperial" value="imperial" />
+          </Picker>
+        </View>
+      </View>
+      <View style={styles.fieldGrid}>
         {FIELDS.map(({ key, label, required }) => (
-          <NumberField
-            key={key}
-            label={label}
-            required={required}
-            unit={unit}
-            value={measurements[key]}
-            onChange={(value) =>
-              onChange({
-                ...measurements,
-                [key]: required ? (value ?? 0) : value,
-              })
-            }
-          />
+          <View key={key} style={styles.fieldWrapper}>
+            <NumberField
+              label={label}
+              required={required}
+              unit={unit}
+              value={measurements[key]}
+              onChange={(value) =>
+                onChange({
+                  ...measurements,
+                  [key]: required ? (value ?? 0) : value,
+                })
+              }
+            />
+          </View>
         ))}
-      </div>
+      </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  unitToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 18,
+  },
+  unitToggleLabel: {
+    color: "#77746b",
+    fontSize: 13,
+  },
+  selectWrapper: {
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    borderRadius: 2,
+    overflow: "hidden",
+    minWidth: 140,
+  },
+  select: {
+    color: "#24231f",
+    height: 44,
+  },
+  fieldGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 18,
+  },
+  fieldWrapper: {
+    width: "48%",
+    minWidth: 200,
+    flexGrow: 1,
+  },
+});
