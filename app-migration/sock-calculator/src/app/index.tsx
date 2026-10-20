@@ -7,6 +7,10 @@ import {
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
 import { ClearButton } from "@/components/ui/ClearButton";
+import {
+  PlatformPicker,
+  PlatformPickerItem,
+} from "@/components/ui/PlatformPicker";
 import { WizardPanel } from "@/components/WizardPanel";
 import { WizardTabs, type WizardTab } from "@/components/WizardTabs";
 import { YarnProfile } from "@/components/YarnProfile";
@@ -141,8 +145,6 @@ export default function Home() {
         <View style={styles.topActions}>
           <View style={styles.unitToggle}>
             <Text>Display</Text>
-            {/* Note: Replace with a React Native Picker or custom selector component for display unit */}
-
             <Picker
               selectedValue={unit}
               onValueChange={(value) =>
@@ -154,19 +156,18 @@ export default function Home() {
                 <Picker.Item key={f.value} label={f.label} value={f.value} />
               ))}
             </Picker>
-          </View>
-          {/* <label className="unit-toggle">
-            Display{" "}
-            <select
-              value={unit}
-              onChange={(event) =>
-                updateRecord({ displayUnit: event.target.value as DisplayUnit })
+            {/* TODO: map platform picker child items from children instead of property */}
+            <PlatformPicker
+              selectedValue={unit}
+              onValueChange={(value) =>
+                updateRecord({ displayUnit: value as DisplayUnit })
               }
-            >
-              <option value="metric">Metric</option>
-              <option value="imperial">Imperial</option>
-            </select>
-          </label> */}
+              items={displayUnits.map<PlatformPickerItem>((f) => ({
+                label: f.label,
+                value: f.value,
+              }))}
+            ></PlatformPicker>
+          </View>
           <SavedItemsControl
             type="project"
             data={record}
