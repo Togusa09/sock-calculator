@@ -4,8 +4,10 @@ import {
   type YarnTension as YarnTensionType,
 } from "@/lib/domain";
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
+import { palette } from "@/theme/colors";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Panel } from "./ui/Panel";
 
 type Props = {
   tension: YarnTensionType;
@@ -50,7 +52,7 @@ export function YarnTension({
   }
 
   return (
-    <View style={styles.panel}>
+    <Panel>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
           <Text style={styles.step}>03</Text>
@@ -109,18 +111,11 @@ export function YarnTension({
         A swatch under 10 cm can be less accurate. The gauge above is stored in
         metric regardless of display unit.
       </Text>
-    </View>
+    </Panel>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: "#fffdf8",
-    borderWidth: 1,
-    borderColor: "#ddd8ca",
-    padding: 27,
-    borderRadius: 2,
-  },
   sectionHeading: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -165,7 +160,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   secondaryButtonText: {
-    color: "#fffdf8",
+    color: palette.textSecondary,
     fontSize: 12,
     fontWeight: "700",
   },
@@ -191,7 +186,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     borderRadius: 2,
     color: "#24231f",
     minHeight: 44,

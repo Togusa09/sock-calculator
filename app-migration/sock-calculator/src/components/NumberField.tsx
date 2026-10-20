@@ -1,5 +1,6 @@
 import type { DisplayUnit } from "@/lib/domain";
 import { fromCentimetres, measurementLabel, toCentimetres } from "@/lib/units";
+import { palette } from "@/theme/colors";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props = {
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     borderRadius: 2,
     color: "#24231f",
     minHeight: 44,

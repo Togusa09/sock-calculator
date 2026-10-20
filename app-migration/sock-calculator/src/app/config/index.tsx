@@ -1,11 +1,13 @@
 import { ConfigShell } from "@/components/config/ConfigShell";
+import { Panel } from "@/components/ui/Panel";
+import { palette } from "@/theme/colors";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function ConfigIndexPage() {
   return (
     <ConfigShell title="Configuration">
-      <View style={styles.panel}>
+      <Panel>
         <View style={styles.configList}>
           <View style={styles.configListItem}>
             <View style={styles.itemContent}>
@@ -57,19 +59,12 @@ export default function ConfigIndexPage() {
             </View>
           </View>
         </View>
-      </View>
+      </Panel>
     </ConfigShell>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: "#fffdf8", // --panel
-    borderWidth: 1,
-    borderColor: "#ddd8ca", // --line
-    padding: 27,
-    borderRadius: 2,
-  },
   configList: {
     gap: 0,
   },
@@ -80,7 +75,7 @@ const styles = StyleSheet.create({
     gap: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd8ca", // --line
+    borderBottomColor: palette.border, // --line
   },
   itemContent: {
     flex: 1,
@@ -125,6 +120,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 0.48,
-    color: "#fffdf8", // --panel
+    color: palette.panel,
   },
 });

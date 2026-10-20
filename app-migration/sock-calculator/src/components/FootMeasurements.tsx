@@ -8,8 +8,10 @@ import {
   type DisplayUnit,
   type Measurements,
 } from "@/lib/domain";
+import { palette } from "@/theme/colors";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Panel } from "./ui/Panel";
 
 type Props = {
   measurements: Measurements;
@@ -22,7 +24,7 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <View style={styles.panel}>
+    <Panel>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
           <Text style={styles.step}>01</Text>
@@ -145,18 +147,11 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
           </View>
         )}
       </View>
-    </View>
+    </Panel>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: "#fffdf8",
-    borderWidth: 1,
-    borderColor: "#ddd8ca",
-    padding: 24,
-    borderRadius: 2,
-  },
   sectionHeading: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -214,7 +209,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     borderTopWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     marginTop: 24,
     paddingTop: 16,
   },

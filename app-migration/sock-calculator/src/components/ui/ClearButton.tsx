@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   reset: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
   },
   resetText: {
     color: "#77746b",

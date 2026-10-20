@@ -1,5 +1,6 @@
 import { palette } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ClearButton } from "./ui/ClearButton";
 
 type Props = {
   materials: MaterialComponent[];
@@ -42,13 +43,11 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
             <Text style={styles.percentLabel}>%</Text>
           </View>
           {materials.length > 1 && (
-            <Pressable
+            <ClearButton
               onPress={() => onChange(materials.filter((_, i) => i !== index))}
-              style={[styles.button, styles.buttonReset]}
-              testID={`remove-material-${index}`}
             >
-              <Text style={styles.buttonText}>Remove</Text>
-            </Pressable>
+              Remove
+            </ClearButton>
           )}
         </View>
       ))}

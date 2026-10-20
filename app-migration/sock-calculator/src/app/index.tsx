@@ -302,7 +302,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   appShell: {
     flex: 1,
-    backgroundColor: "#f4f1ea",
+    backgroundColor: palette.paper,
   },
   scrollContent: {
     paddingHorizontal: "5%",
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: 32,
     borderBottomWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     paddingBottom: 32,
     flexWrap: "wrap",
   },
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   reset: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
   },
   wizardResults: {
     display: "none",
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     marginTop: 48,
     paddingTop: 24,
     borderTopWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 0.48,
-    color: "#fffdf8", // --panel
+    color: palette.panel,
   },
   unitToggle: {
     display: "flex",

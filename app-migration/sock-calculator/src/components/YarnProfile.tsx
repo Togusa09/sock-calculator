@@ -9,8 +9,11 @@ import {
 } from "@/lib/domain";
 import { deleteYarnProfile, type LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
+import { palette } from "@/theme/colors";
+import { Picker } from "@expo/ui";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Panel } from "./ui/Panel";
 
 type Props = {
   profile: YarnProfileData;
@@ -29,7 +32,7 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
   }
 
   return (
-    <View style={styles.panel}>
+    <Panel>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionHeadingMain}>
           <Text style={styles.step}>02</Text>
@@ -70,24 +73,25 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
             onChangeText={(text) => onChange({ manufacturer: text })}
           />
         </View>
+        <Picker
+          selectedValue={profile.weight}
+          onValueChange={(weight) => onChange({ weight })}
+        >
+          <Picker.Item value="fingering" label="Fingering" />
+          <Picker.Item value="DK" label="DK" />
+          <Picker.Item value="worsted" label="Worsted" />
+        </Picker>
       </View>
       <MaterialMixEditor
         materials={profile.materials}
         onChange={(materials) => onChange({ materials })}
       />
       {errors.length > 0 && <Text style={styles.hint}>{errors[0]}</Text>}
-    </View>
+    </Panel>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: "#fffdf8",
-    borderWidth: 1,
-    borderColor: "#ddd8ca",
-    padding: 27,
-    borderRadius: 2,
-  },
   sectionHeading: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     borderRadius: 2,
     color: "#24231f",
     minHeight: 44,

@@ -1,3 +1,4 @@
+import { palette } from "@/theme/colors";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export type WizardTab = {
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     borderRadius: 2,
   },
   isActive: {

@@ -1,3 +1,4 @@
+import { palette } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ClearButton } from "./ui/ClearButton";
 
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   reset: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
   },
   secondary: {
     backgroundColor: "#24231f",
