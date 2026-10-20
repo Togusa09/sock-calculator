@@ -1,5 +1,3 @@
-"use client";
-
 import { ConfigCreatePage } from "@/components/config/ConfigCreatePage";
 import { FootSizeForm } from "@/components/config/FootSizeForm";
 import { DEFAULT_RECORD, type Measurements } from "@/lib/domain";

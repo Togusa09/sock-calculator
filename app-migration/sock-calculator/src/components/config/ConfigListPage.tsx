@@ -1,9 +1,8 @@
-"use client";
-import { Link } from 'expo-router';
-import type { ReactNode } from "react";
 import { ConfigShell } from "@/components/config/ConfigShell";
 import { useLibraryItems } from "@/hooks/UseLibraryItems";
 import type { LibraryItem, LibraryItemType } from "@/lib/library";
+import { Link } from "expo-router";
+import type { ReactNode } from "react";
 
 type Props<T> = {
   type: LibraryItemType;

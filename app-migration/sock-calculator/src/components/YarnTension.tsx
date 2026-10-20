@@ -5,13 +5,7 @@ import {
 } from "@/lib/domain";
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
 import { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props = {
   tension: YarnTensionType;
@@ -42,7 +36,7 @@ export function YarnTension({
     // setStatus("");
     // setLookupFound(!!found);
     if (found) onChange(toGauge(found.data));
-  }, [yarnProfileId, tension.needleSizeMm]);
+  }, [yarnProfileId, tension.needleSizeMm, onChange]);
 
   function handleSave() {
     if (!yarnProfileId) return;
@@ -69,7 +63,7 @@ export function YarnTension({
             </Text>
           </View>
         </View>
-        <TouchableOpacity
+        <Pressable
           style={[
             styles.button,
             styles.secondary,
@@ -79,7 +73,7 @@ export function YarnTension({
           onPress={handleSave}
         >
           <Text style={styles.secondaryButtonText}>Save for yarn + needle</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       {yarnProfileId && (
         <Text style={styles.hint}>

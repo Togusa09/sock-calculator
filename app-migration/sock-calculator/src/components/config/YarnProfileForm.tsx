@@ -1,5 +1,3 @@
-"use client";
-
 import { MaterialMixEditor } from "@/components/MaterialMixEditor";
 import type { YarnProfile, YarnWeightUnit } from "@/lib/domain";
 

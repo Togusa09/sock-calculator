@@ -1,8 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
+import { useState } from "react";
 
 type Props = {
   measurements: Measurements;

@@ -1,23 +1,14 @@
-"use client";
-
-import { Link } from 'expo-router';
-import { useState, type ReactNode } from "react";
-import {
-  ConfigNotFound,
-  ConfigShell,
-} from "@/components/config/ConfigShell";
+import { ConfigNotFound, ConfigShell } from "@/components/config/ConfigShell";
 import { useLibraryItem } from "@/hooks/UseLibraryItems";
-import {
-  isNameTaken,
-  updateItem,
-  type LibraryItemType,
-} from "@/lib/library";
+import { isNameTaken, updateItem, type LibraryItemType } from "@/lib/library";
+import { Href, Link } from "expo-router";
+import { useState, type ReactNode } from "react";
 
 type Props<T> = {
   type: LibraryItemType;
   id: string;
   entityLabel: string;
-  indexHref: string;
+  indexHref: Href;
   indexLabel: string;
   validate: (data: T) => string[];
   renderFields: (data: T, onChange: (data: T) => void) => ReactNode;

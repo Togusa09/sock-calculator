@@ -1,4 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ClearButton } from "./ui/ClearButton";
 
 type Props = {
   onBack?: () => void;
@@ -9,23 +10,11 @@ type Props = {
 export function WizardNav({ onBack, onNext, nextLabel = "Next" }: Props) {
   return (
     <View style={styles.wizardNav}>
-      {onBack ? (
-        <TouchableOpacity
-          style={[styles.button, styles.reset]}
-          onPress={onBack}
-        >
-          <Text style={styles.resetText}>Back</Text>
-        </TouchableOpacity>
-      ) : (
-        <View />
-      )}
+      {onBack ? <ClearButton onPress={onBack}>Back</ClearButton> : <View />}
       {onNext && (
-        <TouchableOpacity
-          style={[styles.button, styles.secondary]}
-          onPress={onNext}
-        >
+        <Pressable style={[styles.button, styles.secondary]} onPress={onNext}>
           <Text style={styles.secondaryText}>{nextLabel}</Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   );
@@ -46,11 +35,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#ddd8ca",
-  },
-  resetText: {
-    color: "#77746b",
-    fontSize: 12,
-    fontWeight: "700",
   },
   secondary: {
     backgroundColor: "#24231f",

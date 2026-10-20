@@ -1,5 +1,3 @@
-"use client";
-
 import { ConfigListPage } from "@/components/config/ConfigListPage";
 import type { Measurements } from "@/lib/domain";
 

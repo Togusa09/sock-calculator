@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Href, Link } from "expo-router";
 import type { ReactNode } from "react";
 
 type ShellProps = {
@@ -31,7 +31,7 @@ export function ConfigShell({ title, eyebrow, children }: ShellProps) {
 
 type NotFoundProps = {
   entityLabel: string;
-  indexHref: string;
+  indexHref: Href;
   indexLabel: string;
 };
 

@@ -1,14 +1,12 @@
-"use client";
-
-import { Suspense } from "react";
 import { ConfigEditPage } from "@/components/config/ConfigEditPage";
 import { YarnProfileForm } from "@/components/config/YarnProfileForm";
 import type { YarnProfile } from "@/lib/domain";
 import { validateYarnProfile } from "@/lib/validation";
+import { useLocalSearchParams } from "expo-router";
+import { Suspense } from "react";
 
 function EditYarnProfile() {
-  // const id = useSearchParams().get("id") ?? "";
-  const id = "";
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
     <ConfigEditPage<YarnProfile>

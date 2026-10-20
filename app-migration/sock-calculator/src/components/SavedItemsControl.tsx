@@ -6,16 +6,19 @@ import {
   type LibraryItem,
   type LibraryItemType,
 } from "@/lib/library";
+import { palette } from "@/theme/colors";
 import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { ClearButton } from "./ui/ClearButton";
 
 export type LoadedItemInfo = {
   id?: string;
@@ -120,12 +123,7 @@ export function SavedItemsControl<T>({
   return (
     <View style={styles.savedItems}>
       <View style={styles.savedItemsHeader}>
-        <TouchableOpacity
-          style={[styles.button, styles.reset]}
-          onPress={handleNew}
-        >
-          <Text style={styles.resetText}>New</Text>
-        </TouchableOpacity>
+        <ClearButton onPress={handleNew}>New</ClearButton>
         <TouchableOpacity style={styles.savedItemsToggle} onPress={toggleOpen}>
           <View style={[styles.chevron, open && styles.chevronUp]} />
         </TouchableOpacity>
@@ -157,29 +155,21 @@ export function SavedItemsControl<T>({
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <View style={styles.listItem}>
-                    <TouchableOpacity
+                    <Pressable
                       style={styles.savedItemsName}
                       onPress={() => handleLoad(item)}
                     >
                       <Text style={styles.itemNameText}>{item.name}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, styles.reset]}
-                      onPress={() => handleDelete(item.id)}
-                    >
-                      <Text style={styles.resetText}>Delete</Text>
-                    </TouchableOpacity>
+                    </Pressable>
+                    <ClearButton onPress={() => handleDelete(item.id)}>
+                      Delete
+                    </ClearButton>
                   </View>
                 )}
               />
             )}
             <View style={styles.savedItemsPanelActions}>
-              <TouchableOpacity
-                style={[styles.button, styles.reset]}
-                onPress={() => setOpen(false)}
-              >
-                <Text style={styles.resetText}>Close</Text>
-              </TouchableOpacity>
+              <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
             </View>
           </View>
         </View>
@@ -193,22 +183,19 @@ export function SavedItemsControl<T>({
               style={styles.p}
             >{`"${loadedItem?.name}" has unsaved changes.`}</Text>
             <View style={styles.confirmDialogActions}>
-              <TouchableOpacity
-                style={[styles.button, styles.reset]}
-                onPress={() => setConfirmingNew(false)}
-              >
-                <Text style={styles.resetText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.reset]}
+              <ClearButton onPress={() => setConfirmingNew(false)}>
+                Cancel
+              </ClearButton>
+              <ClearButton
                 onPress={() => {
                   setConfirmingNew(false);
                   startNew();
                 }}
               >
-                <Text style={styles.resetText}>Discard</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+                Discard
+              </ClearButton>
+
+              <Pressable
                 style={[styles.button, styles.secondary]}
                 onPress={() => {
                   if (loadedItem)
@@ -218,7 +205,7 @@ export function SavedItemsControl<T>({
                 }}
               >
                 <Text style={styles.secondaryText}>Save</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -240,18 +227,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     paddingVertical: 12,
     paddingHorizontal: 16,
-  },
-  reset: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#ddd8ca",
-    paddingVertical: 11,
-    paddingHorizontal: 12,
-  },
-  resetText: {
-    color: "#77746b",
-    fontSize: 12,
-    fontWeight: "700",
   },
   secondary: {
     backgroundColor: "#24231f",
@@ -293,10 +268,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(36, 35, 31, 0.4)",
   },
   savedItemsPanel: {
-    backgroundColor: "#fffdf8",
+    backgroundColor: palette.panel,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     padding: 24,
     width: "90%",
     maxWidth: 360,
@@ -315,7 +290,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#faf8f2",
     borderWidth: 1,
-    borderColor: "#ddd8ca",
+    borderColor: palette.border,
     borderRadius: 6,
     paddingHorizontal: 10,
     fontSize: 13,

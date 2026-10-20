@@ -27,6 +27,12 @@ export default function AppTabs() {
           <TabTrigger name="explore" href="/explore" asChild>
             <TabButton>Explore</TabButton>
           </TabTrigger>
+          <TabTrigger name="config" href="/config" asChild>
+            <TabButton>Config</TabButton>
+          </TabTrigger>
+          <TabTrigger name="yarn-profiles" href="/config/yarn-profiles" asChild>
+            <TabButton>yarn-profiles</TabButton>
+          </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>

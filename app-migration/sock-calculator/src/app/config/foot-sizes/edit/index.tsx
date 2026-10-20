@@ -1,14 +1,12 @@
-"use client";
-
-import { Suspense } from "react";
 import { ConfigEditPage } from "@/components/config/ConfigEditPage";
 import { FootSizeForm } from "@/components/config/FootSizeForm";
 import type { Measurements } from "@/lib/domain";
 import { validateMeasurements } from "@/lib/validation";
+import { useLocalSearchParams } from "expo-router";
+import { Suspense } from "react";
 
 function EditFootSize() {
-  //const id = useSearchParams().get("id") ?? "";
-  const id = "";
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
     <ConfigEditPage<Measurements>

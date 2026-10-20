@@ -1,5 +1,3 @@
-"use client";
-
 import { ConfigCreatePage } from "@/components/config/ConfigCreatePage";
 import { YarnProfileForm } from "@/components/config/YarnProfileForm";
 import { DEFAULT_YARN_PROFILE, type YarnProfile } from "@/lib/domain";
