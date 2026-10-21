@@ -11,7 +11,8 @@ import {
 import { palette } from "@/theme/colors";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Panel } from "./ui/Panel";
+import { Panel } from "../Panel/Panel";
+import { PanelHeading } from "../Panel/PanelHeading";
 
 type Props = {
   measurements: Measurements;
@@ -25,23 +26,12 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
 
   return (
     <Panel>
-      <View style={styles.sectionHeading}>
-        <View style={styles.sectionHeadingMain}>
-          <Text style={styles.step}>01</Text>
-          <View style={styles.headingContent}>
-            <Text style={styles.h2}>
-              Foot measurements
-              {loadedItem && (
-                <Text style={styles.loadedItemName}>
-                  {" "}
-                  — {loadedItem.name}
-                  {loadedItem.dirty ? " (edited)" : ""}
-                </Text>
-              )}
-            </Text>
-            <Text style={styles.p}>Two measurements are enough to begin.</Text>
-          </View>
-        </View>
+      <PanelHeading
+        step={1}
+        heading="Foot measurements"
+        prompt="Two measurements are enough to begin."
+        loadedItem={loadedItem}
+      >
         <SavedItemsControl
           type="measurements"
           data={measurements}
@@ -49,7 +39,7 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
           onLoad={onChange}
           onLoadedItemChange={setLoadedItem}
         />
-      </View>
+      </PanelHeading>
 
       <View style={styles.fieldGrid}>
         <View style={styles.fieldGridItem}>

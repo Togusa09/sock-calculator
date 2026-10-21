@@ -1,7 +1,7 @@
-import { MaterialMixEditor } from "@/components/MaterialMixEditor";
 import type { YarnProfile, YarnWeightUnit } from "@/lib/domain";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { PlatformPicker } from "../ui/PlatformPicker";
+import { MaterialMixEditor } from "../wizard/MaterialMixEditor";
 
 type Props = {
   profile: YarnProfile;

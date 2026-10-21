@@ -1,5 +1,5 @@
 import { ConfigShell } from "@/components/config/ConfigShell";
-import { Panel } from "@/components/ui/Panel";
+import { Panel } from "@/components/Panel/Panel";
 import { palette } from "@/theme/colors";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";

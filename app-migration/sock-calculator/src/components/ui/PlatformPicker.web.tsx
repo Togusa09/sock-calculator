@@ -93,9 +93,4 @@ const webStyles = {
     flex: 1,
   },
   selectActive: {},
-  // option: {
-  //   padding: "10px",
-  //   fontSize: "16px",
-  //   color: "#1F2937",
-  // },
 };

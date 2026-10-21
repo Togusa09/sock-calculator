@@ -1,6 +1,4 @@
-import { Construction } from "@/components/Construction";
 import { FeatureToggle } from "@/components/FeatureToggle";
-import { FootMeasurements } from "@/components/FootMeasurements";
 import { ResultsPanel } from "@/components/ResultsPanel";
 import {
   SavedItemsControl,
@@ -11,10 +9,12 @@ import {
   PlatformPicker,
   PlatformPickerItem,
 } from "@/components/ui/PlatformPicker";
+import { Construction } from "@/components/wizard/Construction";
+import { FootMeasurements } from "@/components/wizard/FootMeasurements";
+import { YarnProfile } from "@/components/wizard/YarnProfile";
+import { YarnTension } from "@/components/wizard/YarnTension";
 import { WizardPanel } from "@/components/WizardPanel";
 import { WizardTabs, type WizardTab } from "@/components/WizardTabs";
-import { YarnProfile } from "@/components/YarnProfile";
-import { YarnTension } from "@/components/YarnTension";
 import { calculateStitches } from "@/lib/calculations";
 import {
   DEFAULT_RECORD,

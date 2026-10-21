@@ -21,8 +21,9 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { Panel } from "./ui/Panel";
-import { PlatformPicker } from "./ui/PlatformPicker";
+import { Panel } from "../Panel/Panel";
+import { PanelHeading } from "../Panel/PanelHeading";
+import { PlatformPicker } from "../ui/PlatformPicker";
 
 type Props = {
   construction: ConstructionOptions;
@@ -39,23 +40,12 @@ export function Construction({
 
   return (
     <Panel>
-      <View style={styles.sectionHeading}>
-        <View style={styles.sectionHeadingMain}>
-          <Text style={styles.step}>04</Text>
-          <View style={styles.headingContent}>
-            <Text style={styles.h2}>
-              Construction
-              {loadedItem && (
-                <Text style={styles.loadedItemName}>
-                  {" "}
-                  — {loadedItem.name}
-                  {loadedItem.dirty ? " (edited)" : ""}
-                </Text>
-              )}
-            </Text>
-            <Text style={styles.p}>Choose the shape you plan to knit.</Text>
-          </View>
-        </View>
+      <PanelHeading
+        step={4}
+        heading="Construction"
+        prompt="Choose the shape you plan to knit."
+        loadedItem={loadedItem}
+      >
         <SavedItemsControl
           type="construction"
           data={construction}
@@ -63,7 +53,7 @@ export function Construction({
           onLoad={onChange}
           onLoadedItemChange={setLoadedItem}
         />
-      </View>
+      </PanelHeading>
       <ScrollView contentContainerStyle={styles.fieldsContainer}>
         {/* Cuff and Ribbing */}
         <View style={styles.rowContainer}>
@@ -195,45 +185,6 @@ export function Construction({
 }
 
 const styles = StyleSheet.create({
-  sectionHeading: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 24,
-    gap: 15,
-  },
-  sectionHeadingMain: {
-    flexDirection: "row",
-    gap: 15,
-    flex: 1,
-  },
-  headingContent: {
-    flex: 1,
-  },
-  step: {
-    fontFamily: "monospace",
-    fontSize: 14,
-    color: palette.orange,
-    paddingTop: 8,
-  },
-  h2: {
-    fontFamily: "Georgia",
-    fontSize: 28,
-    fontWeight: "400",
-    color: "#24231f",
-    marginBottom: 6,
-  },
-  loadedItemName: {
-    fontWeight: "400",
-    fontSize: 13,
-    color: palette.muted,
-  },
-  p: {
-    color: "#77746b",
-    fontSize: 13,
-    lineHeight: 18,
-  },
   override: {
     flexDirection: "row",
     alignItems: "center",

@@ -1,6 +1,6 @@
 import { palette } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { ClearButton } from "./ui/ClearButton";
+import { ClearButton } from "../ui/ClearButton";
 
 type Props = {
   materials: MaterialComponent[];

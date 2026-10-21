@@ -1,4 +1,3 @@
-import { MaterialMixEditor } from "@/components/MaterialMixEditor";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
@@ -8,13 +7,15 @@ import {
   YarnWeightUnit,
   type YarnProfile as YarnProfileData,
 } from "@/lib/domain";
-import { deleteYarnProfile, type LibraryItem } from "@/lib/library";
+import { deleteYarnProfile, LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
 import { palette } from "@/theme/colors";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { Panel } from "./ui/Panel";
-import { PlatformPicker } from "./ui/PlatformPicker";
+import { Panel } from "../Panel/Panel";
+import { PanelHeading } from "../Panel/PanelHeading";
+import { PlatformPicker } from "../ui/PlatformPicker";
+import { MaterialMixEditor } from "./MaterialMixEditor";
 
 type Props = {
   profile: YarnProfileData;
@@ -34,25 +35,12 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
 
   return (
     <Panel>
-      <View style={styles.sectionHeading}>
-        <View style={styles.sectionHeadingMain}>
-          <Text style={styles.step}>02</Text>
-          <View style={styles.headingContent}>
-            <Text style={styles.h2}>
-              Yarn profile
-              {loadedItem && (
-                <Text style={styles.loadedItemName}>
-                  {" "}
-                  — {loadedItem.name}
-                  {loadedItem.dirty ? " (edited)" : ""}
-                </Text>
-              )}
-            </Text>
-            <Text style={styles.p}>
-              Save a profile to link tensions to this yarn.
-            </Text>
-          </View>
-        </View>
+      <PanelHeading
+        step={2}
+        heading={"Yarn profile"}
+        prompt={"Save a profile to link tensions to this yarn."}
+        loadedItem={loadedItem}
+      >
         <SavedItemsControl
           type="yarnProfile"
           data={profile}
@@ -64,7 +52,7 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
           onDelete={handleDelete}
           onLoadedItemChange={setLoadedItem}
         />
-      </View>
+      </PanelHeading>
       <View style={styles.fieldGrid}>
         <View style={styles.field}>
           <Text style={styles.fieldLabel}>Manufacturer *</Text>
@@ -100,43 +88,6 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
 }
 
 const styles = StyleSheet.create({
-  sectionHeading: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 24,
-  },
-  sectionHeadingMain: {
-    flexDirection: "row",
-    gap: 15,
-    flex: 1,
-  },
-  headingContent: {
-    flex: 1,
-  },
-  step: {
-    color: "#c75b36",
-    fontSize: 14,
-    fontFamily: "monospace",
-    paddingTop: 8,
-  },
-  h2: {
-    fontFamily: "Georgia",
-    fontSize: 28,
-    fontWeight: "400",
-    color: "#24231f",
-    marginBottom: 6,
-  },
-  loadedItemName: {
-    color: "#77746b",
-    fontWeight: "400",
-    fontSize: 11,
-  },
-  p: {
-    color: "#77746b",
-    fontSize: 13,
-    lineHeight: 18,
-  },
   fieldGrid: {
     flexDirection: "row",
     gap: 18,

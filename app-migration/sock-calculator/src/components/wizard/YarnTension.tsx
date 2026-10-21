@@ -7,7 +7,7 @@ import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
 import { palette } from "@/theme/colors";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { Panel } from "./ui/Panel";
+import { Panel } from "../Panel/Panel";
 
 type Props = {
   tension: YarnTensionType;
