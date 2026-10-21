@@ -1,8 +1,8 @@
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
-import { Picker } from "@expo/ui";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { PlatformPicker } from "../ui/PlatformPicker";
 
 type Props = {
   measurements: Measurements;
@@ -35,13 +35,17 @@ export function FootSizeForm({ measurements, onChange }: Props) {
       <View style={styles.unitToggle}>
         <Text style={styles.unitToggleLabel}>Display</Text>
         <View style={styles.selectWrapper}>
-          <Picker
+          <PlatformPicker
             selectedValue={unit}
             onValueChange={(itemValue) => setUnit(itemValue as DisplayUnit)}
+            items={[
+              { label: "Metric", value: "metric" },
+              { label: "Imperial", value: "imperial" },
+            ]}
           >
-            <Picker.Item label="Metric" value="metric" />
-            <Picker.Item label="Imperial" value="imperial" />
-          </Picker>
+            {/* <Picker.Item label="Metric" value="metric" />
+            <Picker.Item label="Imperial" value="imperial" /> */}
+          </PlatformPicker>
         </View>
       </View>
       <View style={styles.fieldGrid}>

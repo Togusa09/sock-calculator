@@ -5,15 +5,16 @@ import {
 } from "@/components/SavedItemsControl";
 import {
   DEFAULT_YARN_PROFILE,
+  YarnWeightUnit,
   type YarnProfile as YarnProfileData,
 } from "@/lib/domain";
 import { deleteYarnProfile, type LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
 import { palette } from "@/theme/colors";
-import { Picker } from "@expo/ui";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Panel } from "./ui/Panel";
+import { PlatformPicker } from "./ui/PlatformPicker";
 
 type Props = {
   profile: YarnProfileData;
@@ -73,14 +74,21 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
             onChangeText={(text) => onChange({ manufacturer: text })}
           />
         </View>
-        <Picker
+        <PlatformPicker
           selectedValue={profile.weight}
-          onValueChange={(weight) => onChange({ weight })}
+          onValueChange={(weight) =>
+            onChange({ weight: weight as YarnWeightUnit })
+          }
+          items={[
+            { label: "Fingering", value: "fingering" },
+            { label: "DK", value: "DK" },
+            { label: "Worsted", value: "worsted" },
+          ]}
         >
-          <Picker.Item value="fingering" label="Fingering" />
+          {/* <Picker.Item value="fingering" label="Fingering" />
           <Picker.Item value="DK" label="DK" />
-          <Picker.Item value="worsted" label="Worsted" />
-        </Picker>
+          <Picker.Item value="worsted" label="Worsted" /> */}
+        </PlatformPicker>
       </View>
       <MaterialMixEditor
         materials={profile.materials}

@@ -2,9 +2,15 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
-import { DEFAULT_RECORD, type ConstructionOptions } from "@/lib/domain";
+import {
+  CuffStyle,
+  DEFAULT_RECORD,
+  HeelStyle,
+  Ribbing,
+  ToeStyle,
+  type ConstructionOptions,
+} from "@/lib/domain";
 import { palette } from "@/theme/colors";
-import { Picker } from "@expo/ui";
 import { useState } from "react";
 import {
   Pressable,
@@ -16,6 +22,7 @@ import {
   View,
 } from "react-native";
 import { Panel } from "./ui/Panel";
+import { PlatformPicker } from "./ui/PlatformPicker";
 
 type Props = {
   construction: ConstructionOptions;
@@ -61,27 +68,41 @@ export function Construction({
         {/* Cuff and Ribbing */}
         <View style={styles.rowContainer}>
           <Text style={styles.fieldLabel}>Cuff</Text>
-          <Picker
+          <PlatformPicker
             selectedValue={construction.cuffStyle}
-            onValueChange={(cuffStyle) => onChange({ cuffStyle })}
+            onValueChange={(cuffStyle) =>
+              onChange({ cuffStyle: cuffStyle as CuffStyle })
+            }
+            items={[
+              { value: "ribbed", label: "Ribbed Cuff" },
+              { value: "folded", label: "Folded Cuff" },
+            ]}
           >
-            <Picker.Item value="ribbed" label="Ribbed cuff" />
-            <Picker.Item value="folded" label="Folded cuff" />
-          </Picker>
+            {/* <Picker.Item value="ribbed" label="Ribbed Cuff" />
+            <Picker.Item value="folded" label="Folded cuff" /> */}
+          </PlatformPicker>
 
           {construction.cuffStyle === "ribbed" && (
             <>
               <Text style={styles.fieldLabel}>Ribbing repeat</Text>
 
-              <Picker
+              <PlatformPicker
                 selectedValue={construction.ribbing}
-                onValueChange={(ribbing) => onChange({ ribbing })}
+                onValueChange={(ribbing) =>
+                  onChange({ ribbing: ribbing as Ribbing })
+                }
+                items={[
+                  { value: "1x1", label: "1x1" },
+                  { value: "1x2", label: "1x2" },
+                  { value: "2x2", label: "2x2" },
+                  { value: "3x3", label: "3x3" },
+                ]}
               >
-                <Picker.Item value="1x1" label="1x1"></Picker.Item>
+                {/* <Picker.Item value="1x1" label="1x1"></Picker.Item>
                 <Picker.Item value="1x2" label="1x2"></Picker.Item>
                 <Picker.Item value="2x2" label="2x2"></Picker.Item>
-                <Picker.Item value="3x3" label="3x3"></Picker.Item>
-              </Picker>
+                <Picker.Item value="3x3" label="3x3"></Picker.Item> */}
+              </PlatformPicker>
             </>
           )}
         </View>
@@ -89,26 +110,39 @@ export function Construction({
         {/* Heel */}
         <View style={styles.rowContainer}>
           <Text style={styles.fieldLabel}>Heel</Text>
-          <Picker
+          <PlatformPicker
             selectedValue={construction.heelStyle}
-            onValueChange={(heelStyle) => onChange({ heelStyle })}
+            onValueChange={(heelStyle) =>
+              onChange({ heelStyle: heelStyle as HeelStyle })
+            }
+            items={[
+              { value: "gussetted", label: "Gussetted" },
+              { value: "afterthought", label: "Afterthought" },
+              { value: "short-row", label: "Short-row" },
+            ]}
           >
-            <Picker.Item value="gussetted" label="Gussetted" />
+            {/* <Picker.Item value="gussetted" label="Gussetted" />
             <Picker.Item value="afterthought" label="Afterthought" />
-            <Picker.Item value="short-row" label="Short-row" />
-          </Picker>
+            <Picker.Item value="short-row" label="Short-row" /> */}
+          </PlatformPicker>
         </View>
 
         {/* Toe */}
         <View style={styles.rowContainer}>
           <Text style={styles.fieldLabel}>Toe</Text>
-          <Picker
+          <PlatformPicker
             selectedValue={construction.toeStyle}
-            onValueChange={(toeStyle) => onChange({ toeStyle })}
+            onValueChange={(toeStyle) =>
+              onChange({ toeStyle: toeStyle as ToeStyle })
+            }
+            items={[
+              { value: "round", label: "Round" },
+              { value: "star", label: "Star" },
+            ]}
           >
-            <Picker.Item value="round" label="Round" />
-            <Picker.Item value="star" label="Star" />
-          </Picker>
+            {/* <Picker.Item value="round" label="Round" />
+            <Picker.Item value="star" label="Star" /> */}
+          </PlatformPicker>
         </View>
 
         {/* Override checkbox */}

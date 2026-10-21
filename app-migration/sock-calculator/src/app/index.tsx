@@ -23,7 +23,6 @@ import {
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
 import { palette } from "@/theme/colors";
-import { Picker } from "@expo/ui";
 import { Link } from "expo-router";
 import React, { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -145,17 +144,6 @@ export default function Home() {
         <View style={styles.topActions}>
           <View style={styles.unitToggle}>
             <Text>Display</Text>
-            <Picker
-              selectedValue={unit}
-              onValueChange={(value) =>
-                updateRecord({ displayUnit: value as DisplayUnit })
-              }
-              appearance="wheel"
-            >
-              {displayUnits.map((f) => (
-                <Picker.Item key={f.value} label={f.label} value={f.value} />
-              ))}
-            </Picker>
             {/* TODO: map platform picker child items from children instead of property */}
             <PlatformPicker
               selectedValue={unit}
@@ -294,7 +282,7 @@ export default function Home() {
       </View>
 
       <View style={styles.pageFooter}>
-        <Text style={styles.footerText}>Sock calculator STd</Text>
+        <Text style={styles.footerText}>Sock calculator</Text>
       </View>
     </ScrollView>
   );

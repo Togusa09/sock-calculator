@@ -1,4 +1,5 @@
 // components/PlatformPicker.web.tsx
+import { palette } from "@/theme/colors";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -33,7 +34,7 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
             <option
               key={item.value}
               value={item.value}
-              style={webStyles.option}
+              // style={webStyles.option}
             >
               {item.label}
             </option>
@@ -61,29 +62,40 @@ const styles = StyleSheet.create({
 const webStyles = {
   selectWrapper: {
     position: "relative" as const,
-    width: "100%",
+    // width: "100%",
   },
+  // select: {
+  //   width: "100%",
+  //   padding: "12px 16px",
+  //   fontSize: "16px",
+  //   color: "#1F2937",
+  //   backgroundColor: "#FFFFFF",
+  //   border: "1px solid #D1D5DB",
+  //   borderRadius: "8px",
+  //   outline: "none",
+  //   cursor: "pointer",
+  //   appearance: "none" as const,
+  //   WebkitAppearance: "none" as const,
+  //   MozAppearance: "none" as const,
+  //   backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%234B5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+  //   backgroundRepeat: "no-repeat",
+  //   backgroundPosition: "right 16px center",
+  //   backgroundSize: "16px",
+  // },
   select: {
-    width: "100%",
-    padding: "12px 16px",
-    fontSize: "16px",
-    color: "#1F2937",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #D1D5DB",
-    borderRadius: "8px",
-    outline: "none",
-    cursor: "pointer",
-    appearance: "none" as const,
-    WebkitAppearance: "none" as const,
-    MozAppearance: "none" as const,
-    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%234B5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 16px center",
-    backgroundSize: "16px",
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: 2,
+    padding: 10,
+    backgroundColor: palette.inputBackground,
+    fontSize: 13,
+    color: palette.textPrimary,
+    flex: 1,
   },
-  option: {
-    padding: "10px",
-    fontSize: "16px",
-    color: "#1F2937",
-  },
+  selectActive: {},
+  // option: {
+  //   padding: "10px",
+  //   fontSize: "16px",
+  //   color: "#1F2937",
+  // },
 };

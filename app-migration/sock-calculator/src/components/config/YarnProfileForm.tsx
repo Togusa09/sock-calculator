@@ -1,7 +1,7 @@
 import { MaterialMixEditor } from "@/components/MaterialMixEditor";
 import type { YarnProfile, YarnWeightUnit } from "@/lib/domain";
-import { Picker } from "@expo/ui";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { PlatformPicker } from "../ui/PlatformPicker";
 
 type Props = {
   profile: YarnProfile;
@@ -25,7 +25,7 @@ export function YarnProfileForm({ profile, onChange }: Props) {
         <View style={styles.field}>
           <Text style={styles.fieldLabel}>Weight</Text>
           <View style={styles.selectWrapper}>
-            <Picker
+            <PlatformPicker
               selectedValue={profile.weight}
               onValueChange={(itemValue) =>
                 onChange({
@@ -33,11 +33,16 @@ export function YarnProfileForm({ profile, onChange }: Props) {
                   weight: itemValue as YarnWeightUnit,
                 })
               }
+              items={[
+                { label: "Fingering", value: "fingering" },
+                { label: "DK", value: "DK" },
+                { label: "Worsted", value: "worsted" },
+              ]}
             >
-              <Picker.Item label="Fingering" value="fingering" />
+              {/* <Picker.Item label="Fingering" value="fingering" />
               <Picker.Item label="DK" value="DK" />
-              <Picker.Item label="Worsted" value="worsted" />
-            </Picker>
+              <Picker.Item label="Worsted" value="worsted" /> */}
+            </PlatformPicker>
           </View>
         </View>
       </View>
