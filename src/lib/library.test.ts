@@ -1,20 +1,43 @@
-// @vitest-environment jsdom
-import { beforeEach, describe, expect, it } from "vitest";
 import { DEFAULT_RECORD, DEFAULT_YARN_PROFILE } from "./domain";
 import {
   deleteItem,
   deleteYarnProfile,
   findTension,
   isNameTaken,
-  updateItem,
   listItems,
   nextAvailableName,
   saveItem,
   saveTension,
+  updateItem,
 } from "./library";
 
 beforeEach(() => {
-  window.localStorage.clear();
+  // Type the store explicitly to avoid 'implicit any' errors
+  let store: Record<string, string> = {};
+
+  // Mock the localStorage methods matching the Storage interface signature
+  const localStorageMock: Partial<Storage> = {
+    getItem: jest.fn((key: string): string | null => store[key] || null),
+    setItem: jest.fn((key: string, value: string): void => {
+      store[key] = value.toString();
+    }),
+    removeItem: jest.fn((key: string): void => {
+      delete store[key];
+    }),
+    clear: jest.fn(() => {
+      store = {};
+    }),
+  };
+
+  // Safely cast to unknown then Storage to satisfy Object.defineProperty
+  Object.defineProperty(window, "localStorage", {
+    value: localStorageMock as Storage,
+    writable: true,
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe("library storage", () => {

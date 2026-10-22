@@ -1,7 +1,11 @@
 import type { SavedTension, YarnProfile, YarnTension } from "./domain";
 
 export type LibraryItemType =
-  "measurements" | "tension" | "construction" | "project" | "yarnProfile";
+  | "measurements"
+  | "tension"
+  | "construction"
+  | "project"
+  | "yarnProfile";
 
 export type LibraryItem<T> = {
   id: string;

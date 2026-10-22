@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+
 import { generatePrivacyHtml } from "../../scripts/build-privacy-html.mjs";
 
 describe("Privacy Policy Static HTML", () => {
