@@ -15,7 +15,7 @@ export default function ConfigIndexPage() {
               <Text style={styles.hint}>Saved foot measurements.</Text>
             </View>
             <View style={styles.topActions}>
-              <Link href="/config/foot-sizes" asChild>
+              <Link href="/config/foot-sizes">
                 <View
                   style={StyleSheet.flatten([
                     styles.button,
@@ -25,7 +25,7 @@ export default function ConfigIndexPage() {
                   <Text style={styles.secondaryButtonText}>Manage</Text>
                 </View>
               </Link>
-              <Link href="/config/foot-sizes/new" asChild>
+              <Link href="/config/foot-sizes/new">
                 <View style={styles.button}>
                   <Text style={styles.buttonText}>Create new</Text>
                 </View>
@@ -41,7 +41,7 @@ export default function ConfigIndexPage() {
               </Text>
             </View>
             <View style={styles.topActions}>
-              <Link href="/config/yarn-profiles" asChild>
+              <Link href="/config/yarn-profiles">
                 <View
                   style={StyleSheet.flatten([
                     styles.button,
@@ -51,7 +51,7 @@ export default function ConfigIndexPage() {
                   <Text style={styles.secondaryButtonText}>Manage</Text>
                 </View>
               </Link>
-              <Link href="/config/yarn-profiles/new" asChild>
+              <Link href="/config/yarn-profiles/new">
                 <View style={styles.button}>
                   <Text style={styles.buttonText}>Create new</Text>
                 </View>

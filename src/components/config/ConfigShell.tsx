@@ -24,7 +24,7 @@ export function ConfigShell({ title, eyebrow, children }: ShellProps) {
               <Text style={styles.resetButtonText}>All configuration</Text>
             </View>
           </Link>
-          <Link href="/" asChild>
+          <Link href="/">
             <View
               style={StyleSheet.flatten([styles.button, styles.resetButton])}
             >
@@ -56,7 +56,7 @@ export function ConfigNotFound({
         We couldn&apos;t find that {entityLabel.toLowerCase()}. It may have been
         deleted, or the link may be wrong.
       </Text>
-      <Link href={indexHref} asChild>
+      <Link href={indexHref}>
         <View
           style={StyleSheet.flatten([styles.button, styles.secondaryButton])}
         >
