@@ -1,7 +1,6 @@
-"use client";
-
-import type { ReactNode } from "react";
-import { WizardNav } from "@/src/components/WizardNav";
+import { WizardNav } from "@/components/WizardNav";
+import { type ReactNode } from "react";
+import { StyleSheet, View } from "react-native";
 
 type Props = {
   id: string;
@@ -13,9 +12,7 @@ type Props = {
   children: ReactNode;
 };
 
-/** Stays mounted when inactive so child state (e.g. loaded saved items) survives tab changes. */
 export function WizardPanel({
-  id,
   active,
   desktopActive,
   onBack,
@@ -23,22 +20,22 @@ export function WizardPanel({
   nextLabel,
   children,
 }: Props) {
-  const className = [
-    "wizard-panel",
-    active ? "is-active" : "",
-    desktopActive ? "is-desktop-active" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const isVisible = active || desktopActive;
+
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <div
-      id={`tabpanel-${id}`}
-      role="tabpanel"
-      aria-labelledby={`tab-${id}`}
-      className={className}
-    >
+    <View style={styles.wizardPanel}>
       {children}
       <WizardNav onBack={onBack} onNext={onNext} nextLabel={nextLabel} />
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wizardPanel: {
+    display: "flex",
+  },
+});

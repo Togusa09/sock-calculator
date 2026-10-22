@@ -1,23 +1,15 @@
-"use client";
-
-import Link from "next/link";
+import { ConfigNotFound, ConfigShell } from "@/components/config/ConfigShell";
+import { useLibraryItem } from "@/hooks/UseLibraryItems";
+import { isNameTaken, updateItem, type LibraryItemType } from "@/lib/library";
+import { Href, Link } from "expo-router";
 import { useState, type ReactNode } from "react";
-import {
-  ConfigNotFound,
-  ConfigShell,
-} from "@/src/components/config/ConfigShell";
-import { useLibraryItem } from "@/src/hooks/UseLibraryItems";
-import {
-  isNameTaken,
-  updateItem,
-  type LibraryItemType,
-} from "@/src/lib/library";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props<T> = {
   type: LibraryItemType;
   id: string;
   entityLabel: string;
-  indexHref: string;
+  indexHref: Href;
   indexLabel: string;
   validate: (data: T) => string[];
   renderFields: (data: T, onChange: (data: T) => void) => ReactNode;
@@ -37,9 +29,9 @@ export function ConfigEditPage<T>({
   return (
     <ConfigShell title={`Edit ${entityLabel.toLowerCase()}`}>
       {state.status === "loading" && (
-        <section className="panel">
-          <p>Loading…</p>
-        </section>
+        <View style={styles.panel}>
+          <Text style={styles.p}>Loading…</Text>
+        </View>
       )}
       {state.status === "notFound" && (
         <ConfigNotFound
@@ -115,34 +107,121 @@ export function ConfigEditor<T>({
   }
 
   return (
-    <section className="panel">
-      <label className="field">
-        <span>Name *</span>
-        <input
-          type="text"
+    <View style={styles.panel}>
+      <View style={styles.field}>
+        <Text style={styles.fieldLabel}>Name *</Text>
+        <TextInput
+          style={styles.input}
           value={name}
-          onChange={(event) => changeName(event.target.value)}
+          onChangeText={changeName}
         />
-      </label>
+      </View>
       {renderFields(data, changeData)}
       {showErrors && errors.length > 0 && (
-        <p className="error-box" role="alert">
-          {errors[0]}
-        </p>
+        <View style={styles.errorBox} accessibilityRole="alert">
+          <Text style={styles.errorBoxText}>{errors[0]}</Text>
+        </View>
       )}
       {saved && (
-        <p className="notice" role="status">
-          Saved.
-        </p>
+        <View style={styles.notice} accessibilityRole="status">
+          <Text style={styles.noticeText}>Saved.</Text>
+        </View>
       )}
-      <div className="top-actions">
-        <button className="button secondary" onClick={handleSave}>
-          Save
-        </button>
-        <Link className="button reset" href={indexHref}>
-          Back to list
+      <View style={styles.topActions}>
+        <View
+          style={[styles.button, styles.secondaryButton]}
+          onTouchEnd={handleSave}
+        >
+          <Text style={styles.secondaryButtonText}>Save</Text>
+        </View>
+        <Link href={indexHref} asChild>
+          <View style={StyleSheet.flatten([styles.button, styles.resetButton])}>
+            <Text style={styles.resetButtonText}>Back to list</Text>
+          </View>
         </Link>
-      </div>
-    </section>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  panel: {
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    padding: 27,
+    borderRadius: 2,
+  },
+  p: {
+    color: "#77746b",
+    fontSize: 13,
+  },
+  field: {
+    gap: 7,
+    marginBottom: 18,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    color: "#77746b",
+  },
+  input: {
+    backgroundColor: "#faf8f2",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+    borderRadius: 2,
+    color: "#24231f",
+    minHeight: 44,
+    paddingHorizontal: 12,
+  },
+  errorBox: {
+    backgroundColor: "#f6d9ce",
+    padding: 10,
+    marginBottom: 15,
+  },
+  errorBoxText: {
+    color: "#7d3320",
+    fontSize: 12,
+  },
+  notice: {
+    backgroundColor: "#e4eee8",
+    padding: 11,
+    marginTop: 18,
+  },
+  noticeText: {
+    color: "#61766b",
+    fontSize: 13,
+  },
+  topActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginTop: 20,
+  },
+  button: {
+    borderRadius: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  secondaryButton: {
+    backgroundColor: "#24231f",
+  },
+  secondaryButtonText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#fffdf8",
+  },
+  resetButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#ddd8ca",
+  },
+  resetButtonText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#77746b",
+  },
+});

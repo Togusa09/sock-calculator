@@ -3,7 +3,7 @@ import {
   listItems,
   type LibraryItem,
   type LibraryItemType,
-} from "@/src/lib/library";
+} from "@/lib/library";
 
 export type LibraryItemsState<T> =
   { status: "loading" } | { status: "ready"; items: LibraryItem<T>[] };

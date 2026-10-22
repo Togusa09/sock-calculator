@@ -1,15 +1,13 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import type { ReactNode } from "react";
-import { ConfigEditor } from "@/src/components/config/ConfigEditPage";
-import { ConfigShell } from "@/src/components/config/ConfigShell";
-import { saveItem, type LibraryItemType } from "@/src/lib/library";
+import { ConfigEditor } from "@/components/config/ConfigEditPage";
+import { ConfigShell } from "@/components/config/ConfigShell";
+import { saveItem, type LibraryItemType } from "@/lib/library";
+import { Href, useRouter } from "expo-router";
+import { type ReactNode } from "react";
 
 type Props<T> = {
   type: LibraryItemType;
   entityLabel: string;
-  indexHref: string;
+  indexHref: Href;
   defaultData: T;
   validate: (data: T) => string[];
   renderFields: (data: T, onChange: (data: T) => void) => ReactNode;

@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import {
   deleteItem,
   listItems,
@@ -8,7 +5,20 @@ import {
   saveItem,
   type LibraryItem,
   type LibraryItemType,
-} from "@/src/lib/library";
+} from "@/lib/library";
+import { palette } from "@/theme/colors";
+import { useEffect, useRef, useState } from "react";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { ClearButton } from "./ui/ClearButton";
 
 export type LoadedItemInfo = {
   id?: string;
@@ -40,12 +50,11 @@ export function SavedItemsControl<T>({
   const [open, setOpen] = useState(false);
   const [loadedItem, setLoadedItem] = useState<LibraryItem<T> | null>(null);
   const [confirmingNew, setConfirmingNew] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+
   const isDirty =
     loadedItem !== null &&
     JSON.stringify(data) !== JSON.stringify(loadedItem.data);
 
-  // Keep the latest callback without re-triggering the notify effect on every parent render.
   const onLoadedItemChangeRef = useRef(onLoadedItemChange);
   useEffect(() => {
     onLoadedItemChangeRef.current = onLoadedItemChange;
@@ -57,33 +66,6 @@ export function SavedItemsControl<T>({
         : null,
     );
   }, [loadedItem, isDirty]);
-
-  useEffect(() => {
-    if (!open) return;
-    function handlePointerDown(event: PointerEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!confirmingNew) return;
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setConfirmingNew(false);
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [confirmingNew]);
 
   function refresh() {
     setItems(listItems<T>(type));
@@ -138,134 +120,235 @@ export function SavedItemsControl<T>({
     setOpen(false);
   }
 
-  function confirmNewWithSave() {
-    if (loadedItem) {
-      onSaved?.(saveItem(type, data, loadedItem.name));
-      refresh();
-    }
-    setConfirmingNew(false);
-    startNew();
-  }
-
-  function confirmNewWithoutSave() {
-    setConfirmingNew(false);
-    startNew();
-  }
-
   return (
-    <div className="saved-items" ref={containerRef}>
-      <div className="saved-items-header">
-        <button type="button" className="button reset" onClick={handleNew}>
-          New
-        </button>
-        <button
-          type="button"
-          className="saved-items-toggle"
-          aria-expanded={open}
-          aria-label="Save or load"
-          onClick={toggleOpen}
-        >
-          <span className={open ? "chevron chevron-up" : "chevron"} />
-        </button>
-      </div>
-      {open && (
-        <div className="saved-items-overlay-container">
-          <div className="saved-items-panel">
-            <div className="saved-items-save-row">
-              <input
-                type="text"
+    <View style={styles.savedItems}>
+      <View style={styles.savedItemsHeader}>
+        <ClearButton onPress={handleNew}>New</ClearButton>
+        <TouchableOpacity style={styles.savedItemsToggle} onPress={toggleOpen}>
+          <View style={[styles.chevron, open && styles.chevronUp]} />
+        </TouchableOpacity>
+      </View>
+
+      <Modal visible={open} transparent animationType="fade">
+        <View style={styles.confirmOverlay}>
+          <View style={styles.savedItemsPanel}>
+            <View style={styles.savedItemsSaveRow}>
+              <TextInput
+                style={styles.input}
                 placeholder="Name to save as…"
                 value={nameDraft}
-                onChange={(event) => setNameDraft(event.target.value)}
-                aria-label="Name to save as"
+                onChangeText={setNameDraft}
               />
-              <button
-                type="button"
-                className="button secondary"
-                onClick={handleSave}
+              <TouchableOpacity
+                style={[styles.button, styles.secondary]}
+                onPress={handleSave}
               >
-                Save
-              </button>
-            </div>
-            <h3>Load saved item</h3>
+                <Text style={styles.secondaryText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.h3}>Load saved item</Text>
             {items.length === 0 ? (
-              <p className="saved-items-empty">Nothing saved yet.</p>
+              <Text style={styles.savedItemsEmpty}>Nothing saved yet.</Text>
             ) : (
-              <ul className="saved-items-list">
-                {items.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      className="saved-items-name"
-                      onClick={() => handleLoad(item)}
+              <FlatList
+                data={items}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <View style={styles.listItem}>
+                    <Pressable
+                      style={styles.savedItemsName}
+                      onPress={() => handleLoad(item)}
                     >
-                      {item.name}
-                    </button>
-                    <button
-                      type="button"
-                      className="button reset"
-                      onClick={() => handleDelete(item.id)}
-                    >
+                      <Text style={styles.itemNameText}>{item.name}</Text>
+                    </Pressable>
+                    <ClearButton onPress={() => handleDelete(item.id)}>
                       Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                    </ClearButton>
+                  </View>
+                )}
+              />
             )}
-            <div className="saved-items-panel-actions">
-              <button
-                type="button"
-                className="button reset"
-                onClick={() => setOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {confirmingNew && (
-        <div
-          className="confirm-overlay"
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) setConfirmingNew(false);
-          }}
-        >
-          <div
-            className="confirm-dialog"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="confirm-new-heading"
-          >
-            <h3 id="confirm-new-heading">Save before starting new?</h3>
-            <p>{`"${loadedItem?.name}" has unsaved changes.`}</p>
-            <div className="confirm-dialog-actions">
-              <button
-                type="button"
-                className="button reset"
-                onClick={() => setConfirmingNew(false)}
-              >
+            <View style={styles.savedItemsPanelActions}>
+              <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={confirmingNew} transparent animationType="fade">
+        <View style={styles.confirmOverlay}>
+          <View style={styles.confirmDialog}>
+            <Text style={styles.h3}>Save before starting new?</Text>
+            <Text
+              style={styles.p}
+            >{`"${loadedItem?.name}" has unsaved changes.`}</Text>
+            <View style={styles.confirmDialogActions}>
+              <ClearButton onPress={() => setConfirmingNew(false)}>
                 Cancel
-              </button>
-              <button
-                type="button"
-                className="button reset"
-                onClick={confirmNewWithoutSave}
+              </ClearButton>
+              <ClearButton
+                onPress={() => {
+                  setConfirmingNew(false);
+                  startNew();
+                }}
               >
                 Discard
-              </button>
-              <button
-                type="button"
-                className="button secondary"
-                onClick={confirmNewWithSave}
+              </ClearButton>
+
+              <Pressable
+                style={[styles.button, styles.secondary]}
+                onPress={() => {
+                  if (loadedItem)
+                    onSaved?.(saveItem(type, data, loadedItem.name));
+                  setConfirmingNew(false);
+                  startNew();
+                }}
               >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+                <Text style={styles.secondaryText}>Save</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  savedItems: {
+    position: "relative",
+  },
+  savedItemsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  button: {
+    borderRadius: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  secondary: {
+    backgroundColor: "#24231f",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  secondaryText: {
+    color: "#fffdf8",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  savedItemsToggle: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#fffdf8",
+    borderWidth: 1,
+    borderColor: "#24231f",
+    borderRadius: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  chevron: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 6,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#24231f",
+  },
+  chevronUp: {
+    transform: [{ rotate: "180deg" }],
+  },
+  confirmOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(36, 35, 31, 0.4)",
+  },
+  savedItemsPanel: {
+    backgroundColor: palette.panel,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: palette.border,
+    padding: 24,
+    width: "90%",
+    maxWidth: 360,
+    maxHeight: 520,
+    shadowColor: "#24231f",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.18,
+    shadowRadius: 32,
+  },
+  savedItemsSaveRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: "#faf8f2",
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    fontSize: 13,
+    color: "#24231f",
+    height: 38,
+  },
+  h3: {
+    fontSize: 13,
+    fontWeight: "700",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    color: "#24231f",
+    marginBottom: 10,
+  },
+  savedItemsEmpty: {
+    color: "#77746b",
+    fontSize: 13,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: 4,
+    paddingLeft: 12,
+    paddingVertical: 4,
+    marginBottom: 6,
+  },
+  savedItemsName: {
+    flex: 1,
+  },
+  itemNameText: {
+    fontSize: 13,
+    color: "#24231f",
+  },
+  savedItemsPanelActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 12,
+  },
+  confirmDialog: {
+    backgroundColor: "#fffdf8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: palette.border,
+    padding: 24,
+    width: "90%",
+    maxWidth: 360,
+  },
+  p: {
+    color: "#77746b",
+    fontSize: 13,
+  },
+  confirmDialogActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 8,
+    paddingTop: 30,
+  },
+});

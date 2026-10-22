@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { useFeatureToggle } from "../hooks/UseFeatureToggle";
+import { type ReactNode } from "react";
 
 export interface FeatureToggleProps {
   feature: string;
@@ -12,11 +11,11 @@ export function FeatureToggle({
   children,
   fallback = null,
 }: FeatureToggleProps) {
-  const [isEnabled] = useFeatureToggle();
+  // const [isEnabled] = useFeatureToggle();
 
-  if (!isEnabled(feature)) {
-    return <>{fallback}</>;
-  }
+  // if (!isEnabled(feature)) {
+  //   return <>{fallback}</>;
+  // }
 
   return <>{children}</>;
 }
