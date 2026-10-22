@@ -67,11 +67,11 @@ export function SavedItemsControl<T>({
     );
   }, [loadedItem, isDirty]);
 
-  function refresh() {
-    setItems(listItems<T>(type));
+  async function refresh() {
+    setItems(await listItems<T>(type));
   }
 
-  function handleSave() {
+  async function handleSave() {
     const name =
       nameDraft.trim() ||
       loadedItem?.name ||
@@ -79,8 +79,8 @@ export function SavedItemsControl<T>({
         type,
         items.map((item) => item.name),
       );
-    const saved = saveItem(type, data, name);
-    refresh();
+    const saved = await saveItem(type, data, name);
+    await refresh();
     setNameDraft("");
     setLoadedItem(saved);
     onSaved?.(saved);

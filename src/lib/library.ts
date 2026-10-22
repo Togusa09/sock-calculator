@@ -1,3 +1,4 @@
+import { createAsyncStorage } from "@react-native-async-storage/async-storage";
 import type { SavedTension, YarnProfile, YarnTension } from "./domain";
 
 export type LibraryItemType =
@@ -14,6 +15,8 @@ export type LibraryItem<T> = {
   updatedAt: string;
   data: T;
 };
+
+const storage = createAsyncStorage("appDB");
 
 const STORAGE_PREFIX = "sock-calculator-library-";
 
@@ -41,8 +44,10 @@ function isLibraryItem(value: unknown): value is LibraryItem<unknown> {
 }
 
 /** Reads and parses the stored array, dropping anything unparsable rather than throwing. */
-export function listItems<T>(type: LibraryItemType): LibraryItem<T>[] {
-  const raw = window.localStorage.getItem(storageKey(type));
+export async function listItems<T>(
+  type: LibraryItemType,
+): Promise<LibraryItem<T>[]> {
+  const raw = await storage.getItem(storageKey(type));
   if (!raw) return [];
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -53,17 +58,17 @@ export function listItems<T>(type: LibraryItemType): LibraryItem<T>[] {
   }
 }
 
-export function readItem<T>(
+export async function readItem<T>(
   type: LibraryItemType,
   id: string,
-): LibraryItem<T> | undefined {
-  const items = listItems<T>(type);
+): Promise<LibraryItem<T> | undefined> {
+  const items = await listItems<T>(type);
   const item = items.find((i) => i.id === id);
   return item;
 }
 
 function persist<T>(type: LibraryItemType, items: LibraryItem<T>[]): void {
-  window.localStorage.setItem(storageKey(type), JSON.stringify(items));
+  storage.setItem(storageKey(type), JSON.stringify(items));
 }
 
 /** Finds the lowest two-digit number not already used by an existing "<prefix> NN" name. */
@@ -85,12 +90,12 @@ export function nextAvailableName(
 }
 
 /** Saves as a new item, or upserts in place when `name` matches an existing item. */
-export function saveItem<T>(
+export async function saveItem<T>(
   type: LibraryItemType,
   data: T,
   name?: string,
-): LibraryItem<T> {
-  const items = listItems<T>(type);
+): Promise<LibraryItem<T>> {
+  const items = await listItems<T>(type);
   const resolvedName =
     name?.trim() ||
     nextAvailableName(
@@ -113,25 +118,25 @@ export function saveItem<T>(
 }
 
 /** True when another item of this type (ignoring `exceptId`) already uses the name. */
-export function isNameTaken(
+export async function isNameTaken(
   type: LibraryItemType,
   name: string,
   exceptId?: string,
-): boolean {
+): Promise<boolean> {
   const wanted = name.trim().toLowerCase();
-  return listItems(type).some(
+  return (await listItems(type)).some(
     (item) => item.id !== exceptId && item.name.trim().toLowerCase() === wanted,
   );
 }
 
 /** Updates an existing item in place by id, allowing a rename. Returns undefined if the id is unknown. */
-export function updateItem<T>(
+export async function updateItem<T>(
   type: LibraryItemType,
   id: string,
   name: string,
   data: T,
-): LibraryItem<T> | undefined {
-  const items = listItems<T>(type);
+): Promise<LibraryItem<T> | undefined> {
+  const items = await listItems<T>(type);
   if (!items.some((item) => item.id === id)) return undefined;
   const updated: LibraryItem<T> = {
     id,
@@ -147,8 +152,11 @@ export function updateItem<T>(
   return updated;
 }
 
-export function deleteItem(type: LibraryItemType, id: string): void {
-  const items = listItems(type);
+export async function deleteItem(
+  type: LibraryItemType,
+  id: string,
+): Promise<void> {
+  const items = await listItems(type);
   persist(
     type,
     items.filter((item) => item.id !== id),
@@ -157,11 +165,12 @@ export function deleteItem(type: LibraryItemType, id: string): void {
 
 const NEEDLE_TOLERANCE_MM = 0.01;
 
-export function findTension(
+export async function findTension(
   yarnProfileId: string,
   needleSizeMm: number,
-): LibraryItem<SavedTension> | undefined {
-  return listItems<SavedTension>("tension").find(
+): Promise<LibraryItem<SavedTension> | undefined> {
+  const items = await listItems<SavedTension>("tension");
+  return items.find(
     (item) =>
       item.data.yarnProfileId === yarnProfileId &&
       Math.abs(item.data.needleSizeMm - needleSizeMm) < NEEDLE_TOLERANCE_MM,
@@ -169,20 +178,20 @@ export function findTension(
 }
 
 /** Saves a tension, replacing any existing one for the same profile and needle size. */
-export function saveTension(
+export async function saveTension(
   yarnProfileId: string,
   tension: YarnTension,
   name: string,
-): LibraryItem<SavedTension> {
+): Promise<LibraryItem<SavedTension>> {
   const data: SavedTension = { ...tension, yarnProfileId };
-  const existing = findTension(yarnProfileId, tension.needleSizeMm);
+  const existing = await findTension(yarnProfileId, tension.needleSizeMm);
   return saveItem<SavedTension>("tension", data, existing?.name ?? name);
 }
 
 /** Deletes a yarn profile along with every tension that references it. */
-export function deleteYarnProfile(id: string): void {
-  deleteItem("yarnProfile", id);
-  const tensions = listItems<SavedTension>("tension");
+export async function deleteYarnProfile(id: string): Promise<void> {
+  await deleteItem("yarnProfile", id);
+  const tensions = await listItems<SavedTension>("tension");
   persist(
     "tension",
     tensions.filter((item) => item.data.yarnProfileId !== id),

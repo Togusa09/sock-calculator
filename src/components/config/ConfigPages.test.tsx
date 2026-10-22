@@ -1,16 +1,11 @@
-import { ConfigEditPage } from "@/src/components/config/ConfigEditPage";
-import { ConfigListPage } from "@/src/components/config/ConfigListPage";
-import { listItems, saveItem } from "@/src/lib/library";
+import { ConfigEditPage } from "@/components/config/ConfigEditPage";
+import { ConfigListPage } from "@/components/config/ConfigListPage";
+import { listItems, saveItem } from "@/lib/library";
 import { act, Suspense } from "react";
-import { createRoot } from "react-dom/client";
 
-vi.mock("next/link", () => ({
-  default: ({ href, children, ...rest }: React.ComponentProps<"a">) => (
-    <a href={href} {...rest}>
-      {children}
-    </a>
-  ),
-}));
+jest.mock("@react-native-async-storage/async-storage", () =>
+  require("@react-native-async-storage/async-storage/jest"),
+);
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -22,7 +17,7 @@ async function render(element: React.ReactNode) {
   const container = document.createElement("div");
   document.body.appendChild(container);
   await act(async () => {
-    createRoot(container).render(<Suspense>{element}</Suspense>);
+    render(<Suspense>{element}</Suspense>);
   });
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 10));
@@ -51,14 +46,14 @@ function editPage(id: string) {
   );
 }
 
-beforeEach(() => {
-  window.localStorage.clear();
-  document.body.innerHTML = "";
-});
+// beforeEach(() => {
+//   window.localStorage.clear();
+//   document.body.innerHTML = "";
+// });
 
 describe("config pages", () => {
   it("lists items with an edit link", async () => {
-    const item = saveItem("measurements", { size: 3 }, "Mine");
+    const item = await saveItem("measurements", { size: 3 }, "Mine");
     const container = await render(
       <ConfigListPage<Data>
         type="measurements"

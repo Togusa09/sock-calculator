@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
 import {
   listItems,
   type LibraryItem,
   type LibraryItemType,
 } from "@/lib/library";
+import { useCallback, useEffect, useState } from "react";
 
 export type LibraryItemsState<T> =
-  { status: "loading" } | { status: "ready"; items: LibraryItem<T>[] };
+  | { status: "loading" }
+  | { status: "ready"; items: LibraryItem<T>[] };
 
 export type LibraryItemState<T> =
   | { status: "loading" }
@@ -22,7 +23,10 @@ export function useLibraryItems<T>(
   const reload = useCallback(() => setVersion((v) => v + 1), []);
 
   useEffect(() => {
-    const id = window.setTimeout(() => setItems(listItems<T>(type)), 0);
+    const id = window.setTimeout(
+      async () => setItems(await listItems<T>(type)),
+      0,
+    );
     return () => window.clearTimeout(id);
   }, [type, version]);
 

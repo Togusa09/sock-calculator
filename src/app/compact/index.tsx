@@ -1,4 +1,10 @@
+import { CompactSelect } from "@/components/compact/CompactSelect";
 import { useLibraryItems } from "@/hooks/UseLibraryItems";
+import {
+  describeMeasurements,
+  describeTension,
+  describeYarn,
+} from "@/lib/compactDetails";
 import type {
   CalculatorRecord,
   ConstructionOptions,
@@ -6,7 +12,8 @@ import type {
   SavedTension,
   YarnProfile,
 } from "@/lib/domain";
-import { type LibraryItem } from "@/lib/library";
+import { describeYarnProfile, type LibraryItem } from "@/lib/library";
+import { Text } from "@expo/ui";
 import { useState } from "react";
 
 function itemsOf<T>(state: { status: string; items?: LibraryItem<T>[] }) {
@@ -49,8 +56,10 @@ export default function CompactPage() {
 
   return (
     <main className="compact-shell">
-      <h1>Sock calculator Compact</h1>
-      {/* <CompactSelect
+      <h1>
+        <Text>Sock calculator Compact</Text>
+      </h1>
+      <CompactSelect
         label="Foot"
         value={footId}
         onChange={setFootId}
@@ -92,7 +101,7 @@ export default function CompactPage() {
           result={calculateStitches(record)}
           errors={validateRecord(record)}
         />
-      )} */}
+      )}
     </main>
   );
 }

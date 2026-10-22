@@ -23,6 +23,7 @@ export function WizardTabs({ tabs, activeId, onSelect }: Props) {
         return (
           <TouchableOpacity
             key={tab.id}
+            testID={tab.id}
             accessibilityRole="tab"
             accessibilityState={{ selected }}
             style={[
