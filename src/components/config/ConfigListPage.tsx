@@ -53,6 +53,7 @@ export function ConfigListPage<T>({
                   href={
                     `${basePath}/edit?id=${encodeURIComponent(item.id)}` as Href
                   }
+                  testID={`edit-link-${item.id}`}
                   asChild
                 >
                   <View

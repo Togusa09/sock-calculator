@@ -8,12 +8,8 @@ export default defineConfig({
   //     "node_modules/(?!((jest-)?react-native(-.*)?|@react-native(-community)?)/)",
   //   ],
   preset: "jest-expo",
+  setupFilesAfterEnv: ["./jest-setup.ts"],
   //   setupFiles: ["./jestSetup.ts"],
   //   transformIgnorePatterns: ["node_modules/(?!@react-native-async-storage/)"],
   //   transform: {},
 });
-
-// jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
-// jest.mock("@react-native-async-storage/async-storage", () =>
-//   require("@react-native-async-storage/async-storage/jest"),
-// );

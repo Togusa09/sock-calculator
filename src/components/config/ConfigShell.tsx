@@ -51,12 +51,14 @@ export function ConfigNotFound({
 }: NotFoundProps) {
   return (
     <View style={styles.panel} accessibilityRole="alert">
-      <Text style={styles.h2}>{entityLabel} not found</Text>
+      <Text style={styles.h2} testID="config-heading">
+        {entityLabel} not found
+      </Text>
       <Text style={styles.p}>
         We couldn&apos;t find that {entityLabel.toLowerCase()}. It may have been
         deleted, or the link may be wrong.
       </Text>
-      <Link href={indexHref}>
+      <Link href={indexHref} testID="config-index-link">
         <View
           style={StyleSheet.flatten([styles.button, styles.secondaryButton])}
         >
