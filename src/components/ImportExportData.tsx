@@ -1,3 +1,4 @@
+import { useDataPersistence } from "@/hooks/UseDataPersistence";
 import { CalculatorRecord } from "@/lib/domain";
 import { parseImportedRecord } from "@/lib/validation";
 import { palette } from "@/theme/colors";
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export function ImportExportData({ onImported }: Props) {
+  const { record } = useDataPersistence();
+
   async function ImportData() {
     try {
       console.log("Importing file");
@@ -59,25 +62,18 @@ export function ImportExportData({ onImported }: Props) {
   }
 
   async function ExportData() {
-    const jsonData = { val: "test" };
-
+    var filename = "exported_data.json";
     try {
-      const dataToExport = jsonData || {
-        sampleKey: "Hello World",
-        exportedAt: new Date().toISOString(),
-        items: [1, 2, 3],
-      };
-
-      const jsonString = JSON.stringify(dataToExport, null, 2);
-      const filename = "exported_data.json";
+      const jsonString = JSON.stringify(record);
 
       if (Platform.OS === "web") {
-        // Web Export using DOM Blob & download link
         const blob = new Blob([jsonString], { type: "application/json" });
         const url = URL.createObjectURL(blob);
+
         const link = document.createElement("a");
         link.href = url;
         link.download = filename;
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
