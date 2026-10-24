@@ -3,7 +3,7 @@ import { saveItem } from "@/lib/library";
 import { clearAllMockStorages } from "@react-native-async-storage/async-storage/jest";
 import { render } from "@testing-library/react-native";
 import { act } from "react";
-import CompactPage from ".";
+import CompactPage from "..";
 
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest"),

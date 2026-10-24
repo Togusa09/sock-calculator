@@ -1,6 +1,6 @@
 "use client";
 
-import type { MaterialComponent } from "@/src/lib/domain";
+import type { MaterialComponent } from "@/lib/domain";
 
 type Props = {
   materials: MaterialComponent[];

@@ -1,4 +1,5 @@
 import { FeatureToggle } from "@/components/FeatureToggle";
+import { ImportExportData } from "@/components/ImportExportData";
 import { ResultsPanel } from "@/components/ResultsPanel";
 import {
   SavedItemsControl,
@@ -25,7 +26,7 @@ import { validateRecord } from "@/lib/validation";
 import { palette } from "@/theme/colors";
 import { Link } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 type SectionId = "measurements" | "yarn" | "tension" | "construction";
@@ -178,12 +179,21 @@ export default function Home() {
             </Link>
           </FeatureToggle>
 
+          <ImportExportData
+            onImported={(data) => {
+              console.log(data);
+              setRecord(data);
+            }}
+            onError={() => {}}
+            onExported={() => {}}
+          />
+          {/* 
           <Pressable style={[styles.button, styles.secondaryButton]}>
             <Text style={styles.secondaryButtonText}>Export JSON</Text>
           </Pressable>
           <Pressable style={[styles.button, styles.secondaryButton]}>
             <Text style={styles.secondaryButtonText}>Import JSON</Text>
-          </Pressable>
+          </Pressable> */}
           {/* <button
             className="button secondary"
             // onClick={exportRecord}
@@ -365,11 +375,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
   },
-  reset: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: palette.border,
-  },
   wizardResults: {
     display: "none",
   },
@@ -405,20 +410,5 @@ const styles = StyleSheet.create({
     gap: 8,
     color: palette.muted,
     fontSize: 13,
-  },
-  unitToggleSelect: {
-    backgroundColor: palette.panel,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: palette.headingBorder,
-    borderRadius: 0,
-    color: palette.textPrimary,
-  },
-  pickerNative: {
-    width: "100%",
-    height: 40,
-    backgroundColor: "transparent",
-    // 2. Remove standard web browser default borders
-    borderWidth: 0,
   },
 });
