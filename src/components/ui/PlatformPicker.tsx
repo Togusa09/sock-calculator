@@ -23,7 +23,7 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.mobilePickerWrapper}>
+      <View>
         <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
           {items.map((item) => (
             <Picker.Item
