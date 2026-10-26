@@ -1,11 +1,9 @@
 import { parseImportedRecord } from "@/lib/validation";
-import { createAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SetStateAction, useEffect, useState } from "react";
 import { CalculatorRecord, DEFAULT_RECORD } from "../lib/domain";
 
 const STORAGE_KEY = "sock-calculator-record-v1";
-
-const storage = createAsyncStorage("appDB");
 
 type Props = {
   initialValue: CalculatorRecord;
@@ -23,12 +21,12 @@ export function useDataPersistence(
 
   useEffect(() => {
     const restore = async () => {
-      const saved = await storage.getItem(storageKey);
+      const saved = await AsyncStorage.getItem(storageKey);
       if (saved) {
         try {
           setRecord(parseImportedRecord(saved));
         } catch {
-          await storage.removeItem(storageKey);
+          await AsyncStorage.removeItem(storageKey);
         }
       }
       setHydrated(true);
@@ -40,7 +38,7 @@ export function useDataPersistence(
   useEffect(() => {
     const hydrate = async () => {
       if (hydrated) {
-        await storage.setItem(storageKey, JSON.stringify(record));
+        await AsyncStorage.setItem(storageKey, JSON.stringify(record));
       }
     };
     hydrate();

@@ -1,4 +1,4 @@
-import { createAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { SavedTension, YarnProfile, YarnTension } from "./domain";
 
 export type LibraryItemType =
@@ -15,8 +15,6 @@ export type LibraryItem<T> = {
   updatedAt: string;
   data: T;
 };
-
-const storage = createAsyncStorage("appDB");
 
 const STORAGE_PREFIX = "sock-calculator-library-";
 
@@ -47,7 +45,7 @@ function isLibraryItem(value: unknown): value is LibraryItem<unknown> {
 export async function listItems<T>(
   type: LibraryItemType,
 ): Promise<LibraryItem<T>[]> {
-  const raw = await storage.getItem(storageKey(type));
+  const raw = await AsyncStorage.getItem(storageKey(type));
   if (!raw) return [];
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -68,7 +66,7 @@ export async function readItem<T>(
 }
 
 function persist<T>(type: LibraryItemType, items: LibraryItem<T>[]): void {
-  storage.setItem(storageKey(type), JSON.stringify(items));
+  AsyncStorage.setItem(storageKey(type), JSON.stringify(items));
 }
 
 /** Finds the lowest two-digit number not already used by an existing "<prefix> NN" name. */
