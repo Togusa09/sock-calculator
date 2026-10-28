@@ -42,7 +42,8 @@
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/react": "~19.3.0",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "marked": "^18.1.1"
   },
   "scripts": {
     "start": "expo start",
