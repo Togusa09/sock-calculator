@@ -1,6 +1,9 @@
+import { CompactResults } from "@/components/compact/CompactResults";
 import { CompactSelect } from "@/components/compact/CompactSelect";
 import { useLibraryItems } from "@/hooks/UseLibraryItems";
+import { calculateStitches } from "@/lib/calculations";
 import {
+  describeConstruction,
   describeMeasurements,
   describeTension,
   describeYarn,
@@ -13,6 +16,7 @@ import type {
   YarnProfile,
 } from "@/lib/domain";
 import { describeYarnProfile, type LibraryItem } from "@/lib/library";
+import { validateRecord } from "@/lib/validation";
 import { Text } from "@expo/ui";
 import { useState } from "react";
 

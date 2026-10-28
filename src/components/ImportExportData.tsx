@@ -32,7 +32,7 @@ export function ImportExportData({ onImported }: Props) {
 
       const successResult =
         result as DocumentPicker.DocumentPickerSuccessResult;
-      if (successResult.assets.length != 1) {
+      if (successResult.assets.length !== 1) {
         console.log("Incorrect number of files selected");
         return;
       }
@@ -62,7 +62,7 @@ export function ImportExportData({ onImported }: Props) {
   }
 
   async function ExportData() {
-    var filename = "exported_data.json";
+    let filename = "exported_data.json";
     try {
       const jsonString = JSON.stringify(record);
 

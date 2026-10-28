@@ -25,8 +25,8 @@ describe("WizardTabs", () => {
     const container = await renderTabs(jest.fn(), "b");
     const buttons = screen.queryAllByRole("tab");
 
-    var t = screen.getByTestId("a");
-    var t2 = screen.getByTestId("b");
+    const t = screen.getByTestId("a");
+    const t2 = screen.getByTestId("b");
 
     expect(t).toBeOnTheScreen();
     expect(t2).toBeOnTheScreen();

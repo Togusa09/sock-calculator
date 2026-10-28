@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { MaterialMixEditor } from "@/src/components/MaterialMixEditor";
+import { MaterialMixEditor } from "@/components/MaterialMixEditor";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/src/components/SavedItemsControl";
+} from "@/components/SavedItemsControl";
 import {
   DEFAULT_YARN_PROFILE,
   type YarnProfile as YarnProfileData,
   type YarnWeightUnit,
-} from "@/src/lib/domain";
-import { deleteYarnProfile, type LibraryItem } from "@/src/lib/library";
-import { validateYarnProfile } from "@/src/lib/validation";
+} from "@/lib/domain";
+import { deleteYarnProfile, type LibraryItem } from "@/lib/library";
+import { validateYarnProfile } from "@/lib/validation";
+import { useState } from "react";
 
 type Props = {
   profile: YarnProfileData;

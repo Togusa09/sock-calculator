@@ -165,6 +165,6 @@ describe("updateItem and isNameTaken", () => {
 });
 
 async function readItemData(id: string) {
-  var items = await listItems("measurements");
+  const items = await listItems("measurements");
   return items.find((i) => i.id === id)?.data;
 }

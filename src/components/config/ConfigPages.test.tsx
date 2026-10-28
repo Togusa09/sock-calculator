@@ -80,7 +80,7 @@ describe("config pages", () => {
     const heading = screen.getByTestId("config-heading");
     expect(heading).toHaveTextContent("Foot size not found");
 
-    var link = screen.getByTestId("config-index-link");
+    const link = screen.getByTestId("config-index-link");
     expect(link).toHaveProp("href", "/config/foot-sizes");
 
     // expect(container.textContent).toContain("Foot size not found");

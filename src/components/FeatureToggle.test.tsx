@@ -20,7 +20,7 @@ describe("FeatureToggle", () => {
       </FeatureToggleContext.Provider>,
     );
 
-    var contentText = screen.getByText(/Feature Active/);
+    const contentText = screen.getByText(/Feature Active/);
     expect(contentText).toBeOnTheScreen();
   });
 
@@ -35,7 +35,7 @@ describe("FeatureToggle", () => {
       );
     });
 
-    var content = screen.queryByTestId("content");
+    const content = screen.queryByTestId("content");
     expect(content).toBeNull();
   });
 
@@ -53,10 +53,10 @@ describe("FeatureToggle", () => {
       );
     });
 
-    var content = screen.queryByTestId("content");
+    const content = screen.queryByTestId("content");
     expect(content).toBeNull();
 
-    var fallback = screen.queryByTestId("fallback");
+    const fallback = screen.queryByTestId("fallback");
     expect(fallback).toBeOnTheScreen();
   });
 });

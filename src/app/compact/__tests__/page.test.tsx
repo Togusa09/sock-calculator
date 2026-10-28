@@ -6,6 +6,7 @@ import { act } from "react";
 import CompactPage from "..";
 
 jest.mock("@react-native-async-storage/async-storage", () =>
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require("@react-native-async-storage/async-storage/jest"),
 );
 
@@ -28,11 +29,6 @@ function choose(container: HTMLElement, index: number, value: string) {
 }
 
 describe("compact page", () => {
-  // beforeEach(() => {
-  //   window.localStorage.clear();
-  //   document.body.innerHTML = "";
-  // });
-
   it("shows results once all four items are selected", async () => {
     const foot = await saveItem(
       "measurements",
