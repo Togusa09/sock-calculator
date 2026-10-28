@@ -47,7 +47,8 @@ jobs:
         run: npm test
 
       - name: Build static site
-        run: npm run build
+        #        run: npm run build
+        run: npx expo export -p web
 
       - name: Preserve _next assets
         if: github.event_name != 'pull_request'
@@ -57,7 +58,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./out
+          path: ./dist
 
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
