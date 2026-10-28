@@ -34,7 +34,9 @@
         }
       ],
       "expo-sharing",
-      "@react-native-async-storage/expo-with-async-storage"
+      "@react-native-async-storage/expo-with-async-storage",
+      "expo-image",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
