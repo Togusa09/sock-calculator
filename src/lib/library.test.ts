@@ -1,4 +1,4 @@
-import { createAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DEFAULT_RECORD, DEFAULT_YARN_PROFILE } from "./domain";
 import {
   deleteItem,
@@ -12,15 +12,8 @@ import {
   updateItem,
 } from "./library";
 
-jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest"),
-);
-
-const storage = createAsyncStorage("appDB");
-
 beforeEach(() => {
-  // clearAllMockStorages();
-  storage.clear();
+  AsyncStorage.clear();
 });
 
 // beforeEach(() => {
@@ -89,10 +82,13 @@ describe("library storage", () => {
   });
 
   it("tolerates corrupted localStorage data", async () => {
-    await storage.setItem("sock-calculator-library-project-v1", "{not json");
+    await AsyncStorage.setItem(
+      "sock-calculator-library-project-v1",
+      "{not json",
+    );
     expect(await listItems("project")).toEqual([]);
 
-    await storage.setItem(
+    await AsyncStorage.setItem(
       "sock-calculator-library-project-v1",
       JSON.stringify([{ foo: "bar" }]),
     );

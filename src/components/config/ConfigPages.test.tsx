@@ -4,10 +4,6 @@ import { saveItem } from "@/lib/library";
 import { render, screen } from "@testing-library/react-native";
 import { act, Suspense } from "react";
 
-jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest"),
-);
-
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;

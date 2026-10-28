@@ -52,9 +52,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "build:privacy": "node scripts/build-privacy-html.mjs",
-    "test": "jest --watchAll",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "test": "jest --watchAll"
   },
   "private": true
 }

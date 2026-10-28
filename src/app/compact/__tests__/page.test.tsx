@@ -1,18 +1,9 @@
 import { DEFAULT_RECORD, DEFAULT_YARN_PROFILE } from "@/lib/domain";
 import { saveItem } from "@/lib/library";
-import { clearAllMockStorages } from "@react-native-async-storage/async-storage/jest";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { render } from "@testing-library/react-native";
 import { act } from "react";
 import CompactPage from "..";
-
-jest.mock("@react-native-async-storage/async-storage", () =>
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require("@react-native-async-storage/async-storage/jest"),
-);
-
-beforeEach(() => {
-  clearAllMockStorages();
-});
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -27,6 +18,10 @@ function choose(container: HTMLElement, index: number, value: string) {
   setter.call(select, value);
   select.dispatchEvent(new Event("change", { bubbles: true }));
 }
+
+beforeEach(() => {
+  AsyncStorage.clear();
+});
 
 describe("compact page", () => {
   it("shows results once all four items are selected", async () => {
