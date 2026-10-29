@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { DEFAULT_RECORD, type CalculatorRecord } from "./domain";
 import { parseImportedRecord, validateRecord } from "./validation";
 

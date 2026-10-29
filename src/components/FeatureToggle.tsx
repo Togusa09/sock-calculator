@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { useFeatureToggle } from "../hooks/UseFeatureToggle";
+import { useFeatureToggle } from "@/hooks/UseFeatureToggle";
+import { type ReactNode } from "react";
 
 export interface FeatureToggleProps {
   feature: string;

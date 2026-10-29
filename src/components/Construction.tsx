@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/src/components/SavedItemsControl";
+} from "@/components/SavedItemsControl";
 import {
   DEFAULT_RECORD,
   type ConstructionOptions,
@@ -12,7 +11,8 @@ import {
   type HeelStyle,
   type Ribbing,
   type ToeStyle,
-} from "@/src/lib/domain";
+} from "@/lib/domain";
+import { useState } from "react";
 
 type Props = {
   construction: ConstructionOptions;

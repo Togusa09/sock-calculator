@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   type SavedTension,
   type YarnProfile,
   type YarnTension,
-} from "@/src/lib/domain";
-import {
-  describeYarnProfile,
-  findTension,
-  saveTension,
-} from "@/src/lib/library";
+} from "@/lib/domain";
+import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
+import { useEffect, useState } from "react";
 
 type Props = {
   tension: YarnTension;

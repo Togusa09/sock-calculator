@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { NumberField } from "@/components/NumberField";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
-} from "@/src/components/SavedItemsControl";
+} from "@/components/SavedItemsControl";
 import {
   DEFAULT_RECORD,
-  type Measurements,
   type DisplayUnit,
-} from "@/src/lib/domain";
-import { NumberField } from "@/src/components/NumberField";
+  type Measurements,
+} from "@/lib/domain";
+import { useState } from "react";
 
 type Props = {
   measurements: Measurements;

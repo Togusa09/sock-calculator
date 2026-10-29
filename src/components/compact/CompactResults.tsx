@@ -1,7 +1,6 @@
-"use client";
-
-import type { calculateStitches } from "@/src/lib/calculations";
-import { formatMeasurement } from "@/src/lib/units";
+import type { calculateStitches } from "@/lib/calculations";
+import { formatMeasurement } from "@/lib/units";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {
   result: ReturnType<typeof calculateStitches>;
@@ -17,28 +16,73 @@ export function CompactResults({ result, errors }: Props) {
     ["Foot", `${sections.foot.stitches} sts`],
     ["Toe", `${sections.toe.finalStitches} sts`],
   ];
+
   return (
-    <section className="compact-results" aria-label="Results">
-      {errors.length > 0 && (
-        <p className="error-box" role="alert">
-          {errors[0]}
-        </p>
-      )}
-      <p className="compact-hero">
-        <strong>{result.roundedStitches}</strong> sts cast on
-        <small>
+    <View
+      style={styles.compactResults}
+      className="compact-results"
+      accessibilityLabel="Results"
+    >
+      {errors.length > 0 && <Text style={styles.errorBox}>{errors[0]}</Text>}
+      <Pressable style={styles.compactHero}>
+        <Text style={styles.heroStrong}>{result.roundedStitches}</Text> sts cast
+        on
+        <Text style={styles.heroSmall}>
           {" "}
           for {formatMeasurement(result.easedCircumferenceCm, "metric")}
-        </small>
-      </p>
-      <dl>
+        </Text>
+      </Pressable>
+      <View style={styles.scrollResults}>
         {rows.map(([name, value]) => (
-          <div key={name}>
-            <dt>{name}</dt>
-            <dd>{value}</dd>
-          </div>
+          <View key={name} style={styles.resultRow}>
+            <Text style={styles.resultName}>{name}</Text>
+            <Text style={styles.resultValue}>{value}</Text>
+          </View>
         ))}
-      </dl>
-    </section>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  compactResults: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.15)", // #ffffff25 ≈ rgba(255,255,255, 0.15)
+    paddingTop: 0.25, // 0.5rem = 8px
+    marginTop: 14,
+  },
+  errorBox: {
+    backgroundColor: "#f6d9ce",
+    color: "#7d3320",
+    fontSize: 12,
+    padding: 10,
+    marginBottom: 15,
+  },
+  compactHero: {
+    marginTop: 14,
+  },
+  heroStrong: {
+    fontSize: 24, // 1.6rem approx
+    fontWeight: "700",
+  },
+  heroSmall: {
+    color: "#bcb8af",
+    fontSize: 8, // 0.8rem ≈ 12px for compact view
+  },
+  scrollResults: {
+    paddingTop: 14,
+  },
+  resultRow: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between",
+    gap: 18,
+    padding: 13,
+  },
+  resultName: {
+    fontSize: 13,
+  },
+  resultValue: {
+    color: "#f6b18d",
+    whiteSpace: "nowrap",
+  },
+});

@@ -1,10 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { DEFAULT_RECORD } from "./domain";
 import {
   describeConstruction,
   describeMeasurements,
   describeTension,
 } from "./compactDetails";
+import { DEFAULT_RECORD } from "./domain";
 
 describe("compactDetails", () => {
   it("lists only measurements that are set", () => {

@@ -1,80 +1,68 @@
-// @vitest-environment jsdom
-import { describe, expect, it } from "vitest";
-import { createRoot } from "react-dom/client";
-import { act } from "react";
-import { FeatureToggle } from "./FeatureToggle";
+import { useFeatureToggle } from "@/hooks/UseFeatureToggle";
+import { act, render, screen } from "@testing-library/react-native";
+import { Text } from "react-native";
 import { FeatureToggleContext } from "../context/FeatureToggleContext";
-import { useFeatureToggle } from "../hooks/UseFeatureToggle";
+import { FeatureToggle } from "./FeatureToggle";
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe("FeatureToggle", () => {
-  it("renders children when feature is enabled", () => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
+  test("renders children when feature is enabled", async () => {
+    await render(
+      <FeatureToggleContext.Provider
+        value={{ enabledFeatures: ["beta-feature"] }}
+      >
+        <FeatureToggle feature="beta-feature">
+          <Text testID="content">Feature Active</Text>
+        </FeatureToggle>
+      </FeatureToggleContext.Provider>,
+    );
 
-    act(() => {
-      createRoot(container).render(
-        <FeatureToggleContext.Provider
-          value={{ enabledFeatures: ["beta-feature"] }}
-        >
-          <FeatureToggle feature="beta-feature">
-            <span data-testid="content">Feature Active</span>
-          </FeatureToggle>
-        </FeatureToggleContext.Provider>,
-      );
-    });
-
-    expect(
-      container.querySelector('[data-testid="content"]')?.textContent,
-    ).toBe("Feature Active");
+    const contentText = screen.getByText(/Feature Active/);
+    expect(contentText).toBeOnTheScreen();
   });
 
-  it("renders nothing when feature is not enabled and no fallback provided", () => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-
-    act(() => {
-      createRoot(container).render(
+  it("renders nothing when feature is not enabled and no fallback provided", async () => {
+    await act(async () => {
+      await render(
         <FeatureToggleContext.Provider value={{ enabledFeatures: [] }}>
           <FeatureToggle feature="beta-feature">
-            <span data-testid="content">Feature Active</span>
+            <Text testID="content">Feature Active</Text>
           </FeatureToggle>
         </FeatureToggleContext.Provider>,
       );
     });
 
-    expect(container.querySelector('[data-testid="content"]')).toBeNull();
+    const content = screen.queryByTestId("content");
+    expect(content).toBeNull();
   });
 
-  it("renders fallback when feature is not enabled", () => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-
-    act(() => {
-      createRoot(container).render(
+  it("renders fallback when feature is not enabled", async () => {
+    await act(async () => {
+      await render(
         <FeatureToggleContext.Provider value={{ enabledFeatures: [] }}>
           <FeatureToggle
             feature="beta-feature"
-            fallback={<span data-testid="fallback">Feature Disabled</span>}
+            fallback={<Text testID="fallback">Feature Disabled</Text>}
           >
-            <span data-testid="content">Feature Active</span>
+            <Text testID="content">Feature Active</Text>
           </FeatureToggle>
         </FeatureToggleContext.Provider>,
       );
     });
 
-    expect(
-      container.querySelector('[data-testid="fallback"]')?.textContent,
-    ).toBe("Feature Disabled");
-    expect(container.querySelector('[data-testid="content"]')).toBeNull();
+    const content = screen.queryByTestId("content");
+    expect(content).toBeNull();
+
+    const fallback = screen.queryByTestId("fallback");
+    expect(fallback).toBeOnTheScreen();
   });
 });
 
 describe("useFeatureToggle", () => {
-  it("returns isEnabled function checking features", () => {
+  it("returns isEnabled function checking features", async () => {
     let isEnabledFn: ((feature: string) => boolean) | null = null;
 
     function TestComponent() {
@@ -83,9 +71,8 @@ describe("useFeatureToggle", () => {
       return null;
     }
 
-    const container = document.createElement("div");
-    act(() => {
-      createRoot(container).render(
+    await act(async () => {
+      await render(
         <FeatureToggleContext.Provider
           value={{ enabledFeatures: ["feature-a", "feature-b"] }}
         >
