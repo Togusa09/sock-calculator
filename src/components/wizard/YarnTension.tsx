@@ -32,12 +32,14 @@ export function YarnTension({
   const [lookupFound, setLookupFound] = useState(false);
 
   useEffect(() => {
-    const found = yarnProfileId
-      ? findTension(yarnProfileId, tension.needleSizeMm)
-      : undefined;
-    // setStatus("");
-    // setLookupFound(!!found);
-    if (found) onChange(toGauge(found.data));
+    (async () => {
+      const found = yarnProfileId
+        ? await findTension(yarnProfileId, tension.needleSizeMm)
+        : undefined;
+      // setStatus("");
+      // setLookupFound(!!found);
+      if (found) onChange(toGauge(found.data));
+    })();
   }, [yarnProfileId, tension.needleSizeMm, onChange]);
 
   function handleSave() {
