@@ -15,7 +15,7 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       {/* Host must be the direct parent of the Picker */}
-      <Host matchContents>
+      <Host matchContents={{ vertical: true }} style={styles.host}>
         <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
           {items.map((item) => (
             <Picker.Item
@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: "100%",
     maxWidth: 400,
+    minWidth: 0,
+  },
+  host: {
+    width: "100%",
   },
   label: {
     fontSize: 14,

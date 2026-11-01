@@ -14,6 +14,7 @@ const tabs: WizardTab[] = [
   { id: "a", step: "01", label: "A" },
   { id: "b", step: "02", label: "B", hasError: true },
   { id: "c", step: "03", label: "C" },
+  { id: "construction", step: "04", label: "Construction" },
   { id: "results", step: "05", label: "Results", mobileOnly: true },
 ];
 
@@ -61,6 +62,30 @@ describe("WizardTabs", () => {
     });
 
     expect(screen.getByTestId("results")).toBeOnTheScreen();
+  });
+
+  it("fits compact tab labels on one line within an evenly shared row", async () => {
+    setViewportWidth(390);
+    await act(async () => {
+      await render(
+        <WizardTabs tabs={tabs} activeId="construction" onSelect={jest.fn()} />,
+      );
+    });
+
+    const constructionTab = screen.getByTestId("construction");
+    const constructionLabel = screen.getByText("Construction");
+    expect(
+      ReactNative.StyleSheet.flatten(constructionTab.props.style),
+    ).toMatchObject({
+      flex: 1,
+      minWidth: 0,
+      alignItems: "center",
+    });
+    expect(constructionLabel.props.numberOfLines).toBe(1);
+    expect(
+      ReactNative.StyleSheet.flatten(constructionLabel.props.style),
+    ).toMatchObject({ fontSize: 11, textAlign: "center" });
+    expect(screen.getByTestId("wizard-tabs").props.horizontal).not.toBe(true);
   });
 
   it("keeps yarn profile fields flexible at narrow widths", async () => {

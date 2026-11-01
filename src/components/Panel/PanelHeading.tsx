@@ -61,7 +61,9 @@ const styles = StyleSheet.create({
   sectionHeadingMain: {
     flexDirection: "row",
     gap: 15,
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 200,
   },
   headingContent: {
     flex: 1,

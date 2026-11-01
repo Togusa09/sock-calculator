@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
   },
   workspaceNarrow: {
     flexDirection: "column",
+    alignItems: "stretch",
     gap: 16,
   },
   formColumn: {

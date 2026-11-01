@@ -13,6 +13,7 @@ import {
 import { palette } from "@/theme/colors";
 import { useState } from "react";
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   Switch,
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   fieldLabel: {
-    flex: 1,
+    flex: Platform.OS === "web" ? 1 : 0,
     fontSize: 12,
     color: palette.muted,
   },
@@ -213,8 +214,8 @@ const styles = StyleSheet.create({
   },
   fieldsContainer: {},
   rowContainer: {
-    flexDirection: "row",
-    gap: 18,
+    flexDirection: Platform.OS === "web" ? "row" : "column",
+    gap: Platform.OS === "web" ? 18 : 4,
     marginBottom: 16,
   },
   select: {

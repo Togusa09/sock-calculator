@@ -26,8 +26,7 @@ export function WizardTabs({ tabs, activeId, onSelect }: Props) {
 
   return (
     <ScrollView
-      horizontal={isCompact}
-      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       style={[styles.wizardTabs, isCompact && styles.wizardTabsCompact]}
       contentContainerStyle={
         isCompact ? styles.wizardTabsCompactContent : undefined
@@ -53,7 +52,12 @@ export function WizardTabs({ tabs, activeId, onSelect }: Props) {
           >
             <Text style={styles.wizardTabStep}>{tab.step}</Text>
             <Text
-              style={[styles.wizardTabLabel, selected && styles.isActiveLabel]}
+              numberOfLines={isCompact ? 1 : undefined}
+              style={[
+                styles.wizardTabLabel,
+                isCompact && styles.wizardTabLabelCompact,
+                selected && styles.isActiveLabel,
+              ]}
             >
               {tab.label}
             </Text>
@@ -101,12 +105,18 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   wizardTabCompact: {
-    width: 78,
+    flex: 1,
+    minWidth: 0,
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "center",
     gap: 2,
     paddingVertical: 8,
-    paddingHorizontal: 6,
+    paddingHorizontal: 2,
+  },
+  wizardTabLabelCompact: {
+    fontSize: 11,
+    textAlign: "center",
   },
   isActive: {
     backgroundColor: "#fffdf8",
