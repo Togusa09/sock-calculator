@@ -13,7 +13,6 @@ import {
 import { palette } from "@/theme/colors";
 import { useState } from "react";
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
@@ -139,6 +138,7 @@ export function Construction({
 
         <View style={styles.override}>
           <Switch
+            accessibilityLabel="Override project ease"
             value={construction.negativeEasePercent !== undefined}
             onValueChange={(checked) =>
               onChange({
@@ -148,21 +148,6 @@ export function Construction({
           />
           <Text style={styles.overrideText}>Override project ease</Text>
         </View>
-
-        <Pressable
-          onPress={() => onChange({ negativeEasePercent: tensionNegativeEase })}
-          style={styles.override}
-          className="override"
-        >
-          <Text style={styles.overrideText}>Override project ease</Text>
-          {construction.negativeEasePercent !== undefined && (
-            <TextInput
-              style={styles.percentageInput}
-              value={`${construction.negativeEasePercent}%`}
-              editable={false}
-            />
-          )}
-        </Pressable>
 
         {/* Negative ease input */}
         {construction.negativeEasePercent !== undefined && (
@@ -249,11 +234,6 @@ const styles = StyleSheet.create({
   overrideText: {
     fontSize: 13,
     color: palette.muted,
-  },
-  percentageInput: {
-    width: 80,
-    fontWeight: "600",
-    fontSize: 13,
   },
   compactInput: {
     marginTop: 20,

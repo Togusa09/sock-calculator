@@ -1,6 +1,13 @@
 import { Href, Link } from "expo-router";
+import { palette } from "@/theme/colors";
 import { type ReactNode } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 type ShellProps = {
   title: string;
@@ -9,27 +16,49 @@ type ShellProps = {
 };
 
 export function ConfigShell({ title, eyebrow, children }: ShellProps) {
+  const { width } = useWindowDimensions();
+  const isCompact = width <= 850;
+  const titleSize = Math.min(76, Math.max(42, width * 0.06));
+
   return (
-    <View style={styles.appShell}>
-      <View style={styles.topbar}>
+    <View
+      style={[
+        styles.appShell,
+        {
+          paddingHorizontal: width <= 500 ? 18 : "5%",
+          paddingTop: isCompact ? 28 : 42,
+          paddingBottom: width <= 500 ? 50 : 72,
+        },
+      ]}
+    >
+      <View style={[styles.topbar, isCompact && styles.topbarCompact]}>
         <View style={styles.topbarLeft}>
           <Text style={styles.eyebrow}>{eyebrow ?? "CONFIGURATION"}</Text>
-          <Text style={styles.h1}>{title}</Text>
+          <Text
+            style={[
+              styles.h1,
+              { fontSize: titleSize, lineHeight: titleSize * 0.95 },
+            ]}
+          >
+            {title}
+          </Text>
         </View>
-        <View style={styles.topActions}>
+        <View
+          style={[styles.topActions, isCompact && styles.topActionsCompact]}
+        >
           <Link href="/config" asChild>
-            <View
+            <Pressable
               style={StyleSheet.flatten([styles.button, styles.resetButton])}
             >
               <Text style={styles.resetButtonText}>All configuration</Text>
-            </View>
+            </Pressable>
           </Link>
-          <Link href="/">
-            <View
+          <Link href="/" asChild>
+            <Pressable
               style={StyleSheet.flatten([styles.button, styles.resetButton])}
             >
               <Text style={styles.resetButtonText}>Calculator</Text>
-            </View>
+            </Pressable>
           </Link>
         </View>
       </View>
@@ -49,8 +78,13 @@ export function ConfigNotFound({
   indexHref,
   indexLabel,
 }: NotFoundProps) {
+  const isNarrow = useWindowDimensions().width <= 500;
+
   return (
-    <View style={styles.panel} accessibilityRole="alert">
+    <View
+      style={[styles.panel, isNarrow && styles.panelNarrow]}
+      accessibilityRole="alert"
+    >
       <Text style={styles.h2} testID="config-heading">
         {entityLabel} not found
       </Text>
@@ -58,12 +92,12 @@ export function ConfigNotFound({
         We couldn&apos;t find that {entityLabel.toLowerCase()}. It may have been
         deleted, or the link may be wrong.
       </Text>
-      <Link href={indexHref} testID="config-index-link">
-        <View
+      <Link href={indexHref} testID="config-index-link" asChild>
+        <Pressable
           style={StyleSheet.flatten([styles.button, styles.secondaryButton])}
         >
           <Text style={styles.secondaryButtonText}>{indexLabel}</Text>
-        </View>
+        </Pressable>
       </Link>
     </View>
   );
@@ -72,7 +106,10 @@ export function ConfigNotFound({
 const styles = StyleSheet.create({
   appShell: {
     flex: 1,
-    backgroundColor: "#f4f1ea", // --paper
+    width: "100%",
+    maxWidth: 1320,
+    alignSelf: "center",
+    backgroundColor: palette.paper,
     paddingHorizontal: "5%",
     paddingTop: 42,
     paddingBottom: 72,
@@ -83,17 +120,21 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: 32,
     borderBottomWidth: 1,
-    borderColor: "#ddd8ca", // --line
+    borderColor: palette.border,
     paddingBottom: 32,
     flexWrap: "wrap",
     marginBottom: 28,
+  },
+  topbarCompact: {
+    alignItems: "flex-start",
+    flexDirection: "column",
   },
   topbarLeft: {
     flex: 2,
     minWidth: 280,
   },
   eyebrow: {
-    color: "#c75b36", // --orange
+    color: palette.orange,
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 1.54,
@@ -103,7 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: "Georgia",
     fontSize: 42,
     fontWeight: "400",
-    color: "#24231f", // --ink
+    color: palette.textPrimary,
   },
   h2: {
     fontFamily: "Georgia",
@@ -113,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   p: {
-    color: "#77746b", // --muted
+    color: palette.muted,
     fontSize: 13,
     lineHeight: 18,
     marginBottom: 20,
@@ -125,12 +166,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
   },
+  topActionsCompact: {
+    justifyContent: "flex-start",
+  },
   panel: {
-    backgroundColor: "#fffdf8", // --panel
+    backgroundColor: palette.panel,
     borderWidth: 1,
-    borderColor: "#ddd8ca", // --line
+    borderColor: palette.border,
     padding: 27,
     borderRadius: 2,
+  },
+  panelNarrow: {
+    padding: 20,
   },
   button: {
     borderRadius: 2,
@@ -140,10 +187,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   secondaryButton: {
-    backgroundColor: "#24231f", // --ink
+    backgroundColor: palette.textPrimary,
   },
   secondaryButtonText: {
-    color: "#fffdf8",
+    color: palette.panel,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 0.48,
@@ -151,10 +198,10 @@ const styles = StyleSheet.create({
   resetButton: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#ddd8ca", // --line
+    borderColor: palette.border,
   },
   resetButtonText: {
-    color: "#77746b", // --muted
+    color: palette.muted,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 0.48,

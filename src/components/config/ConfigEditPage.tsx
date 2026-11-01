@@ -3,7 +3,13 @@ import { useLibraryItem } from "@/hooks/UseLibraryItems";
 import { isNameTaken, updateItem, type LibraryItemType } from "@/lib/library";
 import { Href, Link } from "expo-router";
 import { useState, type ReactNode } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 type Props<T> = {
   type: LibraryItemType;
@@ -24,12 +30,13 @@ export function ConfigEditPage<T>({
   validate,
   renderFields,
 }: Props<T>) {
+  const isNarrow = useWindowDimensions().width <= 500;
   const state = useLibraryItem<T>(type, id);
 
   return (
     <ConfigShell title={`Edit ${entityLabel.toLowerCase()}`}>
       {state.status === "loading" && (
-        <View style={styles.panel}>
+        <View style={[styles.panel, isNarrow && styles.panelNarrow]}>
           <Text style={styles.p}>Loading…</Text>
         </View>
       )}
@@ -76,6 +83,7 @@ export function ConfigEditor<T>({
   renderFields,
   onSave,
 }: EditorProps<T>) {
+  const isNarrow = useWindowDimensions().width <= 500;
   const [name, setName] = useState(initialName);
   const [data, setData] = useState<T>(initialData);
   const [saved, setSaved] = useState(false);
@@ -107,7 +115,7 @@ export function ConfigEditor<T>({
   }
 
   return (
-    <View style={styles.panel}>
+    <View style={[styles.panel, isNarrow && styles.panelNarrow]}>
       <View style={styles.field}>
         <Text style={styles.fieldLabel}>Name *</Text>
         <TextInput
@@ -151,6 +159,9 @@ const styles = StyleSheet.create({
     borderColor: "#ddd8ca",
     padding: 27,
     borderRadius: 2,
+  },
+  panelNarrow: {
+    padding: 20,
   },
   p: {
     color: "#77746b",

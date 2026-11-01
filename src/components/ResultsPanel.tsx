@@ -1,7 +1,8 @@
 import type { calculateStitches } from "@/lib/calculations";
 import type { DisplayUnit } from "@/lib/domain";
+import { palette } from "@/theme/colors";
 import { formatMeasurement } from "@/lib/units";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 type CalculationResult = ReturnType<typeof calculateStitches>;
 
@@ -34,9 +35,12 @@ function ResultMetric({
 }
 
 export function ResultsPanel({ result, unit, validation }: Props) {
+  const isNarrow = useWindowDimensions().width <= 500;
   const derived = result.derived;
   return (
-    <View style={styles.resultsColumn}>
+    <View
+      style={[styles.resultsColumn, isNarrow && styles.resultsColumnNarrow]}
+    >
       <View style={styles.resultsHeader}>
         <View>
           <Text style={styles.eyebrow}>YOUR WORKING NUMBERS</Text>
@@ -166,7 +170,10 @@ export function ResultsPanel({ result, unit, validation }: Props) {
 
 const styles = StyleSheet.create({
   resultsColumn: {
-    backgroundColor: "#24231f",
+    backgroundColor: palette.textPrimary,
+    padding: 30,
+  },
+  resultsColumnNarrow: {
     padding: 20,
   },
   resultsHeader: {
@@ -182,6 +189,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   h2: {
+    fontFamily: "Georgia",
     color: "#f7f2e9",
     fontSize: 28,
     fontWeight: "400",

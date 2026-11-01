@@ -69,30 +69,36 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
 
 const styles = StyleSheet.create({
   materialMix: {
+    width: "100%",
     paddingVertical: 16,
   },
   fieldRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    width: "100%",
+    minWidth: 0,
+    gap: 8,
     marginBottom: 8,
   },
   input: {
     flex: 2,
+    minWidth: 0,
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: 2,
     padding: 8,
     fontSize: 14,
-    marginRight: 8,
   },
   percentContainer: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
+    minWidth: 0,
   },
   percentInput: {
     flex: 1,
+    minWidth: 0,
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: 2,

@@ -26,7 +26,14 @@ import { validateRecord } from "@/lib/validation";
 import { palette } from "@/theme/colors";
 import { Link } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 type SectionId = "measurements" | "yarn" | "tension" | "construction";
@@ -45,6 +52,9 @@ const displayUnits = [
 ];
 
 export default function Home() {
+  const { width } = useWindowDimensions();
+  const isWideScreen = width > 850;
+  const titleSize = Math.min(76, Math.max(42, width * 0.06));
   const {
     record,
     setRecord,
@@ -87,7 +97,7 @@ export default function Home() {
       hasError: errors.some((e) => /per 10 cm|ease/i.test(e)),
     },
     { id: "construction", step: "04", label: "Construction" },
-    { id: "results", step: "05", label: "Results", mobileOnly: false },
+    { id: "results", step: "05", label: "Results", mobileOnly: true },
   ];
 
   function selectTab(id: string) {
@@ -121,12 +131,20 @@ export default function Home() {
   return (
     <ScrollView
       style={styles.appShell}
-      contentContainerStyle={styles.scrollContent}
+      contentContainerStyle={[
+        styles.scrollContent,
+        width <= 500 && styles.scrollContentNarrow,
+      ]}
     >
-      <View style={styles.topbar}>
+      <View style={[styles.topbar, !isWideScreen && styles.topbarNarrow]}>
         <View style={styles.topbarLeft}>
           <Text style={styles.eyebrow}>FIELD NOTES / KNIT PLANNING</Text>
-          <Text style={styles.h1}>
+          <Text
+            style={[
+              styles.h1,
+              { fontSize: titleSize, lineHeight: titleSize * 0.95 },
+            ]}
+          >
             Sock calculator
             {loadedItem && (
               <Text style={styles.loadedItemName}>
@@ -142,7 +160,9 @@ export default function Home() {
           </Text>
         </View>
 
-        <View style={styles.topActions}>
+        <View
+          style={[styles.topActions, !isWideScreen && styles.topActionsNarrow]}
+        >
           <View style={styles.unitToggle}>
             <Text>Display</Text>
             {/* TODO: map platform picker child items from children instead of property */}
@@ -174,8 +194,15 @@ export default function Home() {
           />
 
           <FeatureToggle feature="config">
-            <Link className="button secondary" href="/config">
-              Configuration
+            <Link href="/config" asChild>
+              <Pressable
+                style={StyleSheet.flatten([
+                  styles.button,
+                  styles.secondaryButton,
+                ])}
+              >
+                <Text style={styles.secondaryButtonText}>Configuration</Text>
+              </Pressable>
             </Link>
           </FeatureToggle>
 
@@ -222,7 +249,7 @@ export default function Home() {
         </Text>
       )}
 
-      <View style={styles.workspace}>
+      <View style={[styles.workspace, !isWideScreen && styles.workspaceNarrow]}>
         <WizardTabs tabs={tabs} activeId={activeTab} onSelect={selectTab} />
 
         <View style={styles.formColumn}>
@@ -283,6 +310,10 @@ export default function Home() {
           <View
             style={[
               styles.wizardResults,
+              !isWideScreen && styles.wizardResultsNarrow,
+              !isWideScreen &&
+                activeTab !== "results" &&
+                styles.wizardResultsHidden,
               activeTab === "results" && styles.isActiveResults,
             ]}
           >
@@ -302,11 +333,19 @@ const styles = StyleSheet.create({
   appShell: {
     flex: 1,
     backgroundColor: palette.paper,
+    width: "100%",
+    maxWidth: 1320,
+    alignSelf: "center",
   },
   scrollContent: {
     paddingHorizontal: "5%",
     paddingTop: 42,
     paddingBottom: 72,
+  },
+  scrollContentNarrow: {
+    paddingHorizontal: 18,
+    paddingTop: 28,
+    paddingBottom: 50,
   },
   topbar: {
     flexDirection: "row",
@@ -317,6 +356,10 @@ const styles = StyleSheet.create({
     borderColor: palette.border,
     paddingBottom: 32,
     flexWrap: "wrap",
+  },
+  topbarNarrow: {
+    alignItems: "flex-start",
+    flexDirection: "column",
   },
   topbarLeft: {
     flex: 2,
@@ -355,6 +398,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
   },
+  topActionsNarrow: {
+    justifyContent: "flex-start",
+  },
   notice: {
     backgroundColor: "#e4eee8",
     color: "#61766b",
@@ -363,10 +409,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   workspace: {
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginTop: 28,
     gap: 28,
   },
+  workspaceNarrow: {
+    flexDirection: "column",
+    gap: 16,
+  },
   formColumn: {
+    flex: 1,
+    minWidth: 0,
     gap: 16,
   },
   button: {
@@ -376,6 +430,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   wizardResults: {
+    flex: 0.8,
+    minWidth: 350,
+  },
+  wizardResultsNarrow: {
+    flex: 1,
+    width: "100%",
+    minWidth: 0,
+  },
+  wizardResultsHidden: {
     display: "none",
   },
   isActiveResults: {

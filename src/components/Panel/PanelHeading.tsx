@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 24,
     gap: 15,
+    flexWrap: "wrap",
   },
   sectionHeadingMain: {
     flexDirection: "row",

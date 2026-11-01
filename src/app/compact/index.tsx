@@ -17,8 +17,8 @@ import type {
 } from "@/lib/domain";
 import { describeYarnProfile, type LibraryItem } from "@/lib/library";
 import { validateRecord } from "@/lib/validation";
-import { Text } from "@expo/ui";
 import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 function itemsOf<T>(state: { status: string; items?: LibraryItem<T>[] }) {
   return state.items ?? [];
@@ -59,53 +59,75 @@ export default function CompactPage() {
   const record = buildRecord();
 
   return (
-    <main className="compact-shell">
-      <h1>
-        <Text>Sock calculator Compact</Text>
-      </h1>
-      <CompactSelect
-        label="Foot"
-        value={footId}
-        onChange={setFootId}
-        details={foot && describeMeasurements(foot.data)}
-        options={feet.map((i) => ({ id: i.id, label: i.name }))}
-      />
-      <CompactSelect
-        label="Yarn"
-        value={yarnId}
-        onChange={(id) => {
-          setYarnId(id);
-          setTensionId("");
-        }}
-        details={yarn && describeYarn(yarn.data)}
-        options={yarns.map((i) => ({
-          id: i.id,
-          label: `${i.name} — ${describeYarnProfile(i.data)}`,
-        }))}
-      />
-      <CompactSelect
-        label="Tension"
-        value={tensionId}
-        onChange={setTensionId}
-        details={tension && describeTension(tension.data)}
-        options={yarnTensions.map((i) => ({
-          id: i.id,
-          label: `${i.data.needleSizeMm} mm — ${i.name}`,
-        }))}
-      />
-      <CompactSelect
-        label="Construction"
-        value={constructionId}
-        onChange={setConstructionId}
-        details={construction && describeConstruction(construction.data)}
-        options={constructions.map((i) => ({ id: i.id, label: i.name }))}
-      />
-      {record && (
-        <CompactResults
-          result={calculateStitches(record)}
-          errors={validateRecord(record)}
+    <View style={styles.page}>
+      <View style={styles.compactShell}>
+        <Text style={styles.heading}>Sock calculator</Text>
+        <CompactSelect
+          label="Foot"
+          value={footId}
+          onChange={setFootId}
+          details={foot && describeMeasurements(foot.data)}
+          options={feet.map((i) => ({ id: i.id, label: i.name }))}
         />
-      )}
-    </main>
+        <CompactSelect
+          label="Yarn"
+          value={yarnId}
+          onChange={(id) => {
+            setYarnId(id);
+            setTensionId("");
+          }}
+          details={yarn && describeYarn(yarn.data)}
+          options={yarns.map((i) => ({
+            id: i.id,
+            label: `${i.name} — ${describeYarnProfile(i.data)}`,
+          }))}
+        />
+        <CompactSelect
+          label="Tension"
+          value={tensionId}
+          onChange={setTensionId}
+          details={tension && describeTension(tension.data)}
+          options={yarnTensions.map((i) => ({
+            id: i.id,
+            label: `${i.data.needleSizeMm} mm — ${i.name}`,
+          }))}
+        />
+        <CompactSelect
+          label="Construction"
+          value={constructionId}
+          onChange={setConstructionId}
+          details={construction && describeConstruction(construction.data)}
+          options={constructions.map((i) => ({ id: i.id, label: i.name }))}
+        />
+        {record && (
+          <CompactResults
+            result={calculateStitches(record)}
+            errors={validateRecord(record)}
+          />
+        )}
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    backgroundColor: "#f4f1ea",
+  },
+  compactShell: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 448,
+    alignSelf: "center",
+    padding: 12,
+    gap: 8,
+  },
+  heading: {
+    fontFamily: "Georgia",
+    fontSize: 18,
+    fontWeight: "400",
+    color: "#24231f",
+    marginBottom: 0,
+  },
+});

@@ -12,10 +12,12 @@ import {
   FlatList,
   Modal,
   Pressable,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { ClearButton } from "./ui/ClearButton";
@@ -45,6 +47,9 @@ export function SavedItemsControl<T>({
   onDelete,
   onLoadedItemChange,
 }: Props<T>) {
+  const { width } = useWindowDimensions();
+  const isWebInline = Platform.OS === "web" && width > 768;
+  const isWebSheet = Platform.OS === "web" && !isWebInline;
   const [items, setItems] = useState<LibraryItem<T>[]>([]);
   const [nameDraft, setNameDraft] = useState("");
   const [open, setOpen] = useState(false);
@@ -120,6 +125,63 @@ export function SavedItemsControl<T>({
     setOpen(false);
   }
 
+  const savedItemsPanel = (
+    <View
+      style={[
+        styles.savedItemsPanel,
+        isWebInline && styles.savedItemsPanelInline,
+        isWebSheet && styles.savedItemsPanelSheet,
+      ]}
+    >
+      <View
+        style={[
+          styles.savedItemsSaveRow,
+          isWebSheet && styles.savedItemsSaveRowSheet,
+        ]}
+      >
+        <TextInput
+          style={styles.input}
+          placeholder="Name to save as…"
+          value={nameDraft}
+          onChangeText={setNameDraft}
+          accessibilityLabel="Name to save as"
+        />
+        <TouchableOpacity
+          style={[styles.button, styles.secondary]}
+          onPress={handleSave}
+        >
+          <Text style={styles.secondaryText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.h3}>Load saved item</Text>
+      {items.length === 0 ? (
+        <Text style={styles.savedItemsEmpty}>Nothing saved yet.</Text>
+      ) : (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.id}
+          style={styles.savedItemsList}
+          renderItem={({ item }) => (
+            <View style={styles.listItem}>
+              <Pressable
+                style={styles.savedItemsName}
+                onPress={() => handleLoad(item)}
+              >
+                <Text style={styles.itemNameText}>{item.name}</Text>
+              </Pressable>
+              <ClearButton onPress={() => handleDelete(item.id)}>
+                Delete
+              </ClearButton>
+            </View>
+          )}
+        />
+      )}
+      <View style={styles.savedItemsPanelActions}>
+        <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.savedItems}>
       <View style={styles.savedItemsHeader}>
@@ -129,49 +191,25 @@ export function SavedItemsControl<T>({
         </TouchableOpacity>
       </View>
 
-      <Modal visible={open} transparent animationType="fade">
-        <View style={styles.confirmOverlay}>
-          <View style={styles.savedItemsPanel}>
-            <View style={styles.savedItemsSaveRow}>
-              <TextInput
-                style={styles.input}
-                placeholder="Name to save as…"
-                value={nameDraft}
-                onChangeText={setNameDraft}
-              />
-              <TouchableOpacity
-                style={[styles.button, styles.secondary]}
-                onPress={handleSave}
-              >
-                <Text style={styles.secondaryText}>Save</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.h3}>Load saved item</Text>
-            {items.length === 0 ? (
-              <Text style={styles.savedItemsEmpty}>Nothing saved yet.</Text>
-            ) : (
-              <FlatList
-                data={items}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <View style={styles.listItem}>
-                    <Pressable
-                      style={styles.savedItemsName}
-                      onPress={() => handleLoad(item)}
-                    >
-                      <Text style={styles.itemNameText}>{item.name}</Text>
-                    </Pressable>
-                    <ClearButton onPress={() => handleDelete(item.id)}>
-                      Delete
-                    </ClearButton>
-                  </View>
-                )}
-              />
-            )}
-            <View style={styles.savedItemsPanelActions}>
-              <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
-            </View>
-          </View>
+      {isWebInline && open && (
+        <View
+          style={[
+            styles.savedItemsOverlayContainer,
+            { width: Math.min(360, width - 36) },
+          ]}
+        >
+          {savedItemsPanel}
+        </View>
+      )}
+
+      <Modal visible={open && !isWebInline} transparent animationType="fade">
+        <View
+          style={[
+            styles.confirmOverlay,
+            isWebSheet && styles.confirmOverlaySheet,
+          ]}
+        >
+          {savedItemsPanel}
         </View>
       </Modal>
 
@@ -197,9 +235,9 @@ export function SavedItemsControl<T>({
 
               <Pressable
                 style={[styles.button, styles.secondary]}
-                onPress={() => {
+                onPress={async () => {
                   if (loadedItem)
-                    onSaved?.(saveItem(type, data, loadedItem.name));
+                    onSaved?.(await saveItem(type, data, loadedItem.name));
                   setConfirmingNew(false);
                   startNew();
                 }}
@@ -222,6 +260,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+  },
+  savedItemsOverlayContainer: {
+    position: "absolute",
+    top: 48,
+    right: 0,
+    zIndex: 20,
+    width: 360,
   },
   button: {
     borderRadius: 2,
@@ -267,6 +312,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(36, 35, 31, 0.4)",
   },
+  confirmOverlaySheet: {
+    justifyContent: "flex-end",
+    alignItems: "stretch",
+  },
   savedItemsPanel: {
     backgroundColor: palette.panel,
     borderRadius: 4,
@@ -276,15 +325,35 @@ const styles = StyleSheet.create({
     width: "90%",
     maxWidth: 360,
     maxHeight: 520,
+    flexDirection: "column",
     shadowColor: "#24231f",
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.18,
     shadowRadius: 32,
   },
+  savedItemsPanelInline: {
+    width: "100%",
+  },
+  savedItemsPanelSheet: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    maxWidth: "100%",
+    maxHeight: "70%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
   savedItemsSaveRow: {
     flexDirection: "row",
     gap: 8,
     marginBottom: 20,
+  },
+  savedItemsSaveRowSheet: {
+    flexDirection: "row-reverse",
   },
   input: {
     flex: 1,
@@ -308,6 +377,9 @@ const styles = StyleSheet.create({
   savedItemsEmpty: {
     color: "#77746b",
     fontSize: 13,
+  },
+  savedItemsList: {
+    flex: 1,
   },
   listItem: {
     flexDirection: "row",

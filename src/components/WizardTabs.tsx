@@ -1,5 +1,11 @@
 import { palette } from "@/theme/colors";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 
 export type WizardTab = {
   id: string;
@@ -16,8 +22,19 @@ type Props = {
 };
 
 export function WizardTabs({ tabs, activeId, onSelect }: Props) {
+  const isCompact = useWindowDimensions().width <= 850;
+
   return (
-    <View style={styles.wizardTabs} accessibilityRole="tablist">
+    <ScrollView
+      horizontal={isCompact}
+      showsHorizontalScrollIndicator={false}
+      style={[styles.wizardTabs, isCompact && styles.wizardTabsCompact]}
+      contentContainerStyle={
+        isCompact ? styles.wizardTabsCompactContent : undefined
+      }
+      testID="wizard-tabs"
+      accessibilityRole="tablist"
+    >
       {tabs.map((tab) => {
         const selected = tab.id === activeId;
         return (
@@ -28,8 +45,9 @@ export function WizardTabs({ tabs, activeId, onSelect }: Props) {
             accessibilityState={{ selected }}
             style={[
               styles.wizardTab,
+              isCompact && styles.wizardTabCompact,
               selected && styles.isActive,
-              tab.mobileOnly && styles.mobileOnly,
+              !isCompact && tab.mobileOnly && styles.mobileOnly,
             ]}
             onPress={() => onSelect(tab.id)}
           >
@@ -51,14 +69,25 @@ export function WizardTabs({ tabs, activeId, onSelect }: Props) {
           </TouchableOpacity>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   wizardTabs: {
+    width: 140,
+    flexGrow: 0,
+    flexShrink: 0,
     flexDirection: "column",
     gap: 6,
+  },
+  wizardTabsCompact: {
+    width: "100%",
+    flexGrow: 0,
+  },
+  wizardTabsCompactContent: {
+    flexDirection: "row",
+    gap: 4,
   },
   wizardTab: {
     flexDirection: "row",
@@ -70,6 +99,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: 2,
+  },
+  wizardTabCompact: {
+    width: 78,
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
   },
   isActive: {
     backgroundColor: "#fffdf8",

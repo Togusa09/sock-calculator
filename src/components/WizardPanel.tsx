@@ -1,6 +1,6 @@
 import { WizardNav } from "@/components/WizardNav";
 import { type ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 type Props = {
   id: string;
@@ -20,7 +20,8 @@ export function WizardPanel({
   nextLabel,
   children,
 }: Props) {
-  const isVisible = active || desktopActive;
+  const isCompact = useWindowDimensions().width <= 850;
+  const isVisible = active || (!isCompact && desktopActive);
 
   if (!isVisible) {
     return null;

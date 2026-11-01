@@ -3,7 +3,13 @@ import { useLibraryItems } from "@/hooks/UseLibraryItems";
 import type { LibraryItem, LibraryItemType } from "@/lib/library";
 import { Href, Link } from "expo-router";
 import { type ReactNode } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 type Props<T> = {
   type: LibraryItemType;
@@ -20,6 +26,7 @@ export function ConfigListPage<T>({
   emptyMessage,
   summarize,
 }: Props<T>) {
+  const isNarrow = useWindowDimensions().width <= 500;
   const state = useLibraryItems<T>(type);
 
   return (
@@ -33,7 +40,7 @@ export function ConfigListPage<T>({
           </View>
         </Link>
       </View>
-      <View style={styles.panel}>
+      <View style={[styles.panel, isNarrow && styles.panelNarrow]}>
         {state.status === "loading" && <Text style={styles.p}>Loading…</Text>}
         {state.status === "ready" && state.items.length === 0 && (
           <Text style={styles.savedItemsEmpty}>{emptyMessage}</Text>
@@ -90,6 +97,9 @@ const styles = StyleSheet.create({
     borderColor: "#ddd8ca",
     padding: 27,
     borderRadius: 2,
+  },
+  panelNarrow: {
+    padding: 20,
   },
   p: {
     color: "#77746b",

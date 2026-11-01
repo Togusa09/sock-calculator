@@ -1,6 +1,6 @@
 import type { calculateStitches } from "@/lib/calculations";
 import { formatMeasurement } from "@/lib/units";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 type Props = {
   result: ReturnType<typeof calculateStitches>;
@@ -18,23 +18,23 @@ export function CompactResults({ result, errors }: Props) {
   ];
 
   return (
-    <View
-      style={styles.compactResults}
-      className="compact-results"
-      accessibilityLabel="Results"
-    >
-      {errors.length > 0 && <Text style={styles.errorBox}>{errors[0]}</Text>}
-      <Pressable style={styles.compactHero}>
+    <View style={styles.compactResults} accessibilityLabel="Results">
+      {errors.length > 0 && (
+        <Text style={styles.errorBox} accessibilityRole="alert">
+          {errors[0]}
+        </Text>
+      )}
+      <Text style={styles.compactHero}>
         <Text style={styles.heroStrong}>{result.roundedStitches}</Text> sts cast
         on
         <Text style={styles.heroSmall}>
           {" "}
           for {formatMeasurement(result.easedCircumferenceCm, "metric")}
         </Text>
-      </Pressable>
-      <View style={styles.scrollResults}>
+      </Text>
+      <View style={styles.resultsGrid}>
         {rows.map(([name, value]) => (
-          <View key={name} style={styles.resultRow}>
+          <View key={name} style={styles.resultItem}>
             <Text style={styles.resultName}>{name}</Text>
             <Text style={styles.resultValue}>{value}</Text>
           </View>
@@ -47,8 +47,8 @@ export function CompactResults({ result, errors }: Props) {
 const styles = StyleSheet.create({
   compactResults: {
     borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.15)", // #ffffff25 ≈ rgba(255,255,255, 0.15)
-    paddingTop: 0.25, // 0.5rem = 8px
+    borderTopColor: "#ddd8ca",
+    paddingTop: 8,
     marginTop: 14,
   },
   errorBox: {
@@ -59,30 +59,35 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   compactHero: {
-    marginTop: 14,
+    marginBottom: 4,
+    color: "#24231f",
+    fontSize: 13,
   },
   heroStrong: {
-    fontSize: 24, // 1.6rem approx
+    fontSize: 26,
     fontWeight: "700",
   },
   heroSmall: {
-    color: "#bcb8af",
-    fontSize: 8, // 0.8rem ≈ 12px for compact view
+    color: "#77746b",
+    fontSize: 12,
   },
-  scrollResults: {
-    paddingTop: 14,
+  resultsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
   },
-  resultRow: {
-    flexDirection: "row" as const,
-    justifyContent: "space-between",
-    gap: 18,
-    padding: 13,
+  resultItem: {
+    flex: 1,
+    minWidth: 56,
+    gap: 4,
+    paddingVertical: 8,
   },
   resultName: {
     fontSize: 13,
+    color: "#77746b",
   },
   resultValue: {
-    color: "#f6b18d",
-    whiteSpace: "nowrap",
+    color: "#24231f",
+    fontWeight: "600",
   },
 });

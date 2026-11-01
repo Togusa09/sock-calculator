@@ -26,7 +26,7 @@ export function CompactSelect({
     (options.length === 0 ? "None saved" : "Select…");
 
   return (
-    <View style={styles.compactItem} className="compact-item">
+    <View style={styles.compactItem}>
       <Pressable
         style={styles.compactField}
         onPress={() => {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   compactItem: {}, // container for compact item
   compactField: {
     flexDirection: "row",
-    gap: 0.5, // 0.5rem spacing
+    gap: 8,
     fontSize: 13.6, // 0.85rem ≈ 13.6px
     alignItems: "center",
   },
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   compactFieldInput: {
     flex: 1,
     minHeight: 44, // native minimum touch target
-    padding: 0.5, // 0.3rem ≈ 0.5 for RN TextInput
+    padding: 5,
     borderRadius: 2,
     borderWidth: 1,
     borderColor: palette.border,

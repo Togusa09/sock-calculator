@@ -54,7 +54,7 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
         />
       </PanelHeading>
       <View style={styles.fieldGrid}>
-        <View style={styles.field}>
+        <View style={styles.field} testID="yarn-manufacturer-field">
           <Text style={styles.fieldLabel}>Manufacturer *</Text>
           <TextInput
             style={styles.input}
@@ -62,21 +62,19 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
             onChangeText={(text) => onChange({ manufacturer: text })}
           />
         </View>
-        <PlatformPicker
-          selectedValue={profile.weight}
-          onValueChange={(weight) =>
-            onChange({ weight: weight as YarnWeightUnit })
-          }
-          items={[
-            { label: "Fingering", value: "fingering" },
-            { label: "DK", value: "DK" },
-            { label: "Worsted", value: "worsted" },
-          ]}
-        >
-          {/* <Picker.Item value="fingering" label="Fingering" />
-          <Picker.Item value="DK" label="DK" />
-          <Picker.Item value="worsted" label="Worsted" /> */}
-        </PlatformPicker>
+        <View style={styles.field} testID="yarn-weight-field">
+          <PlatformPicker
+            selectedValue={profile.weight}
+            onValueChange={(weight) =>
+              onChange({ weight: weight as YarnWeightUnit })
+            }
+            items={[
+              { label: "Fingering", value: "fingering" },
+              { label: "DK", value: "DK" },
+              { label: "Worsted", value: "worsted" },
+            ]}
+          />
+        </View>
       </View>
       <MaterialMixEditor
         materials={profile.materials}
@@ -95,6 +93,7 @@ const styles = StyleSheet.create({
   },
   field: {
     flex: 1,
+    minWidth: 0,
     gap: 7,
   },
   fieldLabel: {
