@@ -46,9 +46,9 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <View style={styles.fieldGrid} testID="construction-fields">
-        <View style={styles.column} testID="construction-main-column">
-          <View style={styles.field}>
+      <View style={styles.fields} testID="construction-fields">
+        <View style={styles.row} testID="construction-cuff-row">
+          <View style={styles.pickerField}>
             <Text style={styles.fieldLabel}>Cuff</Text>
             <PlatformPicker
               flush
@@ -62,39 +62,11 @@ export function Construction({
               ]}
             />
           </View>
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Heel</Text>
-            <PlatformPicker
-              flush
-              selectedValue={construction.heelStyle}
-              onValueChange={(heelStyle) =>
-                onChange({ heelStyle: heelStyle as HeelStyle })
-              }
-              items={[
-                { value: "gussetted", label: "Gussetted" },
-                { value: "afterthought", label: "Afterthought" },
-                { value: "short-row", label: "Short-row" },
-              ]}
-            />
-          </View>
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Toe</Text>
-            <PlatformPicker
-              flush
-              selectedValue={construction.toeStyle}
-              onValueChange={(toeStyle) =>
-                onChange({ toeStyle: toeStyle as ToeStyle })
-              }
-              items={[
-                { value: "round", label: "Round" },
-                { value: "star", label: "Star" },
-              ]}
-            />
-          </View>
-        </View>
-        <View style={styles.column} testID="construction-options-column">
           {construction.cuffStyle === "ribbed" && (
-            <View style={styles.field}>
+            <View
+              style={styles.pickerField}
+              testID="construction-ribbing-field"
+            >
               <Text style={styles.fieldLabel}>Ribbing repeat</Text>
               <PlatformPicker
                 flush
@@ -111,6 +83,41 @@ export function Construction({
               />
             </View>
           )}
+        </View>
+        <View style={styles.row}>
+          <View style={styles.pickerField}>
+            <Text style={styles.fieldLabel}>Heel</Text>
+            <PlatformPicker
+              flush
+              selectedValue={construction.heelStyle}
+              onValueChange={(heelStyle) =>
+                onChange({ heelStyle: heelStyle as HeelStyle })
+              }
+              items={[
+                { value: "gussetted", label: "Gussetted" },
+                { value: "afterthought", label: "Afterthought" },
+                { value: "short-row", label: "Short-row" },
+              ]}
+            />
+          </View>
+          <View style={styles.spacer} />
+        </View>
+        <View style={styles.row}>
+          <View style={styles.pickerField}>
+            <Text style={styles.fieldLabel}>Toe</Text>
+            <PlatformPicker
+              flush
+              selectedValue={construction.toeStyle}
+              onValueChange={(toeStyle) =>
+                onChange({ toeStyle: toeStyle as ToeStyle })
+              }
+              items={[
+                { value: "round", label: "Round" },
+                { value: "star", label: "Star" },
+              ]}
+            />
+          </View>
+          <View style={styles.spacer} />
         </View>
       </View>
       {/* Override checkbox */}
@@ -162,6 +169,12 @@ const styles = StyleSheet.create({
     position: "relative",
     gap: 7,
   },
+  pickerField: {
+    flexGrow: 1,
+    flexBasis: 240,
+    minWidth: 0,
+    gap: 7,
+  },
   fieldLabel: {
     fontSize: 12,
     color: palette.muted,
@@ -188,16 +201,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 0,
   },
-  fieldGrid: {
+  fields: {
+    gap: 16,
+  },
+  row: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 18,
   },
-  column: {
+  spacer: {
     flexGrow: 1,
     flexBasis: 240,
     minWidth: 0,
-    gap: 16,
   },
   select: {
     borderWidth: 1,

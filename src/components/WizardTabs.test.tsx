@@ -208,7 +208,7 @@ describe("Wizard form layout", () => {
     expect(onChange).toHaveBeenCalledWith({ needleSizeMm: 3 });
   });
 
-  it("puts ribbing in a second column only for ribbed cuffs", async () => {
+  it("places ribbing in the cuff row only for ribbed cuffs", async () => {
     setViewportWidth(1024);
     const base = {
       ribbing: "2x2",
@@ -225,7 +225,7 @@ describe("Wizard form layout", () => {
         />,
       );
     });
-    expect(screen.getByTestId("construction-options-column")).toBeTruthy();
+    expect(screen.getByTestId("construction-ribbing-field")).toBeTruthy();
     expect(screen.getByText("Ribbing repeat")).toBeTruthy();
     expect(screen.getByText("Heel")).toBeTruthy();
   });
