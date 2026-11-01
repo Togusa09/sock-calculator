@@ -4,46 +4,54 @@
 
 ### 1) Integration Inventory
 
-| System                         | Type (API/DB/Queue/etc) | Purpose                                                            | Auth model                                       | Criticality                                 | Evidence                                                |
-| ------------------------------ | ----------------------- | ------------------------------------------------------------------ | ------------------------------------------------ | ------------------------------------------- | ------------------------------------------------------- |
-| Browser `localStorage`         | Browser storage API     | Store active calculator record and reusable library items locally  | Browser origin/profile; no application login     | High to user data persistence               | `src/hooks/UseDataPersistence.ts`, `src/lib/library.ts` |
-| GitHub Actions / GitHub Pages  | CI and static hosting   | Check pull requests, build static export, and deploy from `master` | GitHub workflow permissions and Actions identity | High to deployment, not runtime calculation | `.github/workflows/deploy-pages.yml`                    |
-| File APIs (`Blob`, file input) | Browser APIs            | Export and import a JSON calculator record                         | User-initiated local file selection/download     | Low                                         | `src/app/page.tsx`                                      |
-
-No external application API, database, queue, authentication provider, or telemetry service was found in the declared dependencies or source search.
+| System | Type | Purpose | Auth model | Criticality | Evidence |
+|---|---|---|---|---|---|
+| React Native AsyncStorage | Device-local key/value storage | Working record and named saved items. | No application account; scoped to the installed app/platform storage. | High for persistence. | [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts), [`src/lib/library.ts`](../../src/lib/library.ts) |
+| Expo Document Picker, File System, and Sharing | Platform file APIs | Select JSON input, read/write a file, and share exported data on native platforms. | User-initiated local file access/share. | Medium for import/export. | [`src/components/ImportExportData.tsx`](../../src/components/ImportExportData.tsx), [`package.json`](../../package.json) |
+| GitHub Actions and GitHub Pages | CI and static web hosting | Lint, test, export the Expo web target, and publish the `dist` artifact. | Workflow `contents: read`, `pages: write`, and `id-token: write` permissions. | High for this repository's web deployment; not used by runtime calculations. | [Pages workflow](../../.github/workflows/deploy-pages.yml) |
+| `fetch(source.url)` in `src/lib/platform.ts` | Optional URL-based JSON helper | Fetch and parse a JSON URL if called. | URL supplied by caller; no auth handling in the helper. | `[TODO]` No source call sites were found, so runtime use is unconfirmed. | [`src/lib/platform.ts`](../../src/lib/platform.ts) |
 
 ### 2) Data Stores
 
-| Store                 | Role                                                                          | Access layer                                  | Key risk                                                                      | Evidence                                                |
-| --------------------- | ----------------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Browser local storage | Active record plus typed library arrays stored under `sock-calculator-*` keys | `useDataPersistence` and `src/lib/library.ts` | Origin-local data is not a backup; malformed values can be dropped or removed | `src/hooks/UseDataPersistence.ts`, `src/lib/library.ts` |
+| Store | Role | Access layer | Key risk | Evidence |
+|---|---|---|---|---|
+| AsyncStorage | Versioned active record and arrays of saved library items. | `useDataPersistence` and `src/lib/library.ts`. | App-local data is not a remote backup; parse and write failures have limited user-facing reporting. | [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts), [`src/lib/library.ts`](../../src/lib/library.ts) |
+
+No application database or remote account store is declared in the manifest.
+
+The Android/iOS build pipeline belongs to a separate repository that consumes this project as a submodule; it is outside this repository's deployment workflow.
 
 ### 3) Secrets and Credentials Handling
 
-- Credential sources: none identified; no `.env.example`, `.env.template`, or application secrets were found.
-- `PAGES_BASE_PATH` is a non-secret build configuration value set by the Pages workflow.
-- No external API credentials are needed by the application.
-- Rotation/lifecycle notes: not applicable to the current application integrations.
+- The application dependencies do not declare an authentication provider or service credential SDK.
+- `.env.development` and `.env.production` exist, but their contents were not read; no conclusion about their values or secret handling is made here.
+- No `.env.example` or `.env.template` was found.
+- `src/context/FeatureToggleContext.tsx` reads `NEXT_PUBLIC_FEATURES`; `[TODO]` confirm this configuration name and its intended behavior in the Expo toolchain.
+- Credential rotation/lifecycle: `[TODO]` no application credential integration was identified.
 
 ### 4) Reliability and Failure Behavior
 
-- Retry/backoff: no external application calls exist, so no retry policy is configured.
-- Timeout policy: no external application request timeout was found.
-- Circuit breaker/fallback: not applicable.
-- Persistence recovery: the active-record hook removes stored data when record parsing/validation throws; library-list parsing returns an empty list when stored JSON cannot be parsed or is not an array (`src/hooks/UseDataPersistence.ts`, `src/lib/library.ts`).
-- GitHub Actions fails the build workflow on failing format, lint, test, or build steps (`.github/workflows/deploy-pages.yml`).
+- No retry/backoff, request timeout, or circuit-breaker policy is configured for application integrations.
+- Active-record restore removes the stored key after parse/validation failure; library parsing returns an empty list for malformed JSON.
+- `src/lib/library.ts` does not await the AsyncStorage write promise in its internal `persist` helper.
+- File import/export catches and logs errors; the user-facing `onError` callback is not invoked by `ImportExportData`.
+- The Pages workflow fails on lint, test, privacy-page generation, or web-export step errors.
 
 ### 5) Observability for Integrations
 
-- Application logging around browser storage/file actions: no logging calls were found in `src/`.
-- Metrics/tracing: no application metrics or tracing integration was found.
-- Visibility gap: local persistence failures are not reported through a dedicated user-facing recovery flow.
+- Application code uses `console.log`/`console.error` around import/export and logs the full imported record in the home route.
+- No application metrics, tracing, or external monitoring dependency was found.
+- The record logging conflicts with the repository's security instruction not to log measurement data.
+- AsyncStorage failures and malformed saved data have no dedicated telemetry or consistent user-facing error path.
 
 ### 6) Evidence
 
-- `src/hooks/UseDataPersistence.ts`
-- `src/lib/library.ts`
-- `src/app/page.tsx`
-- `.github/workflows/deploy-pages.yml`
-- `next.config.ts`
-- `package.json`
+- [`package.json`](../../package.json)
+- [`app.json`](../../app.json)
+- [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts)
+- [`src/lib/library.ts`](../../src/lib/library.ts)
+- [`src/lib/platform.ts`](../../src/lib/platform.ts)
+- [`src/components/ImportExportData.tsx`](../../src/components/ImportExportData.tsx)
+- [`src/app/index.tsx`](../../src/app/index.tsx)
+- [`.github/workflows/deploy-pages.yml`](../../.github/workflows/deploy-pages.yml)
+- [`.github/instructions/security.instructions.md`](../../.github/instructions/security.instructions.md)

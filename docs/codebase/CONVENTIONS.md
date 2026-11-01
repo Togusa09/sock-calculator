@@ -4,50 +4,53 @@
 
 ### 1) Naming Rules
 
-| Item                              | Rule                                                                 | Example                                       | Evidence                                               |
-| --------------------------------- | -------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------ |
-| Route files                       | Next.js lowercase route filenames                                    | `src/app/page.tsx`                            | `src/app/`                                             |
-| UI component files and components | Generally PascalCase                                                 | `ResultsPanel.tsx`, `ResultsPanel`            | `src/components/ResultsPanel.tsx`                      |
-| Domain modules and functions      | Generally camelCase                                                  | `calculations.ts`, `calculateStitches`        | `src/lib/calculations.ts`                              |
-| Types                             | PascalCase                                                           | `CalculatorRecord`, `Measurements`            | `src/lib/domain.ts`                                    |
-| Constants                         | Uppercase words with underscores                                     | `DEFAULT_RECORD`, `STORAGE_KEY`               | `src/lib/domain.ts`, `src/hooks/UseDataPersistence.ts` |
-| Hook functions/files              | Function names use `use` + camelCase; current filenames use `Use...` | `useDataPersistence`, `UseDataPersistence.ts` | `src/hooks/UseDataPersistence.ts`                      |
+| Item | Observed rule | Example | Evidence |
+|---|---|---|---|
+| Routes | Expo Router special filenames and lowercase route folders. | `src/app/index.tsx`, `src/app/config/foot-sizes/index.tsx` | [`src/app/_layout.tsx`](../../src/app/_layout.tsx) |
+| Components and component types | Component symbols and many component files use PascalCase; some starter utilities use kebab-case. | `ResultsPanel`, `ImportExportData`, `external-link.tsx` | [`src/components/ResultsPanel.tsx`](../../src/components/ResultsPanel.tsx), [`src/components/external-link.tsx`](../../src/components/external-link.tsx) |
+| Functions and variables | Generally camelCase. | `calculateStitches`, `useDataPersistence` | [`src/lib/calculations.ts`](../../src/lib/calculations.ts), [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts) |
+| Types | PascalCase. | `CalculatorRecord`, `ConstructionOptions` | [`src/lib/domain.ts`](../../src/lib/domain.ts) |
+| Constants | Upper snake case for shared fixed values; local constants also appear in camelCase. | `DEFAULT_RECORD`, `STORAGE_KEY` | [`src/lib/domain.ts`](../../src/lib/domain.ts), [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts) |
+
+File naming is not fully uniform: hook files include both `UseDataPersistence.ts` and `use-theme.ts`.
 
 ### 2) Formatting and Linting
 
-- Formatter: Prettier 3 (`npm run format` / `npm run format:check`); the current scripts target `src`.
-- Linter: ESLint 9 with Next.js core-web-vitals and TypeScript presets (`eslint.config.mjs`).
-- TypeScript: `strict: true`, `noEmit: true`, `allowJs: true`, and bundler module resolution (`tsconfig.json`).
-- Run commands: `npm run format:check`, `npm run lint`, `npx tsc --noEmit`.
-- No separate Prettier configuration file was found.
+- Linter: ESLint 9 with `eslint-config-expo/flat`, invoked by `npm run lint`.
+- TypeScript: strict mode is enabled; aliases map `@/*` to `src/*` and `@/assets/*` to `assets/*`.
+- Prettier is a declared dependency, but no format script or Prettier configuration was found.
+- CI runs Expo lint, but has no explicit `tsc --noEmit` step.
+- Commands: `npm run lint`, `npx tsc --noEmit`; CI runs tests with `npm test -- --watchAll=false --ci`.
 
 ### 3) Import and Module Conventions
 
-- Imports use both external package imports and project imports; no enforced ordering rule or import-sorting plugin was found.
-- The TypeScript alias `@/*` resolves from the repository root. Alias imports and relative imports both occur in source.
-- No barrel-export convention was found; modules are imported from their concrete file paths.
+- Source uses package imports, `@/` aliases, and relative imports.
+- No import-order rule or sorting plugin is configured in the inspected lint/package configuration; `[TODO]` confirm whether additional editor-only rules exist.
+- Modules are imported directly from their files in the representative source; no shared barrel convention is evident.
 
 ### 4) Error and Logging Conventions
 
-- Domain validators return arrays of user-facing error strings; imported record parsing throws when parsing or validation fails.
-- The main page catches import failures and reports the error through a status notice. The persistence hook removes an unreadable/invalid saved record rather than surfacing a notice.
-- No logging library or application logging convention was found in `src/`.
-- The project security instructions require keeping measurement data out of logs and validating untrusted imported/persisted data (`.github/instructions/security.instructions.md`).
+- Domain validation returns arrays of user-facing strings; `parseImportedRecord` throws on JSON parse or validation errors.
+- The persistence hook removes an unreadable active record after restore without reporting the failure in the UI.
+- `listItems` returns an empty list for invalid JSON or a non-array stored value; AsyncStorage operation failures are not consistently surfaced.
+- `ImportExportData` catches errors and logs them; the `onError` prop is declared but not called. The home route also logs the full imported data object.
+- Repository security guidance says not to log measurement records; see [`CONCERNS.md`](./CONCERNS.md).
+- No application logging library or structured logging convention was found.
 
 ### 5) Testing Conventions
 
-- Test files use `*.test.ts` or `*.test.tsx` and are colocated with their target modules where practical.
-- Pure calculation and conversion tests use Vitest assertions; UI tests use jsdom and React DOM, with local storage reset between tests.
-- `vitest.setup.ts` supplies a localStorage mock. Some component tests mock `next/link`.
-- No coverage threshold or coverage command is configured.
+- Test filenames use `.test.ts` or `.test.tsx` and are generally colocated with the code under test.
+- Jest assertions and mocks are used; component suites use `@testing-library/react-native`.
+- The AsyncStorage mock forwards to the package's Jest mock; storage is cleared in relevant suites.
+- Current test tooling is Jest/`jest-expo`, despite stale repository instructions that still specify Vitest; see [`TESTING.md`](./TESTING.md).
 
 ### 6) Evidence
 
-- `eslint.config.mjs`
-- `tsconfig.json`
-- `package.json`
-- `vitest.config.ts`
-- `vitest.setup.ts`
-- `.github/instructions/typescript.instructions.md`
-- `.github/instructions/testing.instructions.md`
-- `.github/instructions/security.instructions.md`
+- [`package.json`](../../package.json)
+- [`tsconfig.json`](../../tsconfig.json)
+- [`eslint.config.js`](../../eslint.config.js)
+- [`jest.config.ts`](../../jest.config.ts)
+- [`src/lib/validation.ts`](../../src/lib/validation.ts)
+- [`src/components/ImportExportData.tsx`](../../src/components/ImportExportData.tsx)
+- [`src/app/index.tsx`](../../src/app/index.tsx)
+- [`.github/instructions/security.instructions.md`](../../.github/instructions/security.instructions.md)

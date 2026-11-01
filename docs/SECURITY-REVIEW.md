@@ -1,4 +1,6 @@
-# Security Review - Sock Calculator
+# Security Review - Sock Calculator (Archived)
+
+> Historical review from 2026-10-07. It describes an earlier project stack and has not been revalidated against the current Expo/React Native application.
 
 **Date:** 2026-10-07  
 **Review Type:** Static code analysis of changes and existing codebase  

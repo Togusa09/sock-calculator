@@ -4,56 +4,59 @@
 
 ### 1) Test Stack and Commands
 
-- Primary test framework: Vitest `^4.1.11`.
-- Assertion/mocking tools: Vitest `expect` and `vi`; jsdom `^29.1.1`; React DOM for component rendering.
+- Primary test framework: Jest `~30.5.2` with `jest-expo` `~58.0.13`.
+- Assertion/mocking tools: Jest `expect`/`jest` APIs and `@testing-library/react-native` `^14.1.0`.
 - Commands:
 
 ```bash
-npm test
-npx vitest run src/lib/calculations.test.ts
-npx tsc --noEmit
-npm run format:check
+npm test -- --watchAll=false --ci
+npx jest --runInBand
 npm run lint
+npx tsc --noEmit
 ```
 
-There is no configured coverage command.
+The `test` script runs `jest --watchAll`; CI appends `--watchAll=false --ci`. No coverage command is configured.
 
 ### 2) Test Layout
 
-- Test files are colocated with source and use `.test.ts` / `.test.tsx`.
-- Current suites cover `src/lib/` calculations, unit conversion, validation, compact summaries, and local library operations; component/route coverage includes wizard tabs, configuration pages, and `/compact`.
-- `vitest.config.ts` selects jsdom globally and loads `vitest.setup.ts`.
-- DOM-oriented tests may also declare `// @vitest-environment jsdom`.
+- Test files use `.test.ts` and `.test.tsx`, colocated with modules/components where practical.
+- Domain suites cover calculations, validation, unit conversion, compact details, and library operations under `src/lib/`.
+- UI tests cover feature toggles, wizard tabs, configuration pages, and the compact screen.
+- `jest.config.ts` uses the `jest-expo` preset and sets transform exclusions for React Native and Expo packages.
+- `src/__mocks__/@react-native-async-storage/async-storage.js` forwards to AsyncStorage's Jest mock; relevant tests clear the mock store.
 
 ### 3) Test Scope Matrix
 
-| Scope                 | Covered?                  | Typical target                                                              | Notes                                                   |
-| --------------------- | ------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Unit                  | Yes                       | Calculation, conversions, validation, library helpers, compact descriptions | Pure domain tests use Vitest                            |
-| Integration/component | Yes, focused              | Configuration pages, wizard tabs, compact route                             | Rendered with React DOM and jsdom                       |
-| E2E                   | No configured suite found | Full browser/user journey                                                   | `[TODO]` Add only if browser-level behavior requires it |
+| Scope | Covered? | Typical target | Notes |
+|---|---|---|---|
+| Unit | Yes | Calculations, validation, units, library helpers, compact descriptions. | Jest tests under `src/lib/`. |
+| Component/screen | Yes, focused | Wizard tabs, configuration, compact results, feature toggles. | Uses React Native Testing Library. |
+| Integration with real services | No service-backed integration suite found. | AsyncStorage module is mocked. | No remote service or database is configured. |
+| E2E/device | No configured suite found. | `[TODO]` Add only if native or real-browser flows need automated coverage. | The Pages workflow exports web but does not run browser automation. |
 
 ### 4) Mocking and Isolation Strategy
 
-- Main mocking approach: custom `window.localStorage` mock in `vitest.setup.ts`; `next/link` is mocked in page/component tests where needed.
-- Isolation: tests clear local storage and DOM state in `beforeEach` for suites using them.
-- External network services are not part of the application and are not mocked.
-- Common limitation: no browser automation layer is configured, so tests do not exercise a real browser or deployed static export.
+- AsyncStorage uses the package-provided Jest mock forwarded through `src/__mocks__/`.
+- Relevant library and compact-screen tests clear AsyncStorage before each case.
+- Tests use local data and do not require external service credentials.
+- Some UI tests contain commented-out assertions or interaction cases; those comments do not execute as coverage.
 
 ### 5) Coverage and Quality Signals
 
 - Coverage tool + threshold: `[TODO]` No coverage provider, command, or threshold is configured.
 - Current reported coverage: `[TODO]` No coverage report was found.
-- Known gaps: no E2E/browser suite; malformed nested import and persisted-record shapes should receive explicit boundary tests alongside stronger validation.
-- GitHub Actions runs formatting, ESLint, Vitest, and the static production build for pull requests (`.github/workflows/deploy-pages.yml`).
+- Known gaps: no configured E2E/native-device run; malformed nested import shapes and persistence write failures do not have focused boundary tests.
+- CI runs privacy-page generation, Expo lint, Jest, and `npx expo export -p web`; it does not explicitly run `tsc --noEmit`.
+- Some repository instruction files still prescribe Vitest and `npm run format:check`; the checked-in manifest/configure Jest and no such script. See the `Intent vs. Reality` section in [`CONCERNS.md`](./CONCERNS.md).
 
 ### 6) Evidence
 
-- `package.json`
-- `vitest.config.ts`
-- `vitest.setup.ts`
-- `src/lib/calculations.test.ts`
-- `src/lib/validation.test.ts`
-- `src/lib/library.test.ts`
-- `src/app/compact/page.test.tsx`
-- `.github/workflows/deploy-pages.yml`
+- [`package.json`](../../package.json)
+- [`jest.config.ts`](../../jest.config.ts)
+- [`src/__mocks__/@react-native-async-storage/async-storage.js`](../../src/__mocks__/@react-native-async-storage/async-storage.js)
+- [`src/lib/calculations.test.ts`](../../src/lib/calculations.test.ts)
+- [`src/lib/validation.test.ts`](../../src/lib/validation.test.ts)
+- [`src/lib/library.test.ts`](../../src/lib/library.test.ts)
+- [`src/components/config/ConfigPages.test.tsx`](../../src/components/config/ConfigPages.test.tsx)
+- [`src/app/compact/__tests__/page.test.tsx`](../../src/app/compact/__tests__/page.test.tsx)
+- [`.github/workflows/deploy-pages.yml`](../../.github/workflows/deploy-pages.yml)

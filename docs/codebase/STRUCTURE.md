@@ -4,53 +4,54 @@
 
 ### 1) Top-Level Map
 
-| Path              | Purpose                                                                                 | Evidence                                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `src/app/`        | Next.js routes, root layout, and global styles                                          | `src/app/`                                                                                                       |
-| `src/components/` | Shared calculator, compact-view, and configuration UI                                   | `src/components/`                                                                                                |
-| `src/hooks/`      | Browser persistence and saved-library hooks                                             | `src/hooks/`                                                                                                     |
-| `src/lib/`        | Domain types, calculation logic, unit conversion, validation, and library storage       | `src/lib/`                                                                                                       |
-| `public/`         | Static public assets                                                                    | `public/`                                                                                                        |
-| `docs/`           | Product design and codebase documentation                                               | `docs/design.md`, `docs/codebase/`                                                                               |
-| `.github/`        | GitHub Actions, Copilot guidance, skills, and agent definitions                         | `.github/`                                                                                                       |
-| `.agents/`        | Repository-local agent skills                                                           | `.agents/skills/`                                                                                                |
-| Root config files | Package scripts/dependencies and Next.js, TypeScript, ESLint, PostCSS, and Vitest setup | `package.json`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `postcss.config.mjs`, `vitest.config.ts` |
+| Path | Purpose | Evidence |
+|---|---|---|
+| `src/app/` | Expo Router layouts and screens: home, compact results, and configuration routes. | [`src/app/_layout.tsx`](../../src/app/_layout.tsx), [`src/app/index.tsx`](../../src/app/index.tsx) |
+| `src/components/` | Shared calculator, configuration, import/export, and result UI. | [`src/components/ImportExportData.tsx`](../../src/components/ImportExportData.tsx), [`src/components/ResultsPanel.tsx`](../../src/components/ResultsPanel.tsx) |
+| `src/hooks/` | Hooks for persisted records, saved items, feature flags, and theme state. | [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts), [`src/hooks/UseLibraryItems.ts`](../../src/hooks/UseLibraryItems.ts) |
+| `src/lib/` | Domain types, unit conversion, validation, calculations, construction formulas, and local library operations. | [`src/lib/domain.ts`](../../src/lib/domain.ts), [`src/lib/calculations.ts`](../../src/lib/calculations.ts) |
+| `src/context/`, `src/constants/`, `src/theme/` | Feature-toggle context and theme constants. | [`src/context/FeatureToggleContext.tsx`](../../src/context/FeatureToggleContext.tsx), `src/constants/`, `src/theme/` |
+| `src/__mocks__/` | Module mock for AsyncStorage used by Jest. | [`src/__mocks__/@react-native-async-storage/async-storage.js`](../../src/__mocks__/@react-native-async-storage/async-storage.js) |
+| `assets/`, `content/`, `public/` | App imagery/icons, privacy-policy source, and static web assets. | [`app.json`](../../app.json), [`content/PrivacyPolicy.md`](../../content/PrivacyPolicy.md) |
+| `scripts/` | Build helper for generating the static privacy-policy page. | [`scripts/build-privacy-html.mjs`](../../scripts/build-privacy-html.mjs) |
+| `.github/`, `.agents/`, `docs/` | CI workflows, repository instructions/skills, and project documentation. | [`.github/workflows/deploy-pages.yml`](../../.github/workflows/deploy-pages.yml), [`AGENTS.md`](../../AGENTS.md) |
 
-Generated directories such as `node_modules/`, `.next/`, and `out/` are build/dependency artifacts rather than source modules.
+The repository is not configured as a package-workspace monorepo. Its release target is Expo web on GitHub Pages. A separate consuming repository uses it as a submodule and handles Android/iOS builds; the local `android/` folder is excluded by `.gitignore` and is not tracked, and no `ios/` folder is present here.
 
 ### 2) Entry Points
 
-- Main runtime entry: `src/app/page.tsx`, the `/` calculator route.
-- Secondary routes: `src/app/compact/page.tsx` (`/compact`), `src/app/config/page.tsx` (`/config`), and nested foot-size and yarn-profile routes.
-- Root layout and document metadata: `src/app/layout.tsx`.
-- Build entry selection: Next.js App Router route files; `npm run dev` starts development mode and `npm run build` creates the static export.
-- No separate worker, CLI, or backend entry point was found.
+- Main runtime entry: `expo-router/entry`, declared as `main` in [`package.json`](../../package.json).
+- Root navigation/layout: [`src/app/_layout.tsx`](../../src/app/_layout.tsx).
+- Main screen: [`src/app/index.tsx`](../../src/app/index.tsx).
+- Other route screens: `src/app/compact/index.tsx`, `src/app/config/index.tsx`, and the foot-size and yarn-profile routes under `src/app/config/`.
+- Command selection: `npm run start`, `npm run android`, `npm run ios`, and `npm run web` start Expo for the respective targets. GitHub Actions uses `npx expo export -p web` for its Pages artifact.
+- Deployment ownership: GitHub Pages web export/deployment is configured in this repository; Android/iOS builds are handled by the separate repository that consumes this one as a submodule.
+- No separate server, worker, or command-line entry point is declared.
 
 ### 3) Module Boundaries
 
-| Boundary          | What belongs here                                                                      | What must not be here                                           |
-| ----------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `src/app/`        | Route composition, page-level state, route metadata                                    | Reusable domain calculations                                    |
-| `src/components/` | Forms, wizard navigation, result presentation, saved-item controls                     | Persistence schema decisions or duplicated calculation formulas |
-| `src/hooks/`      | Client-side loading and persistence lifecycle                                          | Sock calculation formulas                                       |
-| `src/lib/`        | Domain types, calculations, validation, unit conversions, and local library operations | Route layout and presentational markup                          |
+| Boundary | Observed responsibility | Evidence |
+|---|---|---|
+| `src/app/` | Route composition, screen state, and navigation. | [`src/app/index.tsx`](../../src/app/index.tsx), [`src/app/compact/index.tsx`](../../src/app/compact/index.tsx) |
+| `src/components/` | Input controls, shared saved-item UI, import/export, and result presentation. | [`src/components/SavedItemsControl.tsx`](../../src/components/SavedItemsControl.tsx), [`src/components/ResultsPanel.tsx`](../../src/components/ResultsPanel.tsx) |
+| `src/hooks/` | AsyncStorage lifecycle and state access for the working record and library. | [`src/hooks/UseDataPersistence.ts`](../../src/hooks/UseDataPersistence.ts), [`src/hooks/UseLibraryItems.ts`](../../src/hooks/UseLibraryItems.ts) |
+| `src/lib/` | Domain data, conversion, validation, calculation, and local-library operations. | [`src/lib/domain.ts`](../../src/lib/domain.ts), [`src/lib/library.ts`](../../src/lib/library.ts) |
 
 These are observed responsibilities, not enforced package boundaries.
 
 ### 4) Naming and Organization Rules
 
-- Route files use Next.js names such as `page.tsx` and `layout.tsx`; route folders are lowercase.
-- React components and component files are generally PascalCase, for example `ResultsPanel.tsx`.
-- Domain modules use camelCase filenames, for example `calculations.ts` and `validation.ts`.
-- Hook functions use camelCase (`useDataPersistence`, `useLibraryItems`), while the current hook filenames are `UseDataPersistence.ts` and `UseLibraryItems.ts`.
-- `tsconfig.json` maps `@/*` to the repository root. Source imports commonly use that alias, with some relative imports also present.
+- Expo Router uses `_layout.tsx` and `index.tsx` route files with lowercase route directories.
+- Component file naming is mixed: examples include `ResultsPanel.tsx` and `ImportExportData.tsx`, as well as `external-link.tsx` and `themed-view.tsx`.
+- Domain modules use lower camel case (`calculations.ts`, `compactDetails.ts`); the persistence hooks use both `UseDataPersistence.ts` and `use-theme.ts`.
+- `@/*` resolves to `src/*`; `@/assets/*` resolves to `assets/*`, as configured in `tsconfig.json`.
 
 ### 5) Evidence
 
-- `src/app/page.tsx`
-- `src/app/compact/page.tsx`
-- `src/app/config/`
-- `src/components/`
-- `src/hooks/`
-- `src/lib/`
-- `tsconfig.json`
+- [`package.json`](../../package.json)
+- [`app.json`](../../app.json)
+- [`src/app/_layout.tsx`](../../src/app/_layout.tsx)
+- [`src/app/index.tsx`](../../src/app/index.tsx)
+- [`src/app/compact/index.tsx`](../../src/app/compact/index.tsx)
+- [`tsconfig.json`](../../tsconfig.json)
+- [`.gitignore`](../../.gitignore)
