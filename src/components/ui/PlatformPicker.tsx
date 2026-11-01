@@ -2,17 +2,9 @@ import { Picker } from "@expo/ui";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export interface PlatformPickerItem {
-  label: string;
-  value: string | number;
-}
+import type { PlatformPickerProps } from "./PlatformPicker.types";
 
-interface PlatformPickerProps {
-  selectedValue: string | number;
-  onValueChange: (itemValue: string | number) => void;
-  items: PlatformPickerItem[];
-  label?: string;
-}
+export type { PlatformPickerItem } from "./PlatformPicker.types";
 
 export const PlatformPicker: React.FC<PlatformPickerProps> = ({
   selectedValue,
