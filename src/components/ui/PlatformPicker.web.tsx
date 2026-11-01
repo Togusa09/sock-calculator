@@ -12,15 +12,20 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
   onValueChange,
   items,
   label,
+  flush = false,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, flush && styles.flush]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <div style={webStyles.selectWrapper}>
         <select
           value={selectedValue}
           onChange={(e) => onValueChange(e.target.value)}
-          style={webStyles.select}
+          style={
+            flush
+              ? { ...webStyles.select, ...webStyles.selectFlush }
+              : webStyles.select
+          }
         >
           {items.map((item) => (
             <option
@@ -38,6 +43,10 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
 };
 
 const styles = StyleSheet.create({
+  flush: {
+    marginVertical: 0,
+    maxWidth: undefined,
+  },
   container: {
     marginVertical: 10,
     width: "100%",
@@ -83,6 +92,11 @@ const webStyles = {
     fontSize: 13,
     color: palette.textPrimary,
     flex: 1,
+  },
+  selectFlush: {
+    width: "100%",
+    minHeight: 44,
+    boxSizing: "border-box" as const,
   },
   selectActive: {},
 };

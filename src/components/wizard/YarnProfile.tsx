@@ -63,7 +63,9 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
           />
         </View>
         <View style={styles.field} testID="yarn-weight-field">
+          <Text style={styles.fieldLabel}>Weight</Text>
           <PlatformPicker
+            flush
             selectedValue={profile.weight}
             onValueChange={(weight) =>
               onChange({ weight: weight as YarnWeightUnit })

@@ -18,6 +18,7 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
 
   return (
     <View style={styles.materialMix} testID="material-mix-editor">
+      <Text style={styles.label}>Material mix</Text>
       {materials.map((item, index) => (
         <View
           key={index}
@@ -71,6 +72,11 @@ const styles = StyleSheet.create({
   materialMix: {
     width: "100%",
     paddingVertical: 16,
+  },
+  label: {
+    fontSize: 12,
+    color: palette.muted,
+    marginBottom: 7,
   },
   fieldRow: {
     flexDirection: "row",

@@ -8,4 +8,5 @@ export interface PlatformPickerProps {
   onValueChange: (itemValue: string | number) => void;
   items: PlatformPickerItem[];
   label?: string;
+  flush?: boolean;
 }

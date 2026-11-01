@@ -1,10 +1,12 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { act } from "react";
 import * as ReactNative from "react-native";
 import { DEFAULT_YARN_PROFILE } from "@/lib/domain";
 import { WizardTabs, type WizardTab } from "./WizardTabs";
 import { MaterialMixEditor } from "./wizard/MaterialMixEditor";
 import { YarnProfile } from "./wizard/YarnProfile";
+import { YarnTension } from "./wizard/YarnTension";
+import { Construction } from "./wizard/Construction";
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -166,3 +168,65 @@ describe("WizardTabs", () => {
 //     expect(onSelect).toHaveBeenNthCalledWith(2, "c");
 //   });
 // });
+
+describe("Wizard form layout", () => {
+  it("labels yarn weight and material mix", async () => {
+    setViewportWidth(1024);
+    await act(async () => {
+      await render(
+        <YarnProfile
+          profile={DEFAULT_YARN_PROFILE}
+          onChange={jest.fn()}
+          onSelect={jest.fn()}
+        />,
+      );
+    });
+    expect(screen.getByText("Weight")).toBeTruthy();
+    expect(screen.getByText("Material mix")).toBeTruthy();
+  });
+
+  it("edits needle size in yarn tension", async () => {
+    setViewportWidth(1024);
+    const onChange = jest.fn();
+    await act(async () => {
+      await render(
+        <YarnTension
+          tension={{
+            stitchesPer10Cm: 30,
+            rowsPer10Cm: 40,
+            needleSizeMm: 2.5,
+            negativeEasePercent: 10,
+          }}
+          yarnProfile={DEFAULT_YARN_PROFILE}
+          onChange={onChange}
+        />,
+      );
+    });
+    const input = screen.getByLabelText("Needle size");
+    expect(input.props.value).toBe("2.5");
+    fireEvent.changeText(input, "3");
+    expect(onChange).toHaveBeenCalledWith({ needleSizeMm: 3 });
+  });
+
+  it("puts ribbing in a second column only for ribbed cuffs", async () => {
+    setViewportWidth(1024);
+    const base = {
+      ribbing: "2x2",
+      cuffStyle: "ribbed",
+      heelStyle: "gussetted",
+      toeStyle: "round",
+    } as never;
+    await act(async () => {
+      await render(
+        <Construction
+          construction={base}
+          tensionNegativeEase={10}
+          onChange={jest.fn()}
+        />,
+      );
+    });
+    expect(screen.getByTestId("construction-options-column")).toBeTruthy();
+    expect(screen.getByText("Ribbing repeat")).toBeTruthy();
+    expect(screen.getByText("Heel")).toBeTruthy();
+  });
+});

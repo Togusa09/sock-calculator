@@ -10,9 +10,10 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
   onValueChange,
   items,
   label,
+  flush = false,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, flush && styles.flush]}>
       {label && <Text style={styles.label}>{label}</Text>}
       {/* Host must be the direct parent of the Picker */}
       <Host matchContents={{ vertical: true }} style={styles.host}>
@@ -31,6 +32,10 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
 };
 
 const styles = StyleSheet.create({
+  flush: {
+    marginVertical: 0,
+    maxWidth: undefined,
+  },
   container: {
     marginVertical: 10,
     width: "100%",

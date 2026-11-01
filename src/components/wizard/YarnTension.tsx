@@ -108,6 +108,17 @@ export function YarnTension({
           />
           <Text style={styles.fieldSmall}>rows</Text>
         </View>
+        <View style={styles.field} testID="needle-size-field">
+          <Text style={styles.fieldLabel}>Needle size</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="decimal-pad"
+            accessibilityLabel="Needle size"
+            value={String(tension.needleSizeMm)}
+            onChangeText={(text) => onChange({ needleSizeMm: Number(text) })}
+          />
+          <Text style={styles.fieldSmall}>mm</Text>
+        </View>
       </View>
       <Text style={styles.hint}>
         A swatch under 10 cm can be less accurate. The gauge above is stored in
@@ -174,10 +185,12 @@ const styles = StyleSheet.create({
   },
   fieldGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 18,
   },
   field: {
     flex: 1,
+    minWidth: 140,
     position: "relative",
     gap: 7,
   },

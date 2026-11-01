@@ -12,15 +12,7 @@ import {
 } from "@/lib/domain";
 import { palette } from "@/theme/colors";
 import { useState } from "react";
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
 import { PlatformPicker } from "../ui/PlatformPicker";
@@ -54,29 +46,58 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <ScrollView contentContainerStyle={styles.fieldsContainer}>
-        {/* Cuff and Ribbing */}
-        <View style={styles.rowContainer}>
-          <Text style={styles.fieldLabel}>Cuff</Text>
-          <PlatformPicker
-            selectedValue={construction.cuffStyle}
-            onValueChange={(cuffStyle) =>
-              onChange({ cuffStyle: cuffStyle as CuffStyle })
-            }
-            items={[
-              { value: "ribbed", label: "Ribbed Cuff" },
-              { value: "folded", label: "Folded Cuff" },
-            ]}
-          >
-            {/* <Picker.Item value="ribbed" label="Ribbed Cuff" />
-            <Picker.Item value="folded" label="Folded cuff" /> */}
-          </PlatformPicker>
-
+      <View style={styles.fieldGrid} testID="construction-fields">
+        <View style={styles.column} testID="construction-main-column">
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>Cuff</Text>
+            <PlatformPicker
+              flush
+              selectedValue={construction.cuffStyle}
+              onValueChange={(cuffStyle) =>
+                onChange({ cuffStyle: cuffStyle as CuffStyle })
+              }
+              items={[
+                { value: "ribbed", label: "Ribbed cuff" },
+                { value: "folded", label: "Folded cuff" },
+              ]}
+            />
+          </View>
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>Heel</Text>
+            <PlatformPicker
+              flush
+              selectedValue={construction.heelStyle}
+              onValueChange={(heelStyle) =>
+                onChange({ heelStyle: heelStyle as HeelStyle })
+              }
+              items={[
+                { value: "gussetted", label: "Gussetted" },
+                { value: "afterthought", label: "Afterthought" },
+                { value: "short-row", label: "Short-row" },
+              ]}
+            />
+          </View>
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>Toe</Text>
+            <PlatformPicker
+              flush
+              selectedValue={construction.toeStyle}
+              onValueChange={(toeStyle) =>
+                onChange({ toeStyle: toeStyle as ToeStyle })
+              }
+              items={[
+                { value: "round", label: "Round" },
+                { value: "star", label: "Star" },
+              ]}
+            />
+          </View>
+        </View>
+        <View style={styles.column} testID="construction-options-column">
           {construction.cuffStyle === "ribbed" && (
-            <>
+            <View style={styles.field}>
               <Text style={styles.fieldLabel}>Ribbing repeat</Text>
-
               <PlatformPicker
+                flush
                 selectedValue={construction.ribbing}
                 onValueChange={(ribbing) =>
                   onChange({ ribbing: ribbing as Ribbing })
@@ -87,85 +108,41 @@ export function Construction({
                   { value: "2x2", label: "2x2" },
                   { value: "3x3", label: "3x3" },
                 ]}
-              >
-                {/* <Picker.Item value="1x1" label="1x1"></Picker.Item>
-                <Picker.Item value="1x2" label="1x2"></Picker.Item>
-                <Picker.Item value="2x2" label="2x2"></Picker.Item>
-                <Picker.Item value="3x3" label="3x3"></Picker.Item> */}
-              </PlatformPicker>
-            </>
+              />
+            </View>
           )}
         </View>
+      </View>
+      {/* Override checkbox */}
 
-        {/* Heel */}
-        <View style={styles.rowContainer}>
-          <Text style={styles.fieldLabel}>Heel</Text>
-          <PlatformPicker
-            selectedValue={construction.heelStyle}
-            onValueChange={(heelStyle) =>
-              onChange({ heelStyle: heelStyle as HeelStyle })
-            }
-            items={[
-              { value: "gussetted", label: "Gussetted" },
-              { value: "afterthought", label: "Afterthought" },
-              { value: "short-row", label: "Short-row" },
-            ]}
-          >
-            {/* <Picker.Item value="gussetted" label="Gussetted" />
-            <Picker.Item value="afterthought" label="Afterthought" />
-            <Picker.Item value="short-row" label="Short-row" /> */}
-          </PlatformPicker>
-        </View>
+      <View style={styles.override}>
+        <Switch
+          accessibilityLabel="Override project ease"
+          value={construction.negativeEasePercent !== undefined}
+          onValueChange={(checked) =>
+            onChange({
+              negativeEasePercent: checked ? tensionNegativeEase : undefined,
+            })
+          }
+        />
+        <Text style={styles.overrideText}>Override project ease</Text>
+      </View>
 
-        {/* Toe */}
-        <View style={styles.rowContainer}>
-          <Text style={styles.fieldLabel}>Toe</Text>
-          <PlatformPicker
-            selectedValue={construction.toeStyle}
-            onValueChange={(toeStyle) =>
-              onChange({ toeStyle: toeStyle as ToeStyle })
-            }
-            items={[
-              { value: "round", label: "Round" },
-              { value: "star", label: "Star" },
-            ]}
-          >
-            {/* <Picker.Item value="round" label="Round" />
-            <Picker.Item value="star" label="Star" /> */}
-          </PlatformPicker>
-        </View>
-
-        {/* Override checkbox */}
-
-        <View style={styles.override}>
-          <Switch
-            accessibilityLabel="Override project ease"
-            value={construction.negativeEasePercent !== undefined}
-            onValueChange={(checked) =>
-              onChange({
-                negativeEasePercent: checked ? tensionNegativeEase : undefined,
-              })
+      {/* Negative ease input */}
+      {construction.negativeEasePercent !== undefined && (
+        <View style={[styles.field, styles.compact]}>
+          <Text style={styles.fieldLabel}>Project negative ease</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            value={String(construction.negativeEasePercent)}
+            onChangeText={(text) =>
+              onChange({ negativeEasePercent: Number(text) })
             }
           />
-          <Text style={styles.overrideText}>Override project ease</Text>
+          <Text style={styles.fieldSmall}>%</Text>
         </View>
-
-        {/* Negative ease input */}
-        {construction.negativeEasePercent !== undefined && (
-          <View style={[styles.field, styles.compact]}>
-            <Text style={styles.fieldLabel}>Project negative ease</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={String(construction.negativeEasePercent)}
-              onChangeText={(text) =>
-                onChange({ negativeEasePercent: Number(text) })
-              }
-            />
-            <Text style={styles.fieldSmall}>%</Text>
-          </View>
-        )}
-      </ScrollView>
+      )}
     </Panel>
   );
 }
@@ -186,7 +163,6 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   fieldLabel: {
-    flex: Platform.OS === "web" ? 1 : 0,
     fontSize: 12,
     color: palette.muted,
   },
@@ -212,11 +188,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 0,
   },
-  fieldsContainer: {},
-  rowContainer: {
-    flexDirection: Platform.OS === "web" ? "row" : "column",
-    gap: Platform.OS === "web" ? 18 : 4,
-    marginBottom: 16,
+  fieldGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 18,
+  },
+  column: {
+    flexGrow: 1,
+    flexBasis: 240,
+    minWidth: 0,
+    gap: 16,
   },
   select: {
     borderWidth: 1,
