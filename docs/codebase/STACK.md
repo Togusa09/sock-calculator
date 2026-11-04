@@ -59,7 +59,7 @@ npm run build:privacy
 
 - Main configuration: [`app.json`](../../app.json), [`tsconfig.json`](../../tsconfig.json), [`jest.config.ts`](../../jest.config.ts), and [`eslint.config.js`](../../eslint.config.js).
 - `.env.development` and `.env.production` are present. Their contents were not read; `[TODO]` document their non-secret variable names and intended use.
-- `src/context/FeatureToggleContext.tsx` reads `process.env.NEXT_PUBLIC_FEATURES`; `[TODO]` verify whether this variable is intentionally supported by the current Expo build.
+- `src/context/FeatureToggleContext.tsx` reads `process.env.EXPO_PUBLIC_FEATURES`; `[TODO]` verify whether this variable is intentionally supported by the current Expo build.
 - This repository's deployed target is Expo web on GitHub Pages. The web export uses `output: "single"` in `app.json`; the Pages workflow runs on Node 24 and exports web assets to `dist`.
 - A separate repository consumes this project as a submodule and handles Android/iOS builds. No `eas.json`, `.nvmrc`, or package `engines` field was found here; the local `android/` directory is ignored by Git, and there is no `ios/` directory.
 

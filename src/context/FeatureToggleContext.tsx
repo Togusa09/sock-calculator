@@ -14,5 +14,5 @@ function splitFeatures(envVar: string | undefined): string[] {
 }
 
 export const FeatureToggleContext = createContext<FeatureToggleContextType>({
-  enabledFeatures: splitFeatures(process.env.NEXT_PUBLIC_FEATURES),
+  enabledFeatures: splitFeatures(process.env.EXPO_PUBLIC_FEATURES ?? process.env.NEXT_PUBLIC_FEATURES),
 });

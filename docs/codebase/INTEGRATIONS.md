@@ -26,7 +26,7 @@ The Android/iOS build pipeline belongs to a separate repository that consumes th
 - The application dependencies do not declare an authentication provider or service credential SDK.
 - `.env.development` and `.env.production` exist, but their contents were not read; no conclusion about their values or secret handling is made here.
 - No `.env.example` or `.env.template` was found.
-- `src/context/FeatureToggleContext.tsx` reads `NEXT_PUBLIC_FEATURES`; `[TODO]` confirm this configuration name and its intended behavior in the Expo toolchain.
+- `src/context/FeatureToggleContext.tsx` reads `EXPO_PUBLIC_FEATURES`; `[TODO]` confirm this configuration name and its intended behavior in the Expo toolchain.
 - Credential rotation/lifecycle: `[TODO]` no application credential integration was identified.
 
 ### 4) Reliability and Failure Behavior
