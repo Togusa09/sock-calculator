@@ -89,50 +89,6 @@ describe("WizardTabs", () => {
     ).toMatchObject({ fontSize: 11, textAlign: "center" });
     expect(screen.getByTestId("wizard-tabs").props.horizontal).not.toBe(true);
   });
-
-  it("keeps yarn profile fields flexible at narrow widths", async () => {
-    setViewportWidth(503);
-    await act(async () => {
-      await render(
-        <YarnProfile
-          profile={DEFAULT_YARN_PROFILE}
-          onChange={jest.fn()}
-          onSelect={jest.fn()}
-        />,
-      );
-    });
-
-    for (const testId of ["yarn-manufacturer-field", "yarn-weight-field"]) {
-      expect(
-        ReactNative.StyleSheet.flatten(screen.getByTestId(testId).props.style),
-      ).toMatchObject({
-        flex: 1,
-        minWidth: 0,
-      });
-    }
-  });
-
-  it("allows material inputs to shrink within their row", async () => {
-    await act(async () => {
-      await render(
-        <MaterialMixEditor
-          materials={[{ material: "Wool", percent: 100 }]}
-          onChange={jest.fn()}
-        />,
-      );
-    });
-
-    expect(
-      ReactNative.StyleSheet.flatten(
-        screen.getByPlaceholderText("Material name").props.style,
-      ),
-    ).toMatchObject({ minWidth: 0 });
-    expect(
-      ReactNative.StyleSheet.flatten(
-        screen.getByPlaceholderText("0").props.style,
-      ),
-    ).toMatchObject({ minWidth: 0 });
-  });
 });
 
 // describe("WizardTabs", () => {

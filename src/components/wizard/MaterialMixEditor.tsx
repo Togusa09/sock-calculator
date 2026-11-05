@@ -1,5 +1,4 @@
-import { palette } from "@/theme/colors";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { ClearButton } from "../ui/ClearButton";
 
 type Props = {
@@ -17,32 +16,28 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
   }
 
   return (
-    <View style={styles.materialMix} testID="material-mix-editor">
-      <Text style={styles.label}>Material mix</Text>
+    <View testID="material-mix-editor">
+      <Text>Material mix</Text>
       {materials.map((item, index) => (
         <View
           key={index}
           testID={`material-row-${index}`}
-          style={styles.fieldRow}
+          style={{ flexDirection: "row" }}
         >
           <TextInput
-            style={styles.input}
             placeholder="Material name"
             value={item.material}
             onChangeText={(text) => updateRow(index, { material: text })}
           />
-          <View style={styles.percentContainer}>
-            <TextInput
-              style={styles.percentInput}
-              keyboardType="number-pad"
-              placeholder="0"
-              value={String(item.percent)}
-              onChangeText={(text) =>
-                updateRow(index, { percent: Number(text) || 0 })
-              }
-            />
-            <Text style={styles.percentLabel}>%</Text>
-          </View>
+          <TextInput
+            keyboardType="number-pad"
+            placeholder="0"
+            value={String(item.percent)}
+            onChangeText={(text) =>
+              updateRow(index, { percent: Number(text) || 0 })
+            }
+          />
+          <Text>%</Text>
           {materials.length > 1 && (
             <ClearButton
               onPress={() => onChange(materials.filter((_, i) => i !== index))}
@@ -53,98 +48,18 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
         </View>
       ))}
       <Pressable
+        accessibilityRole="button"
         onPress={() => onChange([...materials, { material: "", percent: 0 }])}
-        style={[styles.button, styles.buttonSecondary]}
         testID="add-material"
       >
-        <Text style={styles.buttonText}>Add material</Text>
+        <Text>Add material</Text>
       </Pressable>
-      <View style={styles.hintContainer}>
-        <Text style={styles.hint}>
-          Total: {total}%{total !== 100 ? " — must add up to 100%." : ""}
-        </Text>
-      </View>
+      <Text>
+        Total: {total}%{total !== 100 ? " — must add up to 100%." : ""}
+      </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  materialMix: {
-    width: "100%",
-    paddingVertical: 16,
-  },
-  label: {
-    fontSize: 12,
-    color: palette.muted,
-    marginBottom: 7,
-  },
-  fieldRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    minWidth: 0,
-    gap: 8,
-    marginBottom: 8,
-  },
-  input: {
-    flex: 2,
-    minWidth: 0,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    padding: 8,
-    fontSize: 14,
-  },
-  percentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-    minWidth: 0,
-  },
-  percentInput: {
-    flex: 1,
-    minWidth: 0,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    padding: 8,
-    fontSize: 14,
-    marginRight: 4,
-  },
-  percentLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonReset: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: palette.border,
-  },
-  buttonSecondary: {
-    backgroundColor: palette.textPrimary,
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: palette.textSecondary,
-  },
-  hintContainer: {
-    marginTop: 8,
-    paddingHorizontal: 4,
-  },
-  hint: {
-    fontSize: 12,
-    color: palette.hintText,
-  },
-});
 
 type MaterialComponent = {
   material: string;

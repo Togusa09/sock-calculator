@@ -1,6 +1,6 @@
 import { Picker } from "@expo/ui";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import type { PlatformPickerProps } from "./PlatformPicker.types";
 
@@ -11,11 +11,10 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
   onValueChange,
   items,
   label,
-  flush = false,
 }) => {
   return (
-    <View style={[styles.container, flush && styles.flush]}>
-      {label && <Text style={styles.label}>{label}</Text>}
+    <View>
+      {label && <Text>{label}</Text>}
       <View>
         <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
           {items.map((item) => (
@@ -30,28 +29,3 @@ export const PlatformPicker: React.FC<PlatformPickerProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  flush: {
-    marginVertical: 0,
-    maxWidth: undefined,
-  },
-  container: {
-    marginVertical: 10,
-    width: "100%",
-    maxWidth: 400,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
-    marginBottom: 6,
-  },
-  mobilePickerWrapper: {
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    borderRadius: 8,
-    backgroundColor: "#FFFFFF",
-    overflow: "hidden",
-  },
-});

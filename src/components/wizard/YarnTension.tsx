@@ -4,9 +4,8 @@ import {
   type YarnTension as YarnTensionType,
 } from "@/lib/domain";
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
-import { palette } from "@/theme/colors";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 
 type Props = {
@@ -36,8 +35,6 @@ export function YarnTension({
       const found = yarnProfileId
         ? await findTension(yarnProfileId, tension.needleSizeMm)
         : undefined;
-      // setStatus("");
-      // setLookupFound(!!found);
       if (found) onChange(toGauge(found.data));
     })();
   }, [yarnProfileId, tension.needleSizeMm, onChange]);
@@ -55,163 +52,58 @@ export function YarnTension({
 
   return (
     <Panel>
-      <View style={styles.sectionHeading}>
-        <View style={styles.sectionHeadingMain}>
-          <Text style={styles.step}>03</Text>
-          <View style={styles.headingContent}>
-            <Text style={styles.h2}>Yarn tension</Text>
-            <Text style={styles.p}>
-              {yarnProfileId
-                ? `${describeYarnProfile(yarnProfile)} — gauge and ease shape the fit.`
-                : "Save a yarn profile to look up and store tensions."}
-            </Text>
-          </View>
-        </View>
+      <View>
+        <Text>03 Yarn tension</Text>
+        <Text>
+          {yarnProfileId
+            ? `${describeYarnProfile(yarnProfile)} — gauge and ease shape the fit.`
+            : "Save a yarn profile to look up and store tensions."}
+        </Text>
         <Pressable
-          style={[
-            styles.button,
-            styles.secondary,
-            !yarnProfileId && styles.disabled,
-          ]}
+          accessibilityRole="button"
           disabled={!yarnProfileId}
           onPress={handleSave}
         >
-          <Text style={styles.secondaryButtonText}>Save for yarn + needle</Text>
+          <Text>Save for yarn + needle</Text>
         </Pressable>
       </View>
       {yarnProfileId && (
-        <Text style={styles.hint}>
+        <Text>
           {status ||
             (lookupFound
               ? "Loaded saved tension for this yarn and needle size."
               : "No saved tension for this yarn and needle size yet; enter a gauge and save it.")}
         </Text>
       )}
-      <View style={styles.fieldGrid}>
-        <View style={styles.field}>
-          <Text style={styles.fieldLabel}>Stitches per 10 cm *</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={String(tension.stitchesPer10Cm)}
-            onChangeText={(text) => onChange({ stitchesPer10Cm: Number(text) })}
-          />
-          <Text style={styles.fieldSmall}>sts</Text>
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.fieldLabel}>Rows per 10 cm *</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={String(tension.rowsPer10Cm)}
-            onChangeText={(text) => onChange({ rowsPer10Cm: Number(text) })}
-          />
-          <Text style={styles.fieldSmall}>rows</Text>
-        </View>
-        <View style={styles.field} testID="needle-size-field">
-          <Text style={styles.fieldLabel}>Needle size</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="decimal-pad"
-            accessibilityLabel="Needle size"
-            value={String(tension.needleSizeMm)}
-            onChangeText={(text) => onChange({ needleSizeMm: Number(text) })}
-          />
-          <Text style={styles.fieldSmall}>mm</Text>
-        </View>
+      <View>
+        <Text>Stitches per 10 cm * (sts)</Text>
+        <TextInput
+          keyboardType="numeric"
+          value={String(tension.stitchesPer10Cm)}
+          onChangeText={(text) => onChange({ stitchesPer10Cm: Number(text) })}
+        />
       </View>
-      <Text style={styles.hint}>
+      <View>
+        <Text>Rows per 10 cm * (rows)</Text>
+        <TextInput
+          keyboardType="numeric"
+          value={String(tension.rowsPer10Cm)}
+          onChangeText={(text) => onChange({ rowsPer10Cm: Number(text) })}
+        />
+      </View>
+      <View testID="needle-size-field">
+        <Text>Needle size (mm)</Text>
+        <TextInput
+          keyboardType="decimal-pad"
+          accessibilityLabel="Needle size"
+          value={String(tension.needleSizeMm)}
+          onChangeText={(text) => onChange({ needleSizeMm: Number(text) })}
+        />
+      </View>
+      <Text>
         A swatch under 10 cm can be less accurate. The gauge above is stored in
         metric regardless of display unit.
       </Text>
     </Panel>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionHeading: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 24,
-  },
-  sectionHeadingMain: {
-    flexDirection: "row",
-    gap: 15,
-    flex: 1,
-  },
-  headingContent: {
-    flex: 1,
-  },
-  step: {
-    color: "#c75b36",
-    fontSize: 14,
-    fontFamily: "monospace",
-    paddingTop: 8,
-  },
-  h2: {
-    fontFamily: "Georgia",
-    fontSize: 28,
-    fontWeight: "400",
-    color: "#24231f",
-    marginBottom: 6,
-  },
-  p: {
-    color: "#77746b",
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  button: {
-    borderRadius: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  secondary: {
-    backgroundColor: "#24231f",
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  secondaryButtonText: {
-    color: palette.textSecondary,
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  hint: {
-    color: "#77746b",
-    fontSize: 12,
-    lineHeight: 18,
-    marginVertical: 18,
-  },
-  fieldGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 18,
-  },
-  field: {
-    flex: 1,
-    minWidth: 140,
-    position: "relative",
-    gap: 7,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    color: "#77746b",
-  },
-  input: {
-    backgroundColor: "#faf8f2",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    color: "#24231f",
-    minHeight: 44,
-    paddingHorizontal: 12,
-  },
-  fieldSmall: {
-    position: "absolute",
-    right: 12,
-    bottom: 13,
-    color: "#77746b",
-    fontSize: 11,
-  },
-});

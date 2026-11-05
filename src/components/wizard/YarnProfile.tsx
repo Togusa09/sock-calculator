@@ -9,9 +9,8 @@ import {
 } from "@/lib/domain";
 import { deleteYarnProfile, LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
-import { palette } from "@/theme/colors";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
 import { PlatformPicker } from "../ui/PlatformPicker";
@@ -53,68 +52,33 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <View style={styles.fieldGrid}>
-        <View style={styles.field} testID="yarn-manufacturer-field">
-          <Text style={styles.fieldLabel}>Manufacturer *</Text>
-          <TextInput
-            style={styles.input}
-            value={profile.manufacturer}
-            onChangeText={(text) => onChange({ manufacturer: text })}
-          />
-        </View>
-        <View style={styles.field} testID="yarn-weight-field">
-          <Text style={styles.fieldLabel}>Weight</Text>
-          <PlatformPicker
-            flush
-            selectedValue={profile.weight}
-            onValueChange={(weight) =>
-              onChange({ weight: weight as YarnWeightUnit })
-            }
-            items={[
-              { label: "Fingering", value: "fingering" },
-              { label: "DK", value: "DK" },
-              { label: "Worsted", value: "worsted" },
-            ]}
-          />
-        </View>
+      <View testID="yarn-manufacturer-field">
+        <Text>Manufacturer *</Text>
+        <TextInput
+          value={profile.manufacturer}
+          onChangeText={(text) => onChange({ manufacturer: text })}
+        />
+      </View>
+      <View testID="yarn-weight-field">
+        <Text>Weight</Text>
+        <PlatformPicker
+          flush
+          selectedValue={profile.weight}
+          onValueChange={(weight) =>
+            onChange({ weight: weight as YarnWeightUnit })
+          }
+          items={[
+            { label: "Fingering", value: "fingering" },
+            { label: "DK", value: "DK" },
+            { label: "Worsted", value: "worsted" },
+          ]}
+        />
       </View>
       <MaterialMixEditor
         materials={profile.materials}
         onChange={(materials) => onChange({ materials })}
       />
-      {errors.length > 0 && <Text style={styles.hint}>{errors[0]}</Text>}
+      {errors.length > 0 && <Text>{errors[0]}</Text>}
     </Panel>
   );
 }
-
-const styles = StyleSheet.create({
-  fieldGrid: {
-    flexDirection: "row",
-    gap: 18,
-    marginBottom: 16,
-  },
-  field: {
-    flex: 1,
-    minWidth: 0,
-    gap: 7,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    color: "#77746b",
-  },
-  input: {
-    backgroundColor: "#faf8f2",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    color: "#24231f",
-    minHeight: 44,
-    paddingHorizontal: 12,
-  },
-  hint: {
-    color: "#77746b",
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 20,
-  },
-});

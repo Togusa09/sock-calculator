@@ -1,11 +1,10 @@
 import { useDataPersistence } from "@/hooks/UseDataPersistence";
 import { CalculatorRecord } from "@/lib/domain";
 import { parseImportedRecord } from "@/lib/validation";
-import { palette } from "@/theme/colors";
 import * as DocumentPicker from "expo-document-picker";
 import { File, Paths } from "expo-file-system";
 import { isAvailableAsync, shareAsync } from "expo-sharing";
-import { Platform, Pressable, StyleSheet, Text } from "react-native";
+import { Platform, Pressable, Text } from "react-native";
 
 type Props = {
   //   onMessageUpdate: (mesage: string) => void;
@@ -102,36 +101,12 @@ export function ImportExportData({ onImported }: Props) {
 
   return (
     <>
-      <Pressable
-        style={[styles.button, styles.secondaryButton]}
-        onPress={ExportData}
-      >
-        <Text style={styles.secondaryButtonText}>Export JSON</Text>
+      <Pressable accessibilityRole="button" onPress={ExportData}>
+        <Text>Export JSON</Text>
       </Pressable>
-      <Pressable
-        style={[styles.button, styles.secondaryButton]}
-        onPress={ImportData}
-      >
-        <Text style={styles.secondaryButtonText}>Import JSON</Text>
+      <Pressable accessibilityRole="button" onPress={ImportData}>
+        <Text>Import JSON</Text>
       </Pressable>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  secondaryButton: {
-    backgroundColor: "#24231f", // --ink
-  },
-  secondaryButtonText: {
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 0.48,
-    color: palette.panel,
-  },
-  button: {
-    borderRadius: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-});

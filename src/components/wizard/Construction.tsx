@@ -10,9 +10,8 @@ import {
   ToeStyle,
   type ConstructionOptions,
 } from "@/lib/domain";
-import { palette } from "@/theme/colors";
 import { useState } from "react";
-import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { Switch, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
 import { PlatformPicker } from "../ui/PlatformPicker";
@@ -46,10 +45,10 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <View style={styles.fields} testID="construction-fields">
-        <View style={styles.row} testID="construction-cuff-row">
-          <View style={styles.pickerField}>
-            <Text style={styles.fieldLabel}>Cuff</Text>
+      <View testID="construction-fields">
+        <View testID="construction-cuff-row">
+          <View>
+            <Text>Cuff</Text>
             <PlatformPicker
               flush
               selectedValue={construction.cuffStyle}
@@ -63,11 +62,8 @@ export function Construction({
             />
           </View>
           {construction.cuffStyle === "ribbed" && (
-            <View
-              style={styles.pickerField}
-              testID="construction-ribbing-field"
-            >
-              <Text style={styles.fieldLabel}>Ribbing repeat</Text>
+            <View testID="construction-ribbing-field">
+              <Text>Ribbing repeat</Text>
               <PlatformPicker
                 flush
                 selectedValue={construction.ribbing}
@@ -84,45 +80,38 @@ export function Construction({
             </View>
           )}
         </View>
-        <View style={styles.row}>
-          <View style={styles.pickerField}>
-            <Text style={styles.fieldLabel}>Heel</Text>
-            <PlatformPicker
-              flush
-              selectedValue={construction.heelStyle}
-              onValueChange={(heelStyle) =>
-                onChange({ heelStyle: heelStyle as HeelStyle })
-              }
-              items={[
-                { value: "gussetted", label: "Gussetted" },
-                { value: "afterthought", label: "Afterthought" },
-                { value: "short-row", label: "Short-row" },
-              ]}
-            />
-          </View>
-          <View style={styles.spacer} />
+        <View>
+          <Text>Heel</Text>
+          <PlatformPicker
+            flush
+            selectedValue={construction.heelStyle}
+            onValueChange={(heelStyle) =>
+              onChange({ heelStyle: heelStyle as HeelStyle })
+            }
+            items={[
+              { value: "gussetted", label: "Gussetted" },
+              { value: "afterthought", label: "Afterthought" },
+              { value: "short-row", label: "Short-row" },
+            ]}
+          />
         </View>
-        <View style={styles.row}>
-          <View style={styles.pickerField}>
-            <Text style={styles.fieldLabel}>Toe</Text>
-            <PlatformPicker
-              flush
-              selectedValue={construction.toeStyle}
-              onValueChange={(toeStyle) =>
-                onChange({ toeStyle: toeStyle as ToeStyle })
-              }
-              items={[
-                { value: "round", label: "Round" },
-                { value: "star", label: "Star" },
-              ]}
-            />
-          </View>
-          <View style={styles.spacer} />
+        <View>
+          <Text>Toe</Text>
+          <PlatformPicker
+            flush
+            selectedValue={construction.toeStyle}
+            onValueChange={(toeStyle) =>
+              onChange({ toeStyle: toeStyle as ToeStyle })
+            }
+            items={[
+              { value: "round", label: "Round" },
+              { value: "star", label: "Star" },
+            ]}
+          />
         </View>
       </View>
-      {/* Override checkbox */}
 
-      <View style={styles.override}>
+      <View style={{ flexDirection: "row" }}>
         <Switch
           accessibilityLabel="Override project ease"
           value={construction.negativeEasePercent !== undefined}
@@ -132,115 +121,21 @@ export function Construction({
             })
           }
         />
-        <Text style={styles.overrideText}>Override project ease</Text>
+        <Text>Override project ease</Text>
       </View>
 
-      {/* Negative ease input */}
       {construction.negativeEasePercent !== undefined && (
-        <View style={[styles.field, styles.compact]}>
-          <Text style={styles.fieldLabel}>Project negative ease</Text>
+        <View>
+          <Text>Project negative ease (%)</Text>
           <TextInput
-            style={styles.input}
             keyboardType="numeric"
             value={String(construction.negativeEasePercent)}
             onChangeText={(text) =>
               onChange({ negativeEasePercent: Number(text) })
             }
           />
-          <Text style={styles.fieldSmall}>%</Text>
         </View>
       )}
     </Panel>
   );
 }
-
-const styles = StyleSheet.create({
-  override: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 9,
-    marginTop: 22,
-  },
-  compact: {
-    maxWidth: 210,
-    marginTop: 18,
-  },
-  field: {
-    position: "relative",
-    gap: 7,
-  },
-  pickerField: {
-    flexGrow: 1,
-    flexBasis: 240,
-    minWidth: 0,
-    gap: 7,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    color: palette.muted,
-  },
-  input: {
-    backgroundColor: "#faf8f2",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    color: "#24231f",
-    minHeight: 44,
-    paddingHorizontal: 12,
-  },
-  fieldSmall: {
-    position: "absolute",
-    right: 12,
-    bottom: 13,
-    color: "#77746b",
-    fontSize: 11,
-  },
-  headingTitle: {},
-  sectionSubtitle: {
-    color: palette.muted,
-    fontSize: 13,
-    marginBottom: 0,
-  },
-  fields: {
-    gap: 16,
-  },
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 18,
-  },
-  spacer: {
-    flexGrow: 1,
-    flexBasis: 240,
-    minWidth: 0,
-  },
-  select: {
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    padding: 10,
-    backgroundColor: palette.inputBackground,
-    fontSize: 13,
-    color: palette.textPrimary,
-    flex: 1,
-  },
-  selectActive: {},
-  conditionalSelect: {
-    minHeight: 44,
-  },
-  overrideText: {
-    fontSize: 13,
-    color: palette.muted,
-  },
-  compactInput: {
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    backgroundColor: palette.inputBackground,
-    fontSize: 13,
-    color: palette.textPrimary,
-    minHeight: 44,
-  },
-});
