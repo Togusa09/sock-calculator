@@ -1,58 +1,28 @@
-import sharedStyles from "@/theme/styles";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputProps,
-  View,
-} from "react-native";
+import { TextInput, TextInputProps } from "react-native";
+import LabeledField, { fieldControlStyle } from "./LabeledField";
 
 interface Props extends TextInputProps {
   label: string;
   value: string;
   required?: boolean;
-  //   onChange: (value: string) => void;
+  error?: string;
 }
 
-export default function LabeledTextInput({ label, required, ...rest }: Props) {
+export default function LabeledTextInput({
+  label,
+  required,
+  error,
+  style,
+  ...rest
+}: Props) {
   return (
-    <View style={styles.container}>
-      {label && (
-        <Text style={[sharedStyles.label, sharedStyles.formLabel]}>
-          {label}
-          {required && <Text style={styles.asterisk}>*</Text>}
-        </Text>
-      )}
+    <LabeledField label={label} required={required} error={error}>
       <TextInput
-        style={[styles.baseInput, sharedStyles.formControl]}
+        style={[fieldControlStyle(!!error), style]}
+        accessibilityLabel={label}
         {...rest}
         aria-required={required}
-        accessibilityLabel={required ? "Required field" : undefined}
       />
-    </View>
+    </LabeledField>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  asterisk: {
-    color: "#ff4d4f", // Clean alert red
-  },
-  baseInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#fff",
-  },
-  errorInput: {
-    borderColor: "#ff4d4f",
-    backgroundColor: "#fffbfe",
-  },
-});

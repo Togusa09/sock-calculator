@@ -80,7 +80,6 @@ export default function Home() {
           onValueChange={(value, index) =>
             updateRecord({ displayUnit: value as DisplayUnit })
           }
-          value={""}
         >
           {displayUnits.map((f) => (
             <Picker.Item key={f.value} label={f.label} value={f.value} />
