@@ -1,15 +1,14 @@
 import { FeatureToggle } from "@/components/FeatureToggle";
 import { ImportExportData } from "@/components/ImportExportData";
+import { Picker } from "@react-native-picker/picker";
+
 import { ResultsPanel } from "@/components/ResultsPanel";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
 import { ClearButton } from "@/components/ui/ClearButton";
-import {
-  PlatformPicker,
-  PlatformPickerItem,
-} from "@/components/ui/PlatformPicker";
+import LabeledPicker from "@/components/ui/labeledPicker";
 import { Construction } from "@/components/wizard/Construction";
 import { FootMeasurements } from "@/components/wizard/FootMeasurements";
 import { YarnProfile } from "@/components/wizard/YarnProfile";
@@ -61,7 +60,7 @@ export default function Home() {
           )}
         </Text>
 
-        <View>
+        {/* <View>
           <Text>Display</Text>
           <PlatformPicker
             selectedValue={unit}
@@ -73,7 +72,20 @@ export default function Home() {
               value: f.value,
             }))}
           />
-        </View>
+        </View> */}
+        <LabeledPicker
+          label="Display"
+          required
+          selectedValue={unit}
+          onValueChange={(value, index) =>
+            updateRecord({ displayUnit: value as DisplayUnit })
+          }
+          value={""}
+        >
+          {displayUnits.map((f) => (
+            <Picker.Item key={f.value} label={f.label} value={f.value} />
+          ))}
+        </LabeledPicker>
 
         <SavedItemsControl
           type="project"

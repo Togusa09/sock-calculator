@@ -1,4 +1,3 @@
-import { NumberField } from "@/components/NumberField";
 import {
   SavedItemsControl,
   type LoadedItemInfo,
@@ -8,10 +7,12 @@ import {
   type DisplayUnit,
   type Measurements,
 } from "@/lib/domain";
+import { measurementLabel } from "@/lib/units";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
+import LabeledTextInput from "../ui/labeledTextInput";
 
 type Props = {
   measurements: Measurements;
@@ -40,71 +41,92 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
         />
       </PanelHeading>
 
-      <NumberField
+      {/* <NumberField
         label="Foot length"
         value={measurements.footLengthCm}
         unit={unit}
         required
         onChange={(value) => onChange({ footLengthCm: value ?? 0 })}
-      />
-      <NumberField
-        label="Ball circumference"
-        value={measurements.footCircumferenceCm}
-        unit={unit}
+      /> */}
+      <LabeledTextInput
+        label={`Foot length (${measurementLabel(unit)})`}
+        value={measurements.footLengthCm?.toString() ?? ""}
         required
-        onChange={(value) => onChange({ footCircumferenceCm: value ?? 0 })}
+        onChangeText={function (value: string): void {
+          onChange({
+            ...measurements,
+            footLengthCm: Number(value) ?? 0,
+          });
+        }}
+      />
+      <LabeledTextInput
+        label={`Ball circumference (${measurementLabel(unit)})`}
+        value={measurements.footCircumferenceCm?.toString() ?? ""}
+        required
+        onChangeText={(value) =>
+          onChange({ footCircumferenceCm: Number(value) ?? 0 })
+        }
       />
 
       <TouchableOpacity
         accessibilityRole="button"
         onPress={() => setIsExpanded(!isExpanded)}
       >
-        <Text>{isExpanded ? "▼ More measurements" : "▶ More measurements"}</Text>
+        <Text>
+          {isExpanded ? "▼ More measurements" : "▶ More measurements"}
+        </Text>
       </TouchableOpacity>
 
       {isExpanded && (
         <View>
-          <NumberField
-            label="Heel diagonal"
-            value={measurements.heelDiagonalCm}
-            unit={unit}
-            onChange={(value) => onChange({ heelDiagonalCm: value })}
+          <LabeledTextInput
+            label={`Heel diagonal (${measurementLabel(unit)})`}
+            value={measurements.heelDiagonalCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ heelDiagonalCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="Ankle circumference"
-            value={measurements.ankleCircumferenceCm}
-            unit={unit}
-            onChange={(value) => onChange({ ankleCircumferenceCm: value })}
+          <LabeledTextInput
+            label={`Ankle circumference (${measurementLabel(unit)})`}
+            value={measurements.ankleCircumferenceCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ ankleCircumferenceCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="Heel height"
-            value={measurements.heelHeightCm}
-            unit={unit}
-            onChange={(value) => onChange({ heelHeightCm: value })}
+          <LabeledTextInput
+            label={`Heel height (${measurementLabel(unit)})`}
+            value={measurements.heelHeightCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ heelHeightCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="Instep circumference"
-            value={measurements.instepCircumferenceCm}
-            unit={unit}
-            onChange={(value) => onChange({ instepCircumferenceCm: value })}
+          <LabeledTextInput
+            label={`Instep circumference (${measurementLabel(unit)})`}
+            value={measurements.instepCircumferenceCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ instepCircumferenceCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="Toe length"
-            value={measurements.toeLengthCm}
-            unit={unit}
-            onChange={(value) => onChange({ toeLengthCm: value })}
+          <LabeledTextInput
+            label={`Toe length (${measurementLabel(unit)})`}
+            value={measurements.toeLengthCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ toeLengthCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="Low calf circumference"
-            value={measurements.lowCalfCircumferenceCm}
-            unit={unit}
-            onChange={(value) => onChange({ lowCalfCircumferenceCm: value })}
+          <LabeledTextInput
+            label={`Low calf circumference (${measurementLabel(unit)})`}
+            value={measurements.lowCalfCircumferenceCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ lowCalfCircumferenceCm: Number(value) ?? 0 })
+            }
           />
-          <NumberField
-            label="High calf circumference"
-            value={measurements.highCalfCircumferenceCm}
-            unit={unit}
-            onChange={(value) => onChange({ highCalfCircumferenceCm: value })}
+          <LabeledTextInput
+            label={`High calf circumference (${measurementLabel(unit)})`}
+            value={measurements.highCalfCircumferenceCm?.toString() ?? ""}
+            onChangeText={(value) =>
+              onChange({ highCalfCircumferenceCm: Number(value) ?? 0 })
+            }
           />
         </View>
       )}
