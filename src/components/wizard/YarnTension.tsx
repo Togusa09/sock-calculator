@@ -7,6 +7,7 @@ import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
 import { useEffect, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
+import LabeledField, { fieldControlStyle } from "../ui/LabeledField";
 
 type Props = {
   tension: YarnTensionType;
@@ -75,31 +76,30 @@ export function YarnTension({
               : "No saved tension for this yarn and needle size yet; enter a gauge and save it.")}
         </Text>
       )}
-      <View>
-        <Text>Stitches per 10 cm * (sts)</Text>
+      <LabeledField label="Stitches per 10 cm" required>
         <TextInput
+          style={fieldControlStyle()}
           keyboardType="numeric"
           value={String(tension.stitchesPer10Cm)}
           onChangeText={(text) => onChange({ stitchesPer10Cm: Number(text) })}
         />
-      </View>
-      <View>
-        <Text>Rows per 10 cm * (rows)</Text>
+      </LabeledField>
+      <LabeledField label="Rows per 10 cm" required>
         <TextInput
+          style={fieldControlStyle()}
           keyboardType="numeric"
           value={String(tension.rowsPer10Cm)}
           onChangeText={(text) => onChange({ rowsPer10Cm: Number(text) })}
         />
-      </View>
-      <View testID="needle-size-field">
-        <Text>Needle size (mm)</Text>
+      </LabeledField>
+      <LabeledField label="Needle size (mm)" required>
         <TextInput
+          style={fieldControlStyle()}
           keyboardType="decimal-pad"
-          accessibilityLabel="Needle size"
           value={String(tension.needleSizeMm)}
           onChangeText={(text) => onChange({ needleSizeMm: Number(text) })}
         />
-      </View>
+      </LabeledField>
       <Text>
         A swatch under 10 cm can be less accurate. The gauge above is stored in
         metric regardless of display unit.

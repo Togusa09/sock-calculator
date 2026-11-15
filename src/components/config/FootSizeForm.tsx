@@ -47,9 +47,6 @@ export function FootSizeForm({ measurements, onChange }: Props) {
         </LabeledField>
       </View>
       <View>
-        {/* <LabeledTextInput label={""} value={""} onChange={function (value: string): void {
-          
-        } } /> */}
         {FIELDS.map(({ key, label, required }) => (
           <NumberField
             key={key}
