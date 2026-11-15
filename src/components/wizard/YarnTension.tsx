@@ -4,10 +4,11 @@ import {
   type YarnTension as YarnTensionType,
 } from "@/lib/domain";
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
+import { fieldControlStyle } from "@/theme/styles";
 import { useEffect, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
-import LabeledField, { fieldControlStyle } from "../ui/LabeledField";
+import LabeledField from "../ui/LabeledField";
 
 type Props = {
   tension: YarnTensionType;

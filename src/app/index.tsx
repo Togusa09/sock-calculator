@@ -7,8 +7,8 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
-import { ClearButton } from "@/components/ui/ClearButton";
-import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
+import { BasicButton } from "@/components/ui/BasicButton";
+import LabeledField from "@/components/ui/LabeledField";
 import { Construction } from "@/components/wizard/Construction";
 import { FootMeasurements } from "@/components/wizard/FootMeasurements";
 import { YarnProfile } from "@/components/wizard/YarnProfile";
@@ -20,6 +20,7 @@ import {
   DisplayUnit,
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
+import { fieldControlStyle } from "@/theme/styles";
 import { Link } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -140,14 +141,14 @@ export default function Home() {
           tensionNegativeEase={record.tension.negativeEasePercent}
           onChange={updateConstruction}
         />
-        <ClearButton
+        <BasicButton
           onPress={() => {
             setRecord(DEFAULT_RECORD);
             setMessage("Defaults restored.");
           }}
         >
           Restore defaults
-        </ClearButton>
+        </BasicButton>
       </View>
 
       <ResultsPanel result={result} unit={unit} validation={errors} />

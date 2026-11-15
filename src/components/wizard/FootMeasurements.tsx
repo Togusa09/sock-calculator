@@ -7,11 +7,11 @@ import {
   type DisplayUnit,
   type Measurements,
 } from "@/lib/domain";
+import { fieldControlStyle } from "@/theme/styles";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
-import { fieldControlStyle } from "../ui/LabeledField";
 import LabeledUnitField from "../ui/LabeledUnitField";
 
 type MeasurementInputProps = {

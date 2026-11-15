@@ -1,22 +1,22 @@
 import {
-  deleteItem,
-  listItems,
-  nextAvailableName,
-  saveItem,
-  type LibraryItem,
-  type LibraryItemType,
+    deleteItem,
+    listItems,
+    nextAvailableName,
+    saveItem,
+    type LibraryItem,
+    type LibraryItemType,
 } from "@/lib/library";
 import { useEffect, useRef, useState } from "react";
 import {
-  FlatList,
-  Modal,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    FlatList,
+    Modal,
+    Pressable,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { ClearButton } from "./ui/ClearButton";
+import { BasicButton } from "./ui/BasicButton";
 
 export type LoadedItemInfo = {
   id?: string;
@@ -121,7 +121,7 @@ export function SavedItemsControl<T>({
   return (
     <View>
       <View style={{ flexDirection: "row" }}>
-        <ClearButton onPress={handleNew}>New</ClearButton>
+        <BasicButton onPress={handleNew}>New</BasicButton>
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityLabel="Saved items"
@@ -159,14 +159,14 @@ export function SavedItemsControl<T>({
                   >
                     <Text>{item.name}</Text>
                   </Pressable>
-                  <ClearButton onPress={() => handleDelete(item.id)}>
+                  <BasicButton onPress={() => handleDelete(item.id)}>
                     Delete
-                  </ClearButton>
+                  </BasicButton>
                 </View>
               )}
             />
           )}
-          <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
+          <BasicButton onPress={() => setOpen(false)}>Close</BasicButton>
         </View>
       )}
 
@@ -175,17 +175,17 @@ export function SavedItemsControl<T>({
           <Text>Save before starting new?</Text>
           <Text>{`"${loadedItem?.name}" has unsaved changes.`}</Text>
           <View style={{ flexDirection: "row" }}>
-            <ClearButton onPress={() => setConfirmingNew(false)}>
+            <BasicButton onPress={() => setConfirmingNew(false)}>
               Cancel
-            </ClearButton>
-            <ClearButton
+            </BasicButton>
+            <BasicButton
               onPress={() => {
                 setConfirmingNew(false);
                 startNew();
               }}
             >
               Discard
-            </ClearButton>
+            </BasicButton>
             <Pressable
               accessibilityRole="button"
               onPress={async () => {

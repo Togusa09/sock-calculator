@@ -1,6 +1,6 @@
 import { palette } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ClearButton } from "./ui/ClearButton";
+import { BasicButton } from "./ui/BasicButton";
 
 type Props = {
   onBack?: () => void;
@@ -11,7 +11,7 @@ type Props = {
 export function WizardNav({ onBack, onNext, nextLabel = "Next" }: Props) {
   return (
     <View style={styles.wizardNav}>
-      {onBack ? <ClearButton onPress={onBack}>Back</ClearButton> : <View />}
+      {onBack ? <BasicButton onPress={onBack}>Back</BasicButton> : <View />}
       {onNext && (
         <Pressable style={[styles.button, styles.secondary]} onPress={onNext}>
           <Text style={styles.secondaryText}>{nextLabel}</Text>

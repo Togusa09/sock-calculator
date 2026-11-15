@@ -4,7 +4,8 @@ import { parseImportedRecord } from "@/lib/validation";
 import * as DocumentPicker from "expo-document-picker";
 import { File, Paths } from "expo-file-system";
 import { isAvailableAsync, shareAsync } from "expo-sharing";
-import { Platform, Pressable, Text } from "react-native";
+import { Platform, View } from "react-native";
+import { BasicButton } from "./ui/BasicButton";
 
 type Props = {
   //   onMessageUpdate: (mesage: string) => void;
@@ -101,12 +102,10 @@ export function ImportExportData({ onImported }: Props) {
 
   return (
     <>
-      <Pressable accessibilityRole="button" onPress={ExportData}>
-        <Text>Export JSON</Text>
-      </Pressable>
-      <Pressable accessibilityRole="button" onPress={ImportData}>
-        <Text>Import JSON</Text>
-      </Pressable>
+      <View style={{ flexDirection: "row", gap: 8, width: 200 }}>
+        <BasicButton onPress={ExportData}>Export JSON</BasicButton>
+        <BasicButton onPress={ImportData}>Import JSON</BasicButton>
+      </View>
     </>
   );
 }

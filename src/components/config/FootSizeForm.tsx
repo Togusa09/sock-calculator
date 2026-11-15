@@ -1,9 +1,10 @@
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
+import { fieldControlStyle } from "@/theme/styles";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { View } from "react-native";
-import LabeledField, { fieldControlStyle } from "../ui/LabeledField";
+import LabeledField from "../ui/LabeledField";
 
 type Props = {
   measurements: Measurements;

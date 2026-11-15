@@ -1,5 +1,6 @@
+import { fieldControlStyle } from "@/theme/styles";
 import { Pressable, Text, TextInput, View } from "react-native";
-import { ClearButton } from "../ui/ClearButton";
+import { BasicButton } from "../ui/BasicButton";
 
 type Props = {
   materials: MaterialComponent[];
@@ -25,11 +26,13 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
           style={{ flexDirection: "row" }}
         >
           <TextInput
+            style={fieldControlStyle()}
             placeholder="Material name"
             value={item.material}
             onChangeText={(text) => updateRow(index, { material: text })}
           />
           <TextInput
+            style={fieldControlStyle()}
             keyboardType="number-pad"
             placeholder="0"
             value={String(item.percent)}
@@ -39,11 +42,11 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
           />
           <Text>%</Text>
           {materials.length > 1 && (
-            <ClearButton
+            <BasicButton
               onPress={() => onChange(materials.filter((_, i) => i !== index))}
             >
               Remove
-            </ClearButton>
+            </BasicButton>
           )}
         </View>
       ))}

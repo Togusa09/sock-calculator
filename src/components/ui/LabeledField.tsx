@@ -1,4 +1,4 @@
-import sharedStyles from "@/theme/styles";
+import { styles as sharedStyles } from "@/theme/styles";
 import { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -39,29 +39,6 @@ export default function LabeledField({
       )}
     </View>
   );
-}
-
-export const fieldControlStyles = StyleSheet.create({
-  base: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#fff",
-  },
-  error: {
-    borderColor: "#ff4d4f",
-    backgroundColor: "#fffbfe",
-  },
-});
-
-export function fieldControlStyle(hasError?: boolean) {
-  return [
-    fieldControlStyles.base,
-    sharedStyles.formControl,
-    hasError && fieldControlStyles.error,
-  ];
 }
 
 const styles = StyleSheet.create({

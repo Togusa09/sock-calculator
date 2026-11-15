@@ -1,12 +1,11 @@
+import { DEFAULT_YARN_PROFILE } from "@/lib/domain";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { act } from "react";
 import * as ReactNative from "react-native";
-import { DEFAULT_YARN_PROFILE } from "@/lib/domain";
 import { WizardTabs, type WizardTab } from "./WizardTabs";
-import { MaterialMixEditor } from "./wizard/MaterialMixEditor";
+import { Construction } from "./wizard/Construction";
 import { YarnProfile } from "./wizard/YarnProfile";
 import { YarnTension } from "./wizard/YarnTension";
-import { Construction } from "./wizard/Construction";
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }

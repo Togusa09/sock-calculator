@@ -2,7 +2,7 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
-import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
+import LabeledField from "@/components/ui/LabeledField";
 import {
   DEFAULT_YARN_PROFILE,
   YarnWeightUnit,
@@ -10,6 +10,7 @@ import {
 } from "@/lib/domain";
 import { deleteYarnProfile, LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
+import { fieldControlStyle } from "@/theme/styles";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";

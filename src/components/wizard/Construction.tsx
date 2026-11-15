@@ -2,7 +2,7 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
-import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
+import LabeledField from "@/components/ui/LabeledField";
 import {
   CuffStyle,
   DEFAULT_RECORD,
@@ -11,6 +11,7 @@ import {
   ToeStyle,
   type ConstructionOptions,
 } from "@/lib/domain";
+import { fieldControlStyle } from "@/theme/styles";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Switch, Text, TextInput, View } from "react-native";
