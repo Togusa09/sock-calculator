@@ -96,6 +96,7 @@ export function YarnTension({
       <LabeledField label="Needle size (mm)" required>
         <TextInput
           style={fieldControlStyle()}
+          testID="needle-size-field"
           keyboardType="decimal-pad"
           value={String(tension.needleSizeMm)}
           onChangeText={(text) => onChange({ needleSizeMm: Number(text) })}

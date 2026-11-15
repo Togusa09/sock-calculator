@@ -64,7 +64,11 @@ export function Construction({
 
           {construction.cuffStyle === "ribbed" && (
             <View testID="construction-ribbing-field">
-              <LabeledField label="Ribbing repeat" required>
+              <LabeledField
+                label="Ribbing repeat"
+                required
+                testID="construction-ribbing-repeat-field"
+              >
                 <Picker
                   selectedValue={construction.ribbing}
                   style={fieldControlStyle()}
@@ -82,7 +86,11 @@ export function Construction({
           )}
         </View>
         <View>
-          <LabeledField label="Heel style" required>
+          <LabeledField
+            label="Heel style"
+            required
+            testID="construction-heel-style-field"
+          >
             <Picker
               style={fieldControlStyle()}
               selectedValue={construction.heelStyle}
@@ -97,7 +105,11 @@ export function Construction({
           </LabeledField>
         </View>
         <View>
-          <LabeledField label="Toe style" required>
+          <LabeledField
+            label="Toe style"
+            required
+            testID="construction-toe-style-field"
+          >
             <Picker
               style={fieldControlStyle()}
               selectedValue={construction.toeStyle}

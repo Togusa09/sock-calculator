@@ -157,7 +157,7 @@ describe("Wizard form layout", () => {
         />,
       );
     });
-    const input = screen.getByLabelText("Needle size");
+    const input = screen.getByTestId("needle-size-field");
     expect(input.props.value).toBe("2.5");
     fireEvent.changeText(input, "3");
     expect(onChange).toHaveBeenCalledWith({ needleSizeMm: 3 });
@@ -181,7 +181,10 @@ describe("Wizard form layout", () => {
       );
     });
     expect(screen.getByTestId("construction-ribbing-field")).toBeTruthy();
-    expect(screen.getByText("Ribbing repeat")).toBeTruthy();
-    expect(screen.getByText("Heel")).toBeTruthy();
+    expect(
+      screen.getByTestId("construction-ribbing-repeat-field"),
+    ).toBeTruthy();
+    expect(screen.getByTestId("construction-heel-style-field")).toBeTruthy();
+    expect(screen.getByTestId("construction-toe-style-field")).toBeTruthy();
   });
 });

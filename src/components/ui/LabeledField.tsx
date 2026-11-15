@@ -21,7 +21,11 @@ export default function LabeledField({
     <View style={styles.wrapper} testID={testID}>
       <View style={styles.container}>
         {!!label && (
-          <Text style={[sharedStyles.label, sharedStyles.formLabel]}>
+          <Text
+            style={[sharedStyles.label, sharedStyles.formLabel]}
+            accessibilityRole="label"
+            accessibilityLabel={label}
+          >
             {label}
             {required && (
               <Text style={styles.asterisk} aria-hidden>
