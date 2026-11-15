@@ -2,6 +2,7 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
+import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
 import {
   DEFAULT_YARN_PROFILE,
   YarnWeightUnit,
@@ -9,11 +10,12 @@ import {
 } from "@/lib/domain";
 import { deleteYarnProfile, LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
-import { PlatformPicker } from "../ui/PlatformPicker";
+
 import { MaterialMixEditor } from "./MaterialMixEditor";
 
 type Props = {
@@ -60,19 +62,19 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
         />
       </View>
       <View testID="yarn-weight-field">
-        <Text>Weight</Text>
-        <PlatformPicker
-          flush
-          selectedValue={profile.weight}
-          onValueChange={(weight) =>
-            onChange({ weight: weight as YarnWeightUnit })
-          }
-          items={[
-            { label: "Fingering", value: "fingering" },
-            { label: "DK", value: "DK" },
-            { label: "Worsted", value: "worsted" },
-          ]}
-        />
+        <LabeledField label="Weight">
+          <Picker
+            style={fieldControlStyle()}
+            selectedValue={profile.weight}
+            onValueChange={(weight) =>
+              onChange({ weight: weight as YarnWeightUnit })
+            }
+          >
+            <Picker.Item label="Fingering" value="fingering" />
+            <Picker.Item label="DK" value="DK" />
+            <Picker.Item label="Worsted" value="worsted" />
+          </Picker>
+        </LabeledField>
       </View>
       <MaterialMixEditor
         materials={profile.materials}

@@ -7,13 +7,40 @@ import {
   type DisplayUnit,
   type Measurements,
 } from "@/lib/domain";
-import { measurementLabel } from "@/lib/units";
 import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
-import LabeledTextInput from "../ui/labeledTextInput";
+import { fieldControlStyle } from "../ui/LabeledField";
+import LabeledUnitField from "../ui/LabeledUnitField";
 
+type MeasurementInputProps = {
+  label: string;
+  unit: DisplayUnit;
+  value: number | undefined;
+  required?: boolean;
+  onChange: (value: number) => void;
+};
+
+function MeasurementInput({
+  label,
+  unit,
+  value,
+  required,
+  onChange,
+}: MeasurementInputProps) {
+  return (
+    <LabeledUnitField label={label} unit={unit} required={required}>
+      <TextInput
+        style={fieldControlStyle()}
+        accessibilityLabel={label}
+        aria-required={required}
+        value={value?.toString() ?? ""}
+        onChangeText={(text) => onChange(Number(text) ?? 0)}
+      />
+    </LabeledUnitField>
+  );
+}
 type Props = {
   measurements: Measurements;
   unit: DisplayUnit;
@@ -41,31 +68,19 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
         />
       </PanelHeading>
 
-      {/* <NumberField
+      <MeasurementInput
         label="Foot length"
-        value={measurements.footLengthCm}
         unit={unit}
+        value={measurements.footLengthCm}
         required
-        onChange={(value) => onChange({ footLengthCm: value ?? 0 })}
-      /> */}
-      <LabeledTextInput
-        label={`Foot length (${measurementLabel(unit)})`}
-        value={measurements.footLengthCm?.toString() ?? ""}
-        required
-        onChangeText={function (value: string): void {
-          onChange({
-            ...measurements,
-            footLengthCm: Number(value) ?? 0,
-          });
-        }}
+        onChange={(cm) => onChange({ footLengthCm: cm })}
       />
-      <LabeledTextInput
-        label={`Ball circumference (${measurementLabel(unit)})`}
-        value={measurements.footCircumferenceCm?.toString() ?? ""}
+      <MeasurementInput
+        label="Ball circumference"
+        unit={unit}
+        value={measurements.footCircumferenceCm}
         required
-        onChangeText={(value) =>
-          onChange({ footCircumferenceCm: Number(value) ?? 0 })
-        }
+        onChange={(cm) => onChange({ footCircumferenceCm: cm })}
       />
 
       <TouchableOpacity
@@ -79,54 +94,47 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
 
       {isExpanded && (
         <View>
-          <LabeledTextInput
-            label={`Heel diagonal (${measurementLabel(unit)})`}
-            value={measurements.heelDiagonalCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ heelDiagonalCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Heel diagonal"
+            unit={unit}
+            value={measurements.heelDiagonalCm}
+            onChange={(cm) => onChange({ heelDiagonalCm: cm })}
           />
-          <LabeledTextInput
-            label={`Ankle circumference (${measurementLabel(unit)})`}
-            value={measurements.ankleCircumferenceCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ ankleCircumferenceCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Ankle circumference"
+            unit={unit}
+            value={measurements.ankleCircumferenceCm}
+            onChange={(cm) => onChange({ ankleCircumferenceCm: cm })}
           />
-          <LabeledTextInput
-            label={`Heel height (${measurementLabel(unit)})`}
-            value={measurements.heelHeightCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ heelHeightCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Heel height"
+            unit={unit}
+            value={measurements.heelHeightCm}
+            onChange={(cm) => onChange({ heelHeightCm: cm })}
           />
-          <LabeledTextInput
-            label={`Instep circumference (${measurementLabel(unit)})`}
-            value={measurements.instepCircumferenceCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ instepCircumferenceCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Instep circumference"
+            unit={unit}
+            value={measurements.instepCircumferenceCm}
+            onChange={(cm) => onChange({ instepCircumferenceCm: cm })}
           />
-          <LabeledTextInput
-            label={`Toe length (${measurementLabel(unit)})`}
-            value={measurements.toeLengthCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ toeLengthCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Toe length"
+            unit={unit}
+            value={measurements.toeLengthCm}
+            onChange={(cm) => onChange({ toeLengthCm: cm })}
           />
-          <LabeledTextInput
-            label={`Low calf circumference (${measurementLabel(unit)})`}
-            value={measurements.lowCalfCircumferenceCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ lowCalfCircumferenceCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="Low calf circumference"
+            unit={unit}
+            value={measurements.lowCalfCircumferenceCm}
+            onChange={(cm) => onChange({ lowCalfCircumferenceCm: cm })}
           />
-          <LabeledTextInput
-            label={`High calf circumference (${measurementLabel(unit)})`}
-            value={measurements.highCalfCircumferenceCm?.toString() ?? ""}
-            onChangeText={(value) =>
-              onChange({ highCalfCircumferenceCm: Number(value) ?? 0 })
-            }
+          <MeasurementInput
+            label="High calf circumference"
+            unit={unit}
+            value={measurements.highCalfCircumferenceCm}
+            onChange={(cm) => onChange({ highCalfCircumferenceCm: cm })}
           />
         </View>
       )}

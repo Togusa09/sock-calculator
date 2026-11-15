@@ -2,6 +2,7 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
+import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
 import {
   CuffStyle,
   DEFAULT_RECORD,
@@ -10,11 +11,11 @@ import {
   ToeStyle,
   type ConstructionOptions,
 } from "@/lib/domain";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Switch, Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
-import { PlatformPicker } from "../ui/PlatformPicker";
 
 type Props = {
   construction: ConstructionOptions;
@@ -47,67 +48,66 @@ export function Construction({
       </PanelHeading>
       <View testID="construction-fields">
         <View testID="construction-cuff-row">
-          <View>
-            <Text>Cuff</Text>
-            <PlatformPicker
-              flush
+          <LabeledField label="Cuff style" required>
+            <Picker
+              style={fieldControlStyle()}
               selectedValue={construction.cuffStyle}
               onValueChange={(cuffStyle) =>
                 onChange({ cuffStyle: cuffStyle as CuffStyle })
               }
-              items={[
-                { value: "ribbed", label: "Ribbed cuff" },
-                { value: "folded", label: "Folded cuff" },
-              ]}
-            />
-          </View>
+            >
+              <Picker.Item label="Ribbed cuff" value="ribbed" />
+              <Picker.Item label="Folded cuff" value="folded" />
+            </Picker>
+          </LabeledField>
+
           {construction.cuffStyle === "ribbed" && (
             <View testID="construction-ribbing-field">
-              <Text>Ribbing repeat</Text>
-              <PlatformPicker
-                flush
-                selectedValue={construction.ribbing}
-                onValueChange={(ribbing) =>
-                  onChange({ ribbing: ribbing as Ribbing })
-                }
-                items={[
-                  { value: "1x1", label: "1x1" },
-                  { value: "1x2", label: "1x2" },
-                  { value: "2x2", label: "2x2" },
-                  { value: "3x3", label: "3x3" },
-                ]}
-              />
+              <LabeledField label="Ribbing repeat" required>
+                <Picker
+                  selectedValue={construction.ribbing}
+                  style={fieldControlStyle()}
+                  onValueChange={(ribbing) =>
+                    onChange({ ribbing: ribbing as Ribbing })
+                  }
+                >
+                  <Picker.Item label="1x1" value="1x1" />
+                  <Picker.Item label="1x2" value="1x2" />
+                  <Picker.Item label="2x2" value="2x2" />
+                  <Picker.Item label="3x3" value="3x3" />
+                </Picker>
+              </LabeledField>
             </View>
           )}
         </View>
         <View>
-          <Text>Heel</Text>
-          <PlatformPicker
-            flush
-            selectedValue={construction.heelStyle}
-            onValueChange={(heelStyle) =>
-              onChange({ heelStyle: heelStyle as HeelStyle })
-            }
-            items={[
-              { value: "gussetted", label: "Gussetted" },
-              { value: "afterthought", label: "Afterthought" },
-              { value: "short-row", label: "Short-row" },
-            ]}
-          />
+          <LabeledField label="Heel style" required>
+            <Picker
+              style={fieldControlStyle()}
+              selectedValue={construction.heelStyle}
+              onValueChange={(heelStyle) =>
+                onChange({ heelStyle: heelStyle as HeelStyle })
+              }
+            >
+              <Picker.Item label="Gussetted" value="gussetted" />
+              <Picker.Item label="Afterthought" value="afterthought" />
+              <Picker.Item label="Short-row" value="short-row" />
+            </Picker>
+          </LabeledField>
         </View>
         <View>
-          <Text>Toe</Text>
-          <PlatformPicker
-            flush
-            selectedValue={construction.toeStyle}
-            onValueChange={(toeStyle) =>
-              onChange({ toeStyle: toeStyle as ToeStyle })
-            }
-            items={[
-              { value: "round", label: "Round" },
-              { value: "star", label: "Star" },
-            ]}
-          />
+          <LabeledField label="Toe style" required>
+            <Picker
+              style={fieldControlStyle()}
+              selectedValue={construction.toeStyle}
+              onValueChange={(toeStyle) =>
+                onChange({ toeStyle: toeStyle as ToeStyle })
+              }
+            >
+              <Picker.Item label="Round" value="round" />
+              <Picker.Item label="Star" value="star" />
+            </Picker>
+          </LabeledField>
         </View>
       </View>
 
@@ -126,14 +126,16 @@ export function Construction({
 
       {construction.negativeEasePercent !== undefined && (
         <View>
-          <Text>Project negative ease (%)</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={String(construction.negativeEasePercent)}
-            onChangeText={(text) =>
-              onChange({ negativeEasePercent: Number(text) })
-            }
-          />
+          <LabeledField label="Project negative ease (%)">
+            <TextInput
+              style={fieldControlStyle()}
+              keyboardType="numeric"
+              value={String(construction.negativeEasePercent)}
+              onChangeText={(text) =>
+                onChange({ negativeEasePercent: Number(text) })
+              }
+            />
+          </LabeledField>
         </View>
       )}
     </Panel>

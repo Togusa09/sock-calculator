@@ -8,7 +8,7 @@ import {
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
 import { ClearButton } from "@/components/ui/ClearButton";
-import LabeledPicker from "@/components/ui/labeledPicker";
+import LabeledField, { fieldControlStyle } from "@/components/ui/LabeledField";
 import { Construction } from "@/components/wizard/Construction";
 import { FootMeasurements } from "@/components/wizard/FootMeasurements";
 import { YarnProfile } from "@/components/wizard/YarnProfile";
@@ -60,31 +60,20 @@ export default function Home() {
           )}
         </Text>
 
-        {/* <View>
-          <Text>Display</Text>
-          <PlatformPicker
+        <LabeledField label="Display" required>
+          <Picker
+            accessibilityLabel="Display"
+            style={fieldControlStyle()}
             selectedValue={unit}
             onValueChange={(value) =>
               updateRecord({ displayUnit: value as DisplayUnit })
             }
-            items={displayUnits.map<PlatformPickerItem>((f) => ({
-              label: f.label,
-              value: f.value,
-            }))}
-          />
-        </View> */}
-        <LabeledPicker
-          label="Display"
-          required
-          selectedValue={unit}
-          onValueChange={(value, index) =>
-            updateRecord({ displayUnit: value as DisplayUnit })
-          }
-        >
-          {displayUnits.map((f) => (
-            <Picker.Item key={f.value} label={f.label} value={f.value} />
-          ))}
-        </LabeledPicker>
+          >
+            {displayUnits.map((f) => (
+              <Picker.Item key={f.value} label={f.label} value={f.value} />
+            ))}
+          </Picker>
+        </LabeledField>
 
         <SavedItemsControl
           type="project"

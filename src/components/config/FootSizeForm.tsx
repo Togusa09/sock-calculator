@@ -1,8 +1,9 @@
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { PlatformPicker } from "../ui/PlatformPicker";
+import { View } from "react-native";
+import LabeledField, { fieldControlStyle } from "../ui/LabeledField";
 
 type Props = {
   measurements: Measurements;
@@ -33,15 +34,17 @@ export function FootSizeForm({ measurements, onChange }: Props) {
   return (
     <>
       <View>
-        <Text>Display</Text>
-        <PlatformPicker
-          selectedValue={unit}
-          onValueChange={(itemValue) => setUnit(itemValue as DisplayUnit)}
-          items={[
-            { label: "Metric", value: "metric" },
-            { label: "Imperial", value: "imperial" },
-          ]}
-        />
+        <LabeledField label="Display" required>
+          <Picker
+            accessibilityLabel="Display"
+            style={fieldControlStyle()}
+            selectedValue={unit}
+            onValueChange={(value) => setUnit(value as DisplayUnit)}
+          >
+            <Picker.Item key="metric" label="Metric" value="metric" />
+            <Picker.Item key="imperial" label="Imperial" value="imperial" />
+          </Picker>
+        </LabeledField>
       </View>
       <View>
         {/* <LabeledTextInput label={""} value={""} onChange={function (value: string): void {
