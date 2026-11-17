@@ -23,7 +23,7 @@ export default function LabeledField({
         {!!label && (
           <Text
             style={[sharedStyles.label, sharedStyles.formLabel]}
-            accessibilityRole="label"
+            accessibilityRole="text"
             accessibilityLabel={label}
           >
             {label}
