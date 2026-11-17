@@ -12,13 +12,13 @@ type Props = {
 export function YarnProfileForm({ profile, onChange }: Props) {
   return (
     <>
-      <LabeledField label="Manufacturer" required>
+      <LabeledField label="Manufacturer" required responsive>
         <TextInput
           value={profile.manufacturer}
           onChangeText={(text) => onChange({ ...profile, manufacturer: text })}
         />
       </LabeledField>
-      <LabeledField label="Weight" required>
+      <LabeledField label="Weight" required responsive>
         <Picker
           accessibilityLabel="Weight"
           selectedValue={profile.weight}

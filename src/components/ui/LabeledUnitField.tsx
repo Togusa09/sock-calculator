@@ -15,6 +15,7 @@ export default function LabeledUnitField({
   return (
     <LabeledField
       label={label ? `${label} (${unitLabel})` : `(${unitLabel})`}
+      responsive
       {...rest}
     />
   );

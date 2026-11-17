@@ -77,7 +77,7 @@ export function YarnTension({
               : "No saved tension for this yarn and needle size yet; enter a gauge and save it.")}
         </Text>
       )}
-      <LabeledField label="Stitches per 10 cm" required>
+      <LabeledField label="Stitches per 10 cm" required responsive>
         <TextInput
           style={fieldControlStyle()}
           keyboardType="numeric"
@@ -85,7 +85,7 @@ export function YarnTension({
           onChangeText={(text) => onChange({ stitchesPer10Cm: Number(text) })}
         />
       </LabeledField>
-      <LabeledField label="Rows per 10 cm" required>
+      <LabeledField label="Rows per 10 cm" required responsive>
         <TextInput
           style={fieldControlStyle()}
           keyboardType="numeric"
@@ -93,7 +93,7 @@ export function YarnTension({
           onChangeText={(text) => onChange({ rowsPer10Cm: Number(text) })}
         />
       </LabeledField>
-      <LabeledField label="Needle size (mm)" required>
+      <LabeledField label="Needle size (mm)" required responsive>
         <TextInput
           style={fieldControlStyle()}
           testID="needle-size-field"

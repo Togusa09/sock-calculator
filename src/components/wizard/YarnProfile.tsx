@@ -56,15 +56,16 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
         />
       </PanelHeading>
       <View testID="yarn-manufacturer-field">
-        <LabeledField label="Manufacturer" required>
+        <LabeledField label="Manufacturer" required responsive>
           <TextInput
+            style={fieldControlStyle()}
             value={profile.manufacturer}
             onChangeText={(text) => onChange({ manufacturer: text })}
           />
         </LabeledField>
       </View>
       <View testID="yarn-weight-field">
-        <LabeledField label="Weight">
+        <LabeledField label="Weight" responsive>
           <Picker
             style={fieldControlStyle()}
             selectedValue={profile.weight}

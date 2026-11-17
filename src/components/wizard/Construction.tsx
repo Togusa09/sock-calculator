@@ -47,7 +47,7 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <LabeledField label="Cuff style" required>
+      <LabeledField label="Cuff style" required responsive>
         <Picker
           style={fieldControlStyle()}
           selectedValue={construction.cuffStyle}
@@ -65,6 +65,7 @@ export function Construction({
           <LabeledField
             label="Ribbing repeat"
             required
+            responsive
             testID="construction-ribbing-repeat-field"
           >
             <Picker
@@ -86,6 +87,7 @@ export function Construction({
       <LabeledField
         label="Heel style"
         required
+        responsive
         testID="construction-heel-style-field"
       >
         <Picker
@@ -104,6 +106,7 @@ export function Construction({
       <LabeledField
         label="Toe style"
         required
+        responsive
         testID="construction-toe-style-field"
       >
         <Picker
@@ -133,7 +136,7 @@ export function Construction({
 
       {construction.negativeEasePercent !== undefined && (
         <View>
-          <LabeledField label="Project negative ease (%)">
+          <LabeledField label="Project negative ease (%)" responsive>
             <TextInput
               style={fieldControlStyle()}
               keyboardType="numeric"

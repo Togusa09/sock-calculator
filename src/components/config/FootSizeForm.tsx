@@ -35,7 +35,7 @@ export function FootSizeForm({ measurements, onChange }: Props) {
   return (
     <>
       <View>
-        <LabeledField label="Display" required>
+        <LabeledField label="Display" required responsive>
           <Picker
             accessibilityLabel="Display"
             style={fieldControlStyle()}

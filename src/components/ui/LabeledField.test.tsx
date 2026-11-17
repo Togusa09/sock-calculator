@@ -26,4 +26,24 @@ describe("LabeledField", () => {
     expect(screen.getByText("*", { includeHiddenElements: true })).toBeTruthy();
     expect(screen.getByText("Too short")).toBeTruthy();
   });
+
+  test("wraps only when responsive layout is enabled", async () => {
+    await render(
+      <>
+        <LabeledField label="Default">
+          <Text>default control</Text>
+        </LabeledField>
+        <LabeledField label="Responsive" responsive>
+          <Text>responsive control</Text>
+        </LabeledField>
+      </>,
+    );
+
+    expect(screen.getByText("Default").parent).not.toHaveStyle({
+      flexWrap: "wrap",
+    });
+    expect(screen.getByText("Responsive").parent).toHaveStyle({
+      flexWrap: "wrap",
+    });
+  });
 });

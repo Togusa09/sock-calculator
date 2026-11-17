@@ -9,7 +9,13 @@ import {
 } from "@/lib/domain";
 import { fieldControlStyle } from "@/theme/styles";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
 import LabeledUnitField from "../ui/LabeledUnitField";
@@ -30,9 +36,9 @@ function MeasurementInput({
   onChange,
 }: MeasurementInputProps) {
   return (
-    <LabeledUnitField label={label} unit={unit} required={required}>
+    <LabeledUnitField label={label} unit={unit} required={required} responsive>
       <TextInput
-        style={fieldControlStyle()}
+        style={[fieldControlStyle(), styles.measurementControl]}
         accessibilityLabel={label}
         aria-required={required}
         value={value?.toString() ?? ""}
@@ -41,6 +47,15 @@ function MeasurementInput({
     </LabeledUnitField>
   );
 }
+
+const styles = StyleSheet.create({
+  measurementControl: {
+    minWidth: 0,
+    maxWidth: "100%",
+    flexBasis: 220,
+    flexGrow: 1,
+  },
+});
 type Props = {
   measurements: Measurements;
   unit: DisplayUnit;
