@@ -33,6 +33,30 @@ npm run build:privacy
 
 The `test` script runs Jest in watch mode by default; the command above disables watch mode for a one-off run.
 
+### Reusable wizard
+
+`Wizard` and `WizardStep` in `src/components/Wizard.tsx` provide a linear, reusable flow. This component is not currently connected to the calculator screen.
+
+```tsx
+<Wizard
+  canAdvance={(current, destination) => validateStep(current, destination)}
+  onFinish={finish}
+>
+  <WizardStep
+    id="measurements"
+    label="Measurements"
+    component={<Measurements />}
+  />
+  <WizardStep id="yarn" label="Yarn" component={<Yarn />} />
+</Wizard>
+```
+
+Provide a nonempty, ordered set of steps with unique IDs that remain stable for the wizard's lifetime. Each `component` is a React element, so it can receive normal props. Step content stays mounted when hidden, preserving its local state; remounting the wizard resets it.
+
+The optional synchronous `canAdvance(current, destination)` returns `false` to block forward navigation or Finish. `current` contains the step's `id`, `label`, and zero-based `index`; `destination` is either `{ type: "step", step }` with the same fields or `{ type: "finish" }`. Validation messages are the consumer's responsibility. Backward navigation is always allowed, and step labels can navigate directly only to previously visited steps. Pass `onFinish` to show a Finish button.
+
+Native users can swipe horizontally or use Back/Next buttons; web uses buttons. Both provide a progress indicator. Styles are limited to layout and spacing, with suggestions for adding visual treatments.
+
 ## GitHub Pages
 
 The workflow in `.github/workflows/deploy-pages.yml` runs privacy-page generation, lint, tests, and an Expo web export for pull requests. On pushes to `master`, it publishes the exported `dist` directory to GitHub Pages. The workflow currently sets `PAGES_BASE_PATH=/`.

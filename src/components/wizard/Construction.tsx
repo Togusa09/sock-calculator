@@ -47,82 +47,76 @@ export function Construction({
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <View testID="construction-fields">
-        <View testID="construction-cuff-row">
-          <LabeledField label="Cuff style" required>
-            <Picker
-              style={fieldControlStyle()}
-              selectedValue={construction.cuffStyle}
-              onValueChange={(cuffStyle) =>
-                onChange({ cuffStyle: cuffStyle as CuffStyle })
-              }
-            >
-              <Picker.Item label="Ribbed cuff" value="ribbed" />
-              <Picker.Item label="Folded cuff" value="folded" />
-            </Picker>
-          </LabeledField>
+      <LabeledField label="Cuff style" required>
+        <Picker
+          style={fieldControlStyle()}
+          selectedValue={construction.cuffStyle}
+          onValueChange={(cuffStyle) =>
+            onChange({ cuffStyle: cuffStyle as CuffStyle })
+          }
+        >
+          <Picker.Item label="Ribbed cuff" value="ribbed" />
+          <Picker.Item label="Folded cuff" value="folded" />
+        </Picker>
+      </LabeledField>
 
-          {construction.cuffStyle === "ribbed" && (
-            <View testID="construction-ribbing-field">
-              <LabeledField
-                label="Ribbing repeat"
-                required
-                testID="construction-ribbing-repeat-field"
-              >
-                <Picker
-                  selectedValue={construction.ribbing}
-                  style={fieldControlStyle()}
-                  onValueChange={(ribbing) =>
-                    onChange({ ribbing: ribbing as Ribbing })
-                  }
-                >
-                  <Picker.Item label="1x1" value="1x1" />
-                  <Picker.Item label="1x2" value="1x2" />
-                  <Picker.Item label="2x2" value="2x2" />
-                  <Picker.Item label="3x3" value="3x3" />
-                </Picker>
-              </LabeledField>
-            </View>
-          )}
-        </View>
-        <View>
+      {construction.cuffStyle === "ribbed" && (
+        <View testID="construction-ribbing-field">
           <LabeledField
-            label="Heel style"
+            label="Ribbing repeat"
             required
-            testID="construction-heel-style-field"
+            testID="construction-ribbing-repeat-field"
           >
             <Picker
+              selectedValue={construction.ribbing}
               style={fieldControlStyle()}
-              selectedValue={construction.heelStyle}
-              onValueChange={(heelStyle) =>
-                onChange({ heelStyle: heelStyle as HeelStyle })
+              onValueChange={(ribbing) =>
+                onChange({ ribbing: ribbing as Ribbing })
               }
             >
-              <Picker.Item label="Gussetted" value="gussetted" />
-              <Picker.Item label="Afterthought" value="afterthought" />
-              <Picker.Item label="Short-row" value="short-row" />
+              <Picker.Item label="1x1" value="1x1" />
+              <Picker.Item label="1x2" value="1x2" />
+              <Picker.Item label="2x2" value="2x2" />
+              <Picker.Item label="3x3" value="3x3" />
             </Picker>
           </LabeledField>
         </View>
-        <View>
-          <LabeledField
-            label="Toe style"
-            required
-            testID="construction-toe-style-field"
-          >
-            <Picker
-              style={fieldControlStyle()}
-              selectedValue={construction.toeStyle}
-              onValueChange={(toeStyle) =>
-                onChange({ toeStyle: toeStyle as ToeStyle })
-              }
-            >
-              <Picker.Item label="Round" value="round" />
-              <Picker.Item label="Star" value="star" />
-            </Picker>
-          </LabeledField>
-        </View>
-      </View>
+      )}
+
+      <LabeledField
+        label="Heel style"
+        required
+        testID="construction-heel-style-field"
+      >
+        <Picker
+          style={fieldControlStyle()}
+          selectedValue={construction.heelStyle}
+          onValueChange={(heelStyle) =>
+            onChange({ heelStyle: heelStyle as HeelStyle })
+          }
+        >
+          <Picker.Item label="Gussetted" value="gussetted" />
+          <Picker.Item label="Afterthought" value="afterthought" />
+          <Picker.Item label="Short-row" value="short-row" />
+        </Picker>
+      </LabeledField>
+
+      <LabeledField
+        label="Toe style"
+        required
+        testID="construction-toe-style-field"
+      >
+        <Picker
+          style={fieldControlStyle()}
+          selectedValue={construction.toeStyle}
+          onValueChange={(toeStyle) =>
+            onChange({ toeStyle: toeStyle as ToeStyle })
+          }
+        >
+          <Picker.Item label="Round" value="round" />
+          <Picker.Item label="Star" value="star" />
+        </Picker>
+      </LabeledField>
 
       <View style={{ flexDirection: "row" }}>
         <Switch

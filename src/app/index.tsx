@@ -7,8 +7,8 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
-import { BasicButton } from "@/components/ui/BasicButton";
 import LabeledField from "@/components/ui/LabeledField";
+import { Wizard, WizardStep } from "@/components/Wizard";
 import { Construction } from "@/components/wizard/Construction";
 import { FootMeasurements } from "@/components/wizard/FootMeasurements";
 import { YarnProfile } from "@/components/wizard/YarnProfile";
@@ -23,7 +23,7 @@ import { validateRecord } from "@/lib/validation";
 import { fieldControlStyle } from "@/theme/styles";
 import { Link } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 const displayUnits = [
@@ -109,7 +109,72 @@ export default function Home() {
 
       {message !== "" && <Text accessibilityRole="text">{message}</Text>}
 
-      <View>
+      <View style={styles.container}>
+        <Wizard
+          canAdvance={() => true}
+          onFinish={() => {
+            setMessage("Wizard completed.");
+          }}
+        >
+          <WizardStep
+            id="foot"
+            label="Foot Measurements"
+            component={
+              <FootMeasurements
+                measurements={record.measurements}
+                unit={unit}
+                onChange={updateMeasurements}
+              />
+            }
+          />
+          <WizardStep
+            id="yarn"
+            label="Yarn Profile"
+            component={
+              <YarnProfile
+                profile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
+                profileId={record.yarnProfileId}
+                onChange={(update) =>
+                  updateRecord({
+                    yarnProfile: {
+                      ...(record.yarnProfile ?? DEFAULT_YARN_PROFILE),
+                      ...update,
+                    },
+                  })
+                }
+                onSelect={(yarnProfile, yarnProfileId) =>
+                  updateRecord({ yarnProfile, yarnProfileId })
+                }
+              />
+            }
+          />
+          <WizardStep
+            id="tension"
+            label="Yarn Tension"
+            component={
+              <YarnTension
+                tension={record.tension}
+                yarnProfile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
+                yarnProfileId={record.yarnProfileId}
+                onChange={updateTension}
+              />
+            }
+          />
+          <WizardStep
+            id="construction"
+            label="Construction"
+            component={
+              <Construction
+                construction={record.construction}
+                tensionNegativeEase={record.tension.negativeEasePercent}
+                onChange={updateConstruction}
+              />
+            }
+          />
+        </Wizard>
+      </View>
+
+      {/* <View>
         <FootMeasurements
           measurements={record.measurements}
           unit={unit}
@@ -149,9 +214,20 @@ export default function Home() {
         >
           Restore defaults
         </BasicButton>
-      </View>
+      </View> */}
 
       <ResultsPanel result={result} unit={unit} validation={errors} />
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    maxWidth: 800,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    margin: 16,
+  },
+});

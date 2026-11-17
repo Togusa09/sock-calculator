@@ -1,5 +1,5 @@
 import { fieldControlStyle } from "@/theme/styles";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { BasicButton } from "../ui/BasicButton";
 
 type Props = {
@@ -23,7 +23,12 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
         <View
           key={index}
           testID={`material-row-${index}`}
-          style={{ flexDirection: "row" }}
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            alignItems: "center",
+            padding: 8,
+          }}
         >
           <TextInput
             style={fieldControlStyle()}
@@ -50,13 +55,11 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
           )}
         </View>
       ))}
-      <Pressable
-        accessibilityRole="button"
+      <BasicButton
         onPress={() => onChange([...materials, { material: "", percent: 0 }])}
-        testID="add-material"
       >
-        <Text>Add material</Text>
-      </Pressable>
+        Add material
+      </BasicButton>
       <Text>
         Total: {total}%{total !== 100 ? " — must add up to 100%." : ""}
       </Text>
