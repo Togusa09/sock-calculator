@@ -1,18 +1,34 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, TextStyle } from "react-native";
+
+type TextAlignValues = TextStyle["textAlign"];
 
 type Props = {
   children: string;
   onPress: () => void;
+  width?: number;
+  textAlignment?: TextAlignValues;
 };
 
-export function BasicButton({ children, onPress }: Props) {
+export function BasicButton({
+  children,
+  onPress,
+  width,
+  textAlignment = "center",
+}: Props) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={() => onPress()}
-      style={styles.button}
+      style={[styles.button, width !== undefined && { width }]}
     >
-      <Text style={styles.text}>{children}</Text>
+      <Text
+        style={[
+          styles.text,
+          textAlignment !== undefined && { textAlign: textAlignment },
+        ]}
+      >
+        {children}
+      </Text>
     </Pressable>
   );
 }
@@ -27,5 +43,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "black",
+    width: "100%",
   },
 });

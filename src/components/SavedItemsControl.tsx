@@ -1,20 +1,22 @@
 import {
-    deleteItem,
-    listItems,
-    nextAvailableName,
-    saveItem,
-    type LibraryItem,
-    type LibraryItemType,
+  deleteItem,
+  listItems,
+  nextAvailableName,
+  saveItem,
+  type LibraryItem,
+  type LibraryItemType,
 } from "@/lib/library";
+import { fieldControlStyle } from "@/theme/styles";
 import { useEffect, useRef, useState } from "react";
 import {
-    FlatList,
-    Modal,
-    Pressable,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { BasicButton } from "./ui/BasicButton";
 
@@ -33,6 +35,32 @@ type Props<T> = {
   onDelete?: (id: string) => void;
   onLoadedItemChange?: (info: LoadedItemInfo | null) => void;
 };
+
+type SavedItemRecordProps<T> = {
+  item: LibraryItem<T>;
+  onLoad: (item: LibraryItem<T>) => void;
+  onDelete: (id: string) => void;
+};
+
+function SavedItemRecord<T>({
+  item,
+  onLoad,
+  onDelete,
+}: SavedItemRecordProps<T>) {
+  return (
+    <View style={styles.row}>
+      <Pressable onPress={() => onLoad(item)}>
+        <Text>{item.name}</Text>
+      </Pressable>
+      <BasicButton
+        onPress={() => onDelete(item.id)}
+        width={styles.savedItemRecordRowButton.width}
+      >
+        Delete
+      </BasicButton>
+    </View>
+  );
+}
 
 export function SavedItemsControl<T>({
   type,
@@ -119,8 +147,9 @@ export function SavedItemsControl<T>({
   }
 
   return (
-    <View>
-      <View style={{ flexDirection: "row" }}>
+    <View style={styles.container}>
+      {/* Saved Items Control Heading */}
+      <View style={styles.row}>
         <BasicButton onPress={handleNew}>New</BasicButton>
         <TouchableOpacity
           accessibilityRole="button"
@@ -131,41 +160,38 @@ export function SavedItemsControl<T>({
         </TouchableOpacity>
       </View>
 
+      {/* Saved Items Control Body */}
       {open && (
-        <View>
-          <View style={{ flexDirection: "row" }}>
+        <View style={[styles.savedItemsControlBody, styles.column]}>
+          <View style={styles.row}>
             <TextInput
+              style={fieldControlStyle()}
               placeholder="Name to save as…"
               value={nameDraft}
               onChangeText={setNameDraft}
               accessibilityLabel="Name to save as"
             />
-            <TouchableOpacity accessibilityRole="button" onPress={handleSave}>
-              <Text>Save</Text>
-            </TouchableOpacity>
+            <BasicButton onPress={handleSave}>Save</BasicButton>
           </View>
-          <Text>Load saved item</Text>
-          {items.length === 0 ? (
-            <Text>Nothing saved yet.</Text>
-          ) : (
-            <FlatList
-              data={items}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={{ flexDirection: "row" }}>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={() => handleLoad(item)}
-                  >
-                    <Text>{item.name}</Text>
-                  </Pressable>
-                  <BasicButton onPress={() => handleDelete(item.id)}>
-                    Delete
-                  </BasicButton>
-                </View>
-              )}
-            />
-          )}
+          <View style={styles.savedItemsListContainer}>
+            <Text>Load saved item</Text>
+            {items.length === 0 ? (
+              <Text>Nothing saved yet.</Text>
+            ) : (
+              <FlatList
+                contentContainerStyle={{ flexGrow: 1, backgroundColor: "red" }}
+                data={items}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <SavedItemRecord
+                    item={item}
+                    onLoad={handleLoad}
+                    onDelete={handleDelete}
+                  />
+                )}
+              />
+            )}
+          </View>
           <BasicButton onPress={() => setOpen(false)}>Close</BasicButton>
         </View>
       )}
@@ -203,3 +229,45 @@ export function SavedItemsControl<T>({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    margin: 8,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 4,
+
+    width: "100%",
+  },
+  row: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 8,
+  },
+  column: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 8,
+  },
+  savedItemsListContainer: {
+    borderTopWidth: 1,
+    borderTopColor: "black",
+    width: "100%",
+  },
+  savedItemsControlBody: {
+    flex: 1,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 4,
+    alignItems: "flex-start",
+  },
+  savedItemRecordRowButton: {
+    width: 80,
+  },
+});
