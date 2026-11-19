@@ -7,7 +7,7 @@ import {
   type LibraryItemType,
 } from "@/lib/library";
 import { camelToDescription } from "@/lib/stringFormatting";
-import { fieldControlStyle } from "@/theme/styles";
+import { fieldControlStyle, sharedStyles } from "@/theme/styles";
 import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -174,7 +174,7 @@ export function SavedItemsControl<T>({
             accessibilityRole="dialog"
             accessibilityLabel="Load Existing dialog"
             accessibilityViewIsModal
-            style={[styles.savedItemsControlBody, styles.column]}
+            style={[styles.savedItemsControlBody, sharedStyles.bordered]}
           >
             <View style={styles.modalHeading}>
               <Text>{`Load Existing ${camelToDescription(type)}`}</Text>
@@ -221,7 +221,7 @@ export function SavedItemsControl<T>({
         <View>
           <Text>Save before starting new?</Text>
           <Text>{`"${loadedItem?.name}" has unsaved changes.`}</Text>
-          <View style={{ flexDirection: "row" }}>
+          <View style={sharedStyles.row}>
             <BasicButton onPress={() => setConfirmingNew(false)}>
               Cancel
             </BasicButton>
@@ -254,25 +254,16 @@ export function SavedItemsControl<T>({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 8,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 4,
-
     width: "100%",
   },
   row: {
-    flexDirection: "row",
-    width: "100%",
+    ...sharedStyles.row,
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 8,
-  },
-  column: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
     padding: 8,
   },
   modalBackdrop: {
@@ -283,16 +274,13 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalHeading: {
-    flexDirection: "row",
-    width: "100%",
+    ...sharedStyles.row,
     justifyContent: "space-between",
     alignItems: "center",
   },
   saveRow: {
-    flexDirection: "row",
-    width: "100%",
+    ...sharedStyles.row,
     alignItems: "center",
-    gap: 8,
     paddingVertical: 8,
   },
   nameInput: {
@@ -307,13 +295,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   savedItemsControlBody: {
+    ...sharedStyles.column,
     width: "90%",
     maxWidth: 600,
     height: "80%",
+    justifyContent: "flex-start",
     backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 4,
     alignItems: "flex-start",
   },
   savedItemRecordRowButton: {

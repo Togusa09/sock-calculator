@@ -1,4 +1,4 @@
-import { styles as sharedStyles } from "@/theme/styles";
+import { sharedStyles } from "@/theme/styles";
 import { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -54,13 +54,10 @@ export default function LabeledField({
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginBottom: 16,
-  },
+  wrapper: {},
   container: {
-    flexDirection: "row",
+    ...sharedStyles.row,
     alignItems: "center",
-    gap: 8,
   },
   responsiveContainer: {
     flexWrap: "wrap",

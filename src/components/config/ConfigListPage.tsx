@@ -1,6 +1,7 @@
 import { ConfigShell } from "@/components/config/ConfigShell";
 import { useLibraryItems } from "@/hooks/UseLibraryItems";
 import type { LibraryItem, LibraryItemType } from "@/lib/library";
+import { sharedStyles } from "@/theme/styles";
 import { Href, Link } from "expo-router";
 import { type ReactNode } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -39,7 +40,7 @@ export function ConfigListPage<T>({
             data={sortByName(state.items)}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <View style={{ flexDirection: "row" }}>
+              <View style={sharedStyles.row}>
                 <View>
                   <Text>{item.name}</Text>
                   <Text>{summarize(item.data)}</Text>

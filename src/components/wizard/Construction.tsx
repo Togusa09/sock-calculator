@@ -11,7 +11,7 @@ import {
   ToeStyle,
   type ConstructionOptions,
 } from "@/lib/domain";
-import { fieldControlStyle } from "@/theme/styles";
+import { fieldControlStyle, sharedStyles } from "@/theme/styles";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Switch, Text, TextInput, View } from "react-native";
@@ -121,7 +121,7 @@ export function Construction({
         </Picker>
       </LabeledField>
 
-      <View style={{ flexDirection: "row" }}>
+      <View style={sharedStyles.row}>
         <Switch
           accessibilityLabel="Override project ease"
           value={construction.negativeEasePercent !== undefined}

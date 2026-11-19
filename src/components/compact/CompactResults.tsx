@@ -1,5 +1,6 @@
 import type { calculateStitches } from "@/lib/calculations";
 import { formatMeasurement } from "@/lib/units";
+import { sharedStyles } from "@/theme/styles";
 import { Text, View } from "react-native";
 
 type Props = {
@@ -25,7 +26,7 @@ export function CompactResults({ result, errors }: Props) {
         {formatMeasurement(result.easedCircumferenceCm, "metric")}
       </Text>
       {rows.map(([name, value]) => (
-        <View key={name} style={{ flexDirection: "row" }}>
+        <View key={name} style={sharedStyles.row}>
           <Text>{name}: </Text>
           <Text>{value}</Text>
         </View>

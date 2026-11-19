@@ -1,3 +1,4 @@
+import { sharedStyles } from "@/theme/styles";
 import { Href, Link } from "expo-router";
 import { type ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -12,7 +13,7 @@ export function ConfigShell({ title, children }: ShellProps) {
     <View>
       <View>
         <Text>{title}</Text>
-        <View style={{ flexDirection: "row" }}>
+        <View style={sharedStyles.row}>
           <Link href="/config" asChild>
             <Pressable accessibilityRole="link">
               <Text>All configuration</Text>

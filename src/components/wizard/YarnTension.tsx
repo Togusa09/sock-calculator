@@ -1,4 +1,5 @@
 import {
+  DEFAULT_RECORD,
   type SavedTension,
   type YarnProfile,
   type YarnTension as YarnTensionType,
@@ -6,8 +7,10 @@ import {
 import { describeYarnProfile, findTension, saveTension } from "@/lib/library";
 import { fieldControlStyle } from "@/theme/styles";
 import { useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
+import { PanelHeading } from "../Panel/PanelHeading";
+import { LoadedItemInfo, SavedItemsControl } from "../SavedItemsControl";
 import LabeledField from "../ui/LabeledField";
 
 type Props = {
@@ -32,6 +35,8 @@ export function YarnTension({
   const [status, setStatus] = useState("");
   const [lookupFound, setLookupFound] = useState(false);
 
+  const [loadedItem, setLoadedItem] = useState<LoadedItemInfo | null>(null);
+
   useEffect(() => {
     (async () => {
       const found = yarnProfileId
@@ -55,19 +60,31 @@ export function YarnTension({
   return (
     <Panel>
       <View>
-        <Text>03 Yarn tension</Text>
+        {/* <Text>03 Yarn tension</Text>
         <Text>
           {yarnProfileId
             ? `${describeYarnProfile(yarnProfile)} — gauge and ease shape the fit.`
             : "Save a yarn profile to look up and store tensions."}
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          disabled={!yarnProfileId}
-          onPress={handleSave}
+        </Text> */}
+
+        <PanelHeading
+          step={3}
+          heading={"Yarn Tension"}
+          prompt={
+            yarnProfileId
+              ? `${describeYarnProfile(yarnProfile)} — gauge and ease shape the fit.`
+              : "Save a yarn profile to look up and store tensions."
+          }
+          loadedItem={loadedItem}
         >
-          <Text>Save for yarn + needle</Text>
-        </Pressable>
+          <SavedItemsControl
+            type="tension"
+            data={tension}
+            defaultData={DEFAULT_RECORD.tension}
+            onLoad={onChange}
+            onLoadedItemChange={setLoadedItem}
+          />
+        </PanelHeading>
       </View>
       {yarnProfileId && (
         <Text>

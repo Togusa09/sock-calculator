@@ -1,6 +1,7 @@
 import { ConfigNotFound, ConfigShell } from "@/components/config/ConfigShell";
 import { useLibraryItem } from "@/hooks/UseLibraryItems";
 import { isNameTaken, updateItem, type LibraryItemType } from "@/lib/library";
+import { sharedStyles } from "@/theme/styles";
 import { Href, Link } from "expo-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { Text, TextInput, View } from "react-native";
@@ -128,7 +129,7 @@ export function ConfigEditor<T>({
           <Text>Saved.</Text>
         </View>
       )}
-      <View style={{ flexDirection: "row" }}>
+      <View style={sharedStyles.row}>
         <View onTouchEnd={handleSave}>
           <Text>Save</Text>
         </View>

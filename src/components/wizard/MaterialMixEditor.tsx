@@ -1,4 +1,4 @@
-import { fieldControlStyle } from "@/theme/styles";
+import { fieldControlStyle, sharedStyles } from "@/theme/styles";
 import { Text, TextInput, View } from "react-native";
 import { BasicButton } from "../ui/BasicButton";
 
@@ -23,12 +23,13 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
         <View
           key={index}
           testID={`material-row-${index}`}
-          style={{
-            flexDirection: "row",
-            gap: 8,
-            alignItems: "center",
-            padding: 8,
-          }}
+          style={[
+            sharedStyles.row,
+            {
+              alignItems: "center",
+              padding: 8,
+            },
+          ]}
         >
           <TextInput
             style={fieldControlStyle()}

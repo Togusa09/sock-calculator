@@ -1,3 +1,4 @@
+import { sharedStyles } from "@/theme/styles";
 import {
   Children,
   isValidElement,
@@ -260,8 +261,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   progress: {
-    flexDirection: "row",
-    gap: 8,
+    ...sharedStyles.row,
   },
   progressStep: {
     padding: 8,
@@ -277,9 +277,8 @@ const styles = StyleSheet.create({
     display: "none",
   },
   navigation: {
-    flexDirection: "row",
+    ...sharedStyles.row,
     justifyContent: "space-between",
-    gap: 8,
   },
   control: {
     padding: 8,

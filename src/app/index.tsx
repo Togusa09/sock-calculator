@@ -1,5 +1,6 @@
 import { FeatureToggle } from "@/components/FeatureToggle";
 import { ImportExportData } from "@/components/ImportExportData";
+import { fieldControlStyle, sharedStyles } from "@/theme/styles";
 import { Picker } from "@react-native-picker/picker";
 
 import { ResultsPanel } from "@/components/ResultsPanel";
@@ -21,9 +22,8 @@ import {
   DisplayUnit,
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
-import { fieldControlStyle } from "@/theme/styles";
 import { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 const displayUnits = [
@@ -48,7 +48,7 @@ export default function Home() {
   const errors = validateRecord(record);
 
   return (
-    <ScrollView>
+    <ScrollView style={sharedStyles.container}>
       <View>
         <Text>
           Sock calculator
@@ -92,7 +92,7 @@ export default function Home() {
           onLoadedItemChange={setLoadedItem}
         />
 
-        <View style={{ flexDirection: "row", gap: 8 }}>
+        <View style={sharedStyles.row}>
           <FeatureToggle feature="config">
             {/* <Link href="/config" asChild>
             <Pressable accessibilityRole="link">
@@ -112,7 +112,7 @@ export default function Home() {
 
       {message !== "" && <Text accessibilityRole="text">{message}</Text>}
 
-      <View style={styles.container}>
+      <View>
         <Wizard
           canAdvance={() => true}
           onFinish={() => {
@@ -224,13 +224,13 @@ export default function Home() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    maxWidth: 800,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    margin: 16,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 16,
+//     maxWidth: 800,
+//     borderWidth: 1,
+//     borderColor: "#ccc",
+//     margin: 16,
+//   },
+// });

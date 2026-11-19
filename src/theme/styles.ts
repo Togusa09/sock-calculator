@@ -1,6 +1,29 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+const gap = 8;
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    width: "100%",
+    gap,
+    paddingTop: gap,
+    paddingBottom: gap,
+  },
+  column: {
+    flexDirection: "column",
+    width: "100%",
+    gap,
+  },
+  container: {
+    flex: 1,
+    padding: gap,
+  },
+  bordered: {
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 4,
+  },
   label: {
     fontSize: 14,
     marginBottom: 6,
@@ -13,7 +36,13 @@ export const styles = StyleSheet.create({
   formControl: {
     minWidth: 220,
   },
+  error: {
+    color: "#ff4d4f",
+    fontWeight: "500",
+  },
 });
+
+export { styles as sharedStyles };
 
 export const fieldControlStyles = StyleSheet.create({
   base: {

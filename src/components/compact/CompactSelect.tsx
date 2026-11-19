@@ -1,5 +1,6 @@
 import { CompactDetails } from "@/components/compact/CompactDetails";
 import type { DetailRow } from "@/lib/compactDetails";
+import { sharedStyles } from "@/theme/styles";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 type Option = { id: string; label: string };
@@ -27,7 +28,7 @@ export function CompactSelect({
   return (
     <View>
       <Pressable
-        style={{ flexDirection: "row" }}
+        style={sharedStyles.row}
         onPress={() => {
           /* toggle dropdown in full app */
         }}

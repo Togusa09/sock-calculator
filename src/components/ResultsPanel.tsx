@@ -1,7 +1,8 @@
 import type { calculateStitches } from "@/lib/calculations";
 import type { DisplayUnit } from "@/lib/domain";
 import { formatMeasurement } from "@/lib/units";
-import { Text, View } from "react-native";
+import { sharedStyles } from "@/theme/styles";
+import { StyleSheet, Text, View } from "react-native";
 
 type CalculationResult = ReturnType<typeof calculateStitches>;
 
@@ -41,7 +42,7 @@ function SectionRow({
   stitches: number;
 }) {
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={sharedStyles.row}>
       <View>
         <Text>{label}</Text>
         <Text>{detail}</Text>
@@ -55,10 +56,14 @@ export function ResultsPanel({ result, unit, validation }: Props) {
   const derived = result.derived;
   const { sections } = result;
   return (
-    <View>
+    <View
+      style={[styles.results, sharedStyles.container, sharedStyles.bordered]}
+    >
       <Text>Stitch plan</Text>
 
-      {validation.length > 0 && <Text>{validation[0]}</Text>}
+      {validation.length > 0 && (
+        <Text style={sharedStyles.error}>{validation[0]}</Text>
+      )}
 
       <View>
         <Text>Target foot circumference</Text>
@@ -129,3 +134,7 @@ export function ResultsPanel({ result, unit, validation }: Props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  results: {},
+});
