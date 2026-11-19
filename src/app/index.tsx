@@ -8,6 +8,7 @@ import {
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
 import LabeledField from "@/components/ui/LabeledField";
+import { NavButton } from "@/components/ui/NavButton";
 import { Wizard, WizardStep } from "@/components/Wizard";
 import { Construction } from "@/components/wizard/Construction";
 import { FootMeasurements } from "@/components/wizard/FootMeasurements";
@@ -21,9 +22,8 @@ import {
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
 import { fieldControlStyle } from "@/theme/styles";
-import { Link } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 const displayUnits = [
@@ -92,19 +92,22 @@ export default function Home() {
           onLoadedItemChange={setLoadedItem}
         />
 
-        <FeatureToggle feature="config">
-          <Link href="/config" asChild>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <FeatureToggle feature="config">
+            {/* <Link href="/config" asChild>
             <Pressable accessibilityRole="link">
-              <Text>Configuration</Text>
+              <Text>Edit Configuration</Text>
             </Pressable>
-          </Link>
-        </FeatureToggle>
+          </Link> */}
+            <NavButton href="/config">Edit Configuration</NavButton>
+          </FeatureToggle>
 
-        <ImportExportData
-          onImported={(data) => setRecord(data)}
-          onError={() => {}}
-          onExported={() => {}}
-        />
+          <ImportExportData
+            onImported={(data) => setRecord(data)}
+            onError={() => {}}
+            onExported={() => {}}
+          />
+        </View>
       </View>
 
       {message !== "" && <Text accessibilityRole="text">{message}</Text>}

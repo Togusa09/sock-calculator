@@ -1,10 +1,5 @@
 import {
-  TabList,
-  TabListProps,
-  Tabs,
-  TabSlot,
-  TabTrigger,
-  TabTriggerSlotProps,
+  TabListProps
 } from "expo-router/ui";
 import { SymbolView } from "expo-symbols";
 import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
@@ -15,51 +10,49 @@ import { ExternalLink } from "./external-link";
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
 
-export default function AppTabs() {
-  return (
-    <Tabs>
-      <TabSlot style={{ height: "100%" }} />
-      <TabList asChild>
-        <CustomTabList>
-          <TabTrigger name="home" href="/" asChild>
-            <TabButton>Home</TabButton>
-          </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
-          </TabTrigger>
-          <TabTrigger name="config" href="/config" asChild>
-            <TabButton>Config</TabButton>
-          </TabTrigger>
-          <TabTrigger name="yarn-profiles" href="/config/yarn-profiles" asChild>
-            <TabButton>yarn-profiles</TabButton>
-          </TabTrigger>
-        </CustomTabList>
-      </TabList>
-    </Tabs>
-  );
-}
+// export default function AppTabs() {
+//   return (
+//     <Tabs>
+//       <TabSlot style={{ height: "100%" }} />
+//       <TabList asChild>
+//         <CustomTabList>
+//           <TabTrigger name="home" href="/" asChild>
+//             <TabButton>Home</TabButton>
+//           </TabTrigger>
 
-export function TabButton({
-  children,
-  isFocused,
-  ...props
-}: TabTriggerSlotProps) {
-  return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView
-        type={isFocused ? "backgroundSelected" : "backgroundElement"}
-        style={styles.tabButtonView}
-      >
-        <ThemedText
-          type="small"
-          themeColor={isFocused ? "text" : "textSecondary"}
-        >
-          {children}
-        </ThemedText>
-      </ThemedView>
-    </Pressable>
-  );
-}
+//           <TabTrigger name="config" href="/config" asChild>
+//             <TabButton>Config</TabButton>
+//           </TabTrigger>
+//           <TabTrigger name="yarn-profiles" href="/config/yarn-profiles" asChild>
+//             <TabButton>yarn-profiles</TabButton>
+//           </TabTrigger>
+//         </CustomTabList>
+//       </TabList>
+//     </Tabs>
+//   );
+// }
+
+// export function TabButton({
+//   children,
+//   isFocused,
+//   ...props
+// }: TabTriggerSlotProps) {
+//   return (
+//     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
+//       <ThemedView
+//         type={isFocused ? "backgroundSelected" : "backgroundElement"}
+//         style={styles.tabButtonView}
+//       >
+//         <ThemedText
+//           type="small"
+//           themeColor={isFocused ? "text" : "textSecondary"}
+//         >
+//           {children}
+//         </ThemedText>
+//       </ThemedView>
+//     </Pressable>
+//   );
+// }
 
 export function CustomTabList(props: TabListProps) {
   const scheme = useColorScheme();

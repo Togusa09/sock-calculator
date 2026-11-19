@@ -6,6 +6,7 @@ import {
   type LibraryItem,
   type LibraryItemType,
 } from "@/lib/library";
+import { camelToDescription } from "@/lib/stringFormatting";
 import { fieldControlStyle } from "@/theme/styles";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -49,7 +50,11 @@ function SavedItemRecord<T>({
 }: SavedItemRecordProps<T>) {
   return (
     <View style={styles.row}>
-      <Pressable onPress={() => onLoad(item)}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Load ${item.name}`}
+        onPress={() => onLoad(item)}
+      >
         <Text>{item.name}</Text>
       </Pressable>
       <BasicButton
@@ -150,53 +155,74 @@ export function SavedItemsControl<T>({
     <View style={styles.container}>
       {/* Saved Items Control Heading */}
       <View style={styles.row}>
-        <BasicButton onPress={handleNew}>New</BasicButton>
+        <BasicButton
+          onPress={handleNew}
+        >{`New ${camelToDescription(type)}`}</BasicButton>
         <TouchableOpacity
           accessibilityRole="button"
-          accessibilityLabel="Saved items"
+          accessibilityLabel={`Load Existing ${camelToDescription(type)}`}
+          accessibilityState={{ expanded: open }}
           onPress={toggleOpen}
         >
-          <Text>{open ? "▲" : "▼"}</Text>
+          <Text>{`Load Existing ${camelToDescription(type)}`}</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Saved Items Control Body */}
-      {open && (
-        <View style={[styles.savedItemsControlBody, styles.column]}>
-          <View style={styles.row}>
-            <TextInput
-              style={fieldControlStyle()}
-              placeholder="Name to save as…"
-              value={nameDraft}
-              onChangeText={setNameDraft}
-              accessibilityLabel="Name to save as"
-            />
-            <BasicButton onPress={handleSave}>Save</BasicButton>
-          </View>
-          <View style={styles.savedItemsListContainer}>
-            <Text>Load saved item</Text>
-            {items.length === 0 ? (
-              <Text>Nothing saved yet.</Text>
-            ) : (
-              <FlatList
-                contentContainerStyle={{ flexGrow: 1, backgroundColor: "red" }}
-                data={items}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <SavedItemRecord
-                    item={item}
-                    onLoad={handleLoad}
-                    onDelete={handleDelete}
-                  />
-                )}
+      <Modal
+        visible={open}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setOpen(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View
+            accessibilityRole="dialog"
+            accessibilityLabel="Load Existing dialog"
+            accessibilityViewIsModal
+            style={[styles.savedItemsControlBody, styles.column]}
+          >
+            <View style={styles.modalHeading}>
+              <Text>{`Load Existing ${camelToDescription(type)}`}</Text>
+              <BasicButton onPress={() => setOpen(false)}>Close</BasicButton>
+            </View>
+            <View style={styles.saveRow}>
+              <TextInput
+                style={[fieldControlStyle(), styles.nameInput]}
+                placeholder="Name to save as…"
+                value={nameDraft}
+                onChangeText={setNameDraft}
+                accessibilityLabel="Name to save as"
               />
-            )}
+              <BasicButton onPress={handleSave}>Save</BasicButton>
+            </View>
+            <View style={styles.savedItemsListContainer}>
+              <Text>Load saved item</Text>
+              {items.length === 0 ? (
+                <Text>Nothing saved yet.</Text>
+              ) : (
+                <FlatList
+                  data={items}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <SavedItemRecord
+                      item={item}
+                      onLoad={handleLoad}
+                      onDelete={handleDelete}
+                    />
+                  )}
+                />
+              )}
+            </View>
           </View>
-          <BasicButton onPress={() => setOpen(false)}>Close</BasicButton>
         </View>
-      )}
+      </Modal>
 
-      <Modal visible={confirmingNew} transparent animationType="fade">
+      <Modal
+        visible={confirmingNew}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setConfirmingNew(false)}
+      >
         <View>
           <Text>Save before starting new?</Text>
           <Text>{`"${loadedItem?.name}" has unsaved changes.`}</Text>
@@ -254,13 +280,41 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 8,
   },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalHeading: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  saveRow: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 8,
+  },
+  nameInput: {
+    flex: 1,
+    minWidth: 0,
+  },
   savedItemsListContainer: {
+    flex: 1,
     borderTopWidth: 1,
     borderTopColor: "black",
     width: "100%",
+    paddingTop: 8,
   },
   savedItemsControlBody: {
-    flex: 1,
+    width: "90%",
+    maxWidth: 600,
+    height: "80%",
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "black",

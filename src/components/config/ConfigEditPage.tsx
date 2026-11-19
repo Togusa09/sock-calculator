@@ -2,7 +2,7 @@ import { ConfigNotFound, ConfigShell } from "@/components/config/ConfigShell";
 import { useLibraryItem } from "@/hooks/UseLibraryItems";
 import { isNameTaken, updateItem, type LibraryItemType } from "@/lib/library";
 import { Href, Link } from "expo-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Text, TextInput, View } from "react-native";
 
 type Props<T> = {
@@ -76,14 +76,23 @@ export function ConfigEditor<T>({
   const [data, setData] = useState<T>(initialData);
   const [saved, setSaved] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
+  const [nameTaken, setNameTaken] = useState(false);
 
   const errors = [
     ...(name.trim() ? [] : ["Name is required."]),
-    ...(name.trim() && isNameTaken(type, name, exceptId)
+    ...(name.trim() && nameTaken //isNameTaken(type, name, exceptId)
       ? ["Another item already uses that name."]
       : []),
     ...validate(data),
   ];
+
+  useEffect(() => {
+    async function checkNameTaken() {
+      const taken = await isNameTaken(type, name, exceptId);
+      setNameTaken(taken);
+    }
+    checkNameTaken();
+  }, [type, name, exceptId]);
 
   function handleSave() {
     setShowErrors(true);

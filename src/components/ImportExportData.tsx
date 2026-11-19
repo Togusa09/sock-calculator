@@ -4,7 +4,7 @@ import { parseImportedRecord } from "@/lib/validation";
 import * as DocumentPicker from "expo-document-picker";
 import { File, Paths } from "expo-file-system";
 import { isAvailableAsync, shareAsync } from "expo-sharing";
-import { Platform, View } from "react-native";
+import { Platform } from "react-native";
 import { BasicButton } from "./ui/BasicButton";
 
 type Props = {
@@ -102,10 +102,8 @@ export function ImportExportData({ onImported }: Props) {
 
   return (
     <>
-      <View style={{ flexDirection: "row", gap: 8, width: 200 }}>
-        <BasicButton onPress={ExportData}>Export JSON</BasicButton>
-        <BasicButton onPress={ImportData}>Import JSON</BasicButton>
-      </View>
+      <BasicButton onPress={ExportData}>Export JSON</BasicButton>
+      <BasicButton onPress={ImportData}>Import JSON</BasicButton>
     </>
   );
 }
