@@ -16,7 +16,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { BasicButton } from "./ui/BasicButton";
@@ -158,14 +157,10 @@ export function SavedItemsControl<T>({
         <BasicButton
           onPress={handleNew}
         >{`New ${camelToDescription(type)}`}</BasicButton>
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel={`Load Existing ${camelToDescription(type)}`}
-          accessibilityState={{ expanded: open }}
+        <BasicButton
+          testID="load-existing-button"
           onPress={toggleOpen}
-        >
-          <Text>{`Load Existing ${camelToDescription(type)}`}</Text>
-        </TouchableOpacity>
+        >{`Load Existing ${camelToDescription(type)}`}</BasicButton>
       </View>
 
       <Modal

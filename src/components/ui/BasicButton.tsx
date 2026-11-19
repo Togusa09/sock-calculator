@@ -6,6 +6,7 @@ type Props = {
   children: string;
   onPress: () => void;
   width?: number;
+  testID?: string;
   textAlignment?: TextAlignValues;
 };
 
@@ -13,11 +14,13 @@ export function BasicButton({
   children,
   onPress,
   width,
+  testID,
   textAlignment = "center",
 }: Props) {
   return (
     <Pressable
       accessibilityRole="button"
+      testID={testID}
       onPress={() => onPress()}
       style={[styles.button, width !== undefined && { width }]}
     >
