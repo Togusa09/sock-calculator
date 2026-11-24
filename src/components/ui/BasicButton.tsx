@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: "black",
+    marginTop: "auto",
+    marginBottom: "auto",
   },
   text: {
     color: "black",

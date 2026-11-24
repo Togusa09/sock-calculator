@@ -22,8 +22,8 @@ import {
   DisplayUnit,
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
-import { useMemo, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { useMemo, useRef, useState } from "react";
+import { ScrollView, Text, View, type ScrollViewInstance } from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 const displayUnits = [
@@ -47,10 +47,20 @@ export default function Home() {
   const result = useMemo(() => calculateStitches(record), [record]);
   const errors = validateRecord(record);
 
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
+  const [targetY, setTargetY] = useState(0);
+
+  const handleScroll = () => {
+    scrollViewRef.current?.scrollTo({
+      y: targetY,
+      animated: true,
+    });
+  };
+
   return (
-    <ScrollView style={sharedStyles.container}>
+    <ScrollView style={sharedStyles.container} ref={scrollViewRef}>
       <View>
-        <Text>
+        <Text style={sharedStyles.title}>
           Sock calculator
           {loadedItem && (
             <Text>
@@ -61,9 +71,9 @@ export default function Home() {
           )}
         </Text>
 
-        <LabeledField label="Display" required>
+        <LabeledField label="Display Unit" required>
           <Picker
-            accessibilityLabel="Display"
+            accessibilityLabel="Display Unit"
             style={fieldControlStyle()}
             selectedValue={unit}
             onValueChange={(value) =>
@@ -116,7 +126,8 @@ export default function Home() {
         <Wizard
           canAdvance={() => true}
           onFinish={() => {
-            setMessage("Wizard completed.");
+            //setMessage("Wizard completed.");
+            handleScroll();
           }}
         >
           <WizardStep
@@ -218,7 +229,13 @@ export default function Home() {
           Restore defaults
         </BasicButton>
       </View> */}
-
+      {/* Marker for top of results panel */}
+      <View
+        onLayout={(event) => {
+          const layout = event.nativeEvent.layout;
+          setTargetY(layout.y);
+        }}
+      ></View>
       <ResultsPanel result={result} unit={unit} validation={errors} />
     </ScrollView>
   );
@@ -234,3 +251,4 @@ export default function Home() {
 //     margin: 16,
 //   },
 // });
+// const styles = StyleSheet.create({});

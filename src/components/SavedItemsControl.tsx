@@ -48,7 +48,7 @@ function SavedItemRecord<T>({
   onDelete,
 }: SavedItemRecordProps<T>) {
   return (
-    <View style={styles.row}>
+    <View style={styles.savedItemsRow}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`Load ${item.name}`}
@@ -56,12 +56,7 @@ function SavedItemRecord<T>({
       >
         <Text>{item.name}</Text>
       </Pressable>
-      <BasicButton
-        onPress={() => onDelete(item.id)}
-        width={styles.savedItemRecordRowButton.width}
-      >
-        Delete
-      </BasicButton>
+      <BasicButton onPress={() => onDelete(item.id)}>Delete</BasicButton>
     </View>
   );
 }
@@ -151,9 +146,9 @@ export function SavedItemsControl<T>({
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       {/* Saved Items Control Heading */}
-      <View style={styles.row}>
+      <View style={sharedStyles.row}>
         <BasicButton
           onPress={handleNew}
         >{`New ${camelToDescription(type)}`}</BasicButton>
@@ -169,20 +164,28 @@ export function SavedItemsControl<T>({
         animationType="fade"
         onRequestClose={() => setOpen(false)}
       >
-        <View style={styles.modalBackdrop}>
+        <View style={styles.centeredView}>
           <View
             accessibilityRole="dialog"
             accessibilityLabel="Load Existing dialog"
             accessibilityViewIsModal
-            style={[styles.savedItemsControlBody, sharedStyles.bordered]}
+            style={[styles.modalView, sharedStyles.container]}
           >
-            <View style={styles.modalHeading}>
-              <Text>{`Load Existing ${camelToDescription(type)}`}</Text>
-              <BasicButton onPress={() => setOpen(false)}>Close</BasicButton>
+            {/* Borrowing the saved items row style for moment, will likely need to change */}
+            <View style={styles.savedItemsRow}>
+              <Text
+                style={sharedStyles.heading1}
+              >{`Load Existing ${camelToDescription(type)}`}</Text>
+              <BasicButton
+                textAlignment={"center"}
+                onPress={() => setOpen(false)}
+              >
+                Close
+              </BasicButton>
             </View>
-            <View style={styles.saveRow}>
+            <View style={sharedStyles.row}>
               <TextInput
-                style={[fieldControlStyle(), styles.nameInput]}
+                style={[fieldControlStyle()]}
                 placeholder="Name to save as…"
                 value={nameDraft}
                 onChangeText={setNameDraft}
@@ -190,8 +193,8 @@ export function SavedItemsControl<T>({
               />
               <BasicButton onPress={handleSave}>Save</BasicButton>
             </View>
-            <View style={styles.savedItemsListContainer}>
-              <Text>Load saved item</Text>
+            <View style={sharedStyles.column}>
+              <Text style={sharedStyles.heading2}>Load saved item</Text>
               {items.length === 0 ? (
                 <Text>Nothing saved yet.</Text>
               ) : (
@@ -252,58 +255,86 @@ export function SavedItemsControl<T>({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 4,
-    width: "100%",
-  },
-  row: {
-    ...sharedStyles.row,
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 8,
-  },
-  modalBackdrop: {
+  centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  modalHeading: {
+  modalView: {
+    margin: 20,
+    // backgroundColor: "white",
+    // borderRadius: 20,
+    borderRadius: 4,
+    backgroundColor: "white",
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  savedItemsRow: {
     ...sharedStyles.row,
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  saveRow: {
-    ...sharedStyles.row,
-    alignItems: "center",
     paddingVertical: 8,
   },
-  nameInput: {
-    flex: 1,
-    minWidth: 0,
-  },
-  savedItemsListContainer: {
-    flex: 1,
-    borderTopWidth: 1,
-    borderTopColor: "black",
-    width: "100%",
-    paddingTop: 8,
-  },
-  savedItemsControlBody: {
-    ...sharedStyles.column,
-    width: "90%",
-    maxWidth: 600,
-    height: "80%",
-    justifyContent: "flex-start",
-    backgroundColor: "white",
-    alignItems: "flex-start",
-  },
-  savedItemRecordRowButton: {
-    width: 80,
-  },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: "white",
+  //   borderWidth: 1,
+  //   borderColor: "black",
+  //   borderRadius: 4,
+  //   width: "100%",
+  // },
+  // row: {
+  //   ...sharedStyles.row,
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   padding: 8,
+  // },
+  // modalBackdrop: {
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   padding: 16,
+  //   backgroundColor: "rgba(0, 0, 0, 0.5)",
+  // },
+  // modalHeading: {
+  //   ...sharedStyles.row,
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  // },
+  // saveRow: {
+  //   ...sharedStyles.row,
+  //   alignItems: "center",
+  //   paddingVertical: 8,
+  // },
+  // nameInput: {
+  //   flex: 1,
+  //   minWidth: 0,
+  // },
+  // savedItemsListContainer: {
+  //   flex: 1,
+  //   borderTopWidth: 1,
+  //   borderTopColor: "black",
+  //   width: "100%",
+  //   paddingTop: 8,
+  // },
+  // savedItemsControlBody: {
+  //   ...sharedStyles.column,
+  //   width: "90%",
+  //   maxWidth: 600,
+  //   height: "80%",
+  //   justifyContent: "flex-start",
+  //   backgroundColor: "white",
+  //   alignItems: "flex-start",
+  // },
+  // savedItemRecordRowButton: {
+  //   width: 80,
+  // },
 });

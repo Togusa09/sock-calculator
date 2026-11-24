@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     gap,
   },
   container: {
-    flex: 1,
+    // flex: 1,
     padding: gap,
   },
   bordered: {
@@ -39,6 +39,25 @@ const styles = StyleSheet.create({
   error: {
     color: "#ff4d4f",
     fontWeight: "500",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+    color: "#333",
+  },
+  heading1: {
+    fontSize: 20,
+    marginBottom: 16,
+    textAlign: "center",
+    color: "#333",
+  },
+  heading2: {
+    fontSize: 18,
+    marginBottom: 14,
+    textAlign: "center",
+    color: "#333",
   },
 });
 

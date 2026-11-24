@@ -2,7 +2,7 @@ import type { calculateStitches } from "@/lib/calculations";
 import type { DisplayUnit } from "@/lib/domain";
 import { formatMeasurement } from "@/lib/units";
 import { sharedStyles } from "@/theme/styles";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 type CalculationResult = ReturnType<typeof calculateStitches>;
 
@@ -57,7 +57,8 @@ export function ResultsPanel({ result, unit, validation }: Props) {
   const { sections } = result;
   return (
     <View
-      style={[styles.results, sharedStyles.container, sharedStyles.bordered]}
+      style={[sharedStyles.container, sharedStyles.bordered]}
+      onLayout={(event) => {}}
     >
       <Text>Stitch plan</Text>
 
@@ -134,7 +135,3 @@ export function ResultsPanel({ result, unit, validation }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  results: {},
-});
