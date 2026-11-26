@@ -193,12 +193,13 @@ export function SavedItemsControl<T>({
               />
               <BasicButton onPress={handleSave}>Save</BasicButton>
             </View>
-            <View style={sharedStyles.column}>
-              <Text style={sharedStyles.heading2}>Load saved item</Text>
+            <View style={[sharedStyles.column, sharedStyles.centered]}>
+              <Text style={sharedStyles.heading2}>Saved Items</Text>
               {items.length === 0 ? (
                 <Text>Nothing saved yet.</Text>
               ) : (
                 <FlatList
+                  style={{ width: "100%" }}
                   data={items}
                   keyExtractor={(item) => item.id}
                   renderItem={({ item }) => (
@@ -282,6 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 8,
+    width: "100%",
   },
   // container: {
   //   flex: 1,

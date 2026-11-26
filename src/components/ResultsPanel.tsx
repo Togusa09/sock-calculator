@@ -60,7 +60,7 @@ export function ResultsPanel({ result, unit, validation }: Props) {
       style={[sharedStyles.container, sharedStyles.bordered]}
       onLayout={(event) => {}}
     >
-      <Text>Stitch plan</Text>
+      <Text style={sharedStyles.heading1}>Stitch plan</Text>
 
       {validation.length > 0 && (
         <Text style={sharedStyles.error}>{validation[0]}</Text>

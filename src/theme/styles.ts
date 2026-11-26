@@ -15,6 +15,10 @@ const styles = StyleSheet.create({
     width: "100%",
     gap,
   },
+  centered: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     // flex: 1,
     padding: gap,
