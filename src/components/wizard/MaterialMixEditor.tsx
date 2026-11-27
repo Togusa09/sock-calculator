@@ -19,16 +19,13 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
   return (
     <View testID="material-mix-editor">
       <Text>Material mix</Text>
+      <View style={[sharedStyles.column,]}>
       {materials.map((item, index) => (
         <View
           key={index}
           testID={`material-row-${index}`}
           style={[
             sharedStyles.row,
-            {
-              alignItems: "center",
-              padding: 8,
-            },
           ]}
         >
           <TextInput
@@ -56,14 +53,18 @@ export function MaterialMixEditor({ materials, onChange }: Props) {
           )}
         </View>
       ))}
-      <BasicButton
-        onPress={() => onChange([...materials, { material: "", percent: 0 }])}
-      >
-        Add material
-      </BasicButton>
-      <Text>
+      </View>
+      <View style={sharedStyles.row}>
+        <BasicButton
+          onPress={() => onChange([...materials, { material: "", percent: 0 }])}
+        >
+          Add material
+        </BasicButton>
+          <Text>
         Total: {total}%{total !== 100 ? " — must add up to 100%." : ""}
       </Text>
+      </View>
+    
     </View>
   );
 }

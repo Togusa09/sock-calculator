@@ -84,7 +84,7 @@ export default function Home() {
         <LabeledField label="Display Unit" required>
           <Picker
             accessibilityLabel="Display Unit"
-            style={fieldControlStyle()}
+            style={[fieldControlStyle(), styles.fitPicker]}
             selectedValue={unit}
             onValueChange={(value) =>
               updateRecord({ displayUnit: value as DisplayUnit })
@@ -215,4 +215,5 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   pageRoot: { flex: 1, padding: 16, maxWidth: 600, alignSelf: "center" },
+  fitPicker: { flexGrow: 1, minWidth: 150 },
 });
