@@ -2,6 +2,7 @@ import {
   SavedItemsControl,
   type LoadedItemInfo,
 } from "@/components/SavedItemsControl";
+import LabeledField from "@/components/ui/LabeledField";
 import {
   DEFAULT_YARN_PROFILE,
   YarnWeightUnit,
@@ -9,12 +10,13 @@ import {
 } from "@/lib/domain";
 import { deleteYarnProfile, LibraryItem } from "@/lib/library";
 import { validateYarnProfile } from "@/lib/validation";
-import { palette } from "@/theme/colors";
+import { fieldControlStyle } from "@/theme/styles";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { Panel } from "../Panel/Panel";
 import { PanelHeading } from "../Panel/PanelHeading";
-import { PlatformPicker } from "../ui/PlatformPicker";
+
 import { MaterialMixEditor } from "./MaterialMixEditor";
 
 type Props = {
@@ -53,68 +55,35 @@ export function YarnProfile({ profile, profileId, onChange, onSelect }: Props) {
           onLoadedItemChange={setLoadedItem}
         />
       </PanelHeading>
-      <View style={styles.fieldGrid}>
-        <View style={styles.field} testID="yarn-manufacturer-field">
-          <Text style={styles.fieldLabel}>Manufacturer *</Text>
+      <View testID="yarn-manufacturer-field">
+        <LabeledField label="Manufacturer" required responsive>
           <TextInput
-            style={styles.input}
+            style={fieldControlStyle()}
             value={profile.manufacturer}
             onChangeText={(text) => onChange({ manufacturer: text })}
           />
-        </View>
-        <View style={styles.field} testID="yarn-weight-field">
-          <Text style={styles.fieldLabel}>Weight</Text>
-          <PlatformPicker
-            flush
+        </LabeledField>
+      </View>
+      <View testID="yarn-weight-field">
+        <LabeledField label="Weight" responsive>
+          <Picker
+            style={fieldControlStyle()}
             selectedValue={profile.weight}
             onValueChange={(weight) =>
               onChange({ weight: weight as YarnWeightUnit })
             }
-            items={[
-              { label: "Fingering", value: "fingering" },
-              { label: "DK", value: "DK" },
-              { label: "Worsted", value: "worsted" },
-            ]}
-          />
-        </View>
+          >
+            <Picker.Item label="Fingering" value="fingering" />
+            <Picker.Item label="DK" value="DK" />
+            <Picker.Item label="Worsted" value="worsted" />
+          </Picker>
+        </LabeledField>
       </View>
       <MaterialMixEditor
         materials={profile.materials}
         onChange={(materials) => onChange({ materials })}
       />
-      {errors.length > 0 && <Text style={styles.hint}>{errors[0]}</Text>}
+      {errors.length > 0 && <Text>{errors[0]}</Text>}
     </Panel>
   );
 }
-
-const styles = StyleSheet.create({
-  fieldGrid: {
-    flexDirection: "row",
-    gap: 18,
-    marginBottom: 16,
-  },
-  field: {
-    flex: 1,
-    minWidth: 0,
-    gap: 7,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    color: "#77746b",
-  },
-  input: {
-    backgroundColor: "#faf8f2",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 2,
-    color: "#24231f",
-    minHeight: 44,
-    paddingHorizontal: 12,
-  },
-  hint: {
-    color: "#77746b",
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 20,
-  },
-});

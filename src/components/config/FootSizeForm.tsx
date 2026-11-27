@@ -1,8 +1,10 @@
 import { NumberField } from "@/components/NumberField";
 import type { DisplayUnit, Measurements } from "@/lib/domain";
+import { fieldControlStyle } from "@/theme/styles";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { PlatformPicker } from "../ui/PlatformPicker";
+import { View } from "react-native";
+import LabeledField from "../ui/LabeledField";
 
 type Props = {
   measurements: Measurements;
@@ -32,75 +34,36 @@ export function FootSizeForm({ measurements, onChange }: Props) {
 
   return (
     <>
-      <View style={styles.unitToggle}>
-        <Text style={styles.unitToggleLabel}>Display</Text>
-        <View style={styles.selectWrapper}>
-          <PlatformPicker
+      <View>
+        <LabeledField label="Display" required responsive>
+          <Picker
+            accessibilityLabel="Display"
+            style={fieldControlStyle()}
             selectedValue={unit}
-            onValueChange={(itemValue) => setUnit(itemValue as DisplayUnit)}
-            items={[
-              { label: "Metric", value: "metric" },
-              { label: "Imperial", value: "imperial" },
-            ]}
+            onValueChange={(value) => setUnit(value as DisplayUnit)}
           >
-            {/* <Picker.Item label="Metric" value="metric" />
-            <Picker.Item label="Imperial" value="imperial" /> */}
-          </PlatformPicker>
-        </View>
+            <Picker.Item key="metric" label="Metric" value="metric" />
+            <Picker.Item key="imperial" label="Imperial" value="imperial" />
+          </Picker>
+        </LabeledField>
       </View>
-      <View style={styles.fieldGrid}>
+      <View>
         {FIELDS.map(({ key, label, required }) => (
-          <View key={key} style={styles.fieldWrapper}>
-            <NumberField
-              label={label}
-              required={required}
-              unit={unit}
-              value={measurements[key]}
-              onChange={(value) =>
-                onChange({
-                  ...measurements,
-                  [key]: required ? (value ?? 0) : value,
-                })
-              }
-            />
-          </View>
+          <NumberField
+            key={key}
+            label={label}
+            required={required}
+            unit={unit}
+            value={measurements[key]}
+            onChange={(value) =>
+              onChange({
+                ...measurements,
+                [key]: required ? (value ?? 0) : value,
+              })
+            }
+          />
         ))}
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  unitToggle: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 18,
-  },
-  unitToggleLabel: {
-    color: "#77746b",
-    fontSize: 13,
-  },
-  selectWrapper: {
-    backgroundColor: "#fffdf8",
-    borderWidth: 1,
-    borderColor: "#ddd8ca",
-    borderRadius: 2,
-    overflow: "hidden",
-    minWidth: 140,
-  },
-  select: {
-    color: "#24231f",
-    height: 44,
-  },
-  fieldGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 18,
-  },
-  fieldWrapper: {
-    width: "48%",
-    minWidth: 200,
-    flexGrow: 1,
-  },
-});

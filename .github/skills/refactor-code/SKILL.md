@@ -15,7 +15,7 @@ Ask what maintainability concern or scope the user wants addressed if it is not 
 
 - Inspect the relevant implementation, callers, tests, and repository instructions before editing.
 - Keep changes focused; do not combine unrelated feature work with a refactor.
-- Preserve calculation outputs, canonical units, validation, versioned persistence, import/export compatibility, and accessible behavior.
+- Preserve calculation outputs, canonical units, validation, AsyncStorage persistence, versioned import/export compatibility, and accessible behavior across web and native platforms.
 - Prefer extracting focused responsibilities and improving types over adding layers or abstractions without need.
 - Add or update tests before or alongside risky changes, then run them after each coherent refactor.
 - Explain any intentional behavior change separately; do not silently change behavior under the label of refactoring.

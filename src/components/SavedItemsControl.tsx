@@ -6,21 +6,19 @@ import {
   type LibraryItem,
   type LibraryItemType,
 } from "@/lib/library";
-import { palette } from "@/theme/colors";
+import { camelToDescription } from "@/lib/stringFormatting";
+import { fieldControlStyle, sharedStyles } from "@/theme/styles";
 import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
   Pressable,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  useWindowDimensions,
   View,
 } from "react-native";
-import { ClearButton } from "./ui/ClearButton";
+import { BasicButton } from "./ui/BasicButton";
 
 export type LoadedItemInfo = {
   id?: string;
@@ -38,6 +36,31 @@ type Props<T> = {
   onLoadedItemChange?: (info: LoadedItemInfo | null) => void;
 };
 
+type SavedItemRecordProps<T> = {
+  item: LibraryItem<T>;
+  onLoad: (item: LibraryItem<T>) => void;
+  onDelete: (id: string) => void;
+};
+
+function SavedItemRecord<T>({
+  item,
+  onLoad,
+  onDelete,
+}: SavedItemRecordProps<T>) {
+  return (
+    <View style={styles.savedItemsRow}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Load ${item.name}`}
+        onPress={() => onLoad(item)}
+      >
+        <Text>{item.name}</Text>
+      </Pressable>
+      <BasicButton onPress={() => onDelete(item.id)}>Delete</BasicButton>
+    </View>
+  );
+}
+
 export function SavedItemsControl<T>({
   type,
   data,
@@ -47,9 +70,6 @@ export function SavedItemsControl<T>({
   onDelete,
   onLoadedItemChange,
 }: Props<T>) {
-  const { width } = useWindowDimensions();
-  const isWebInline = Platform.OS === "web" && width > 768;
-  const isWebSheet = Platform.OS === "web" && !isWebInline;
   const [items, setItems] = useState<LibraryItem<T>[]>([]);
   const [nameDraft, setNameDraft] = useState("");
   const [open, setOpen] = useState(false);
@@ -125,126 +145,109 @@ export function SavedItemsControl<T>({
     setOpen(false);
   }
 
-  const savedItemsPanel = (
-    <View
-      style={[
-        styles.savedItemsPanel,
-        isWebInline && styles.savedItemsPanelInline,
-        isWebSheet && styles.savedItemsPanelSheet,
-      ]}
-    >
-      <View
-        style={[
-          styles.savedItemsSaveRow,
-          isWebSheet && styles.savedItemsSaveRowSheet,
-        ]}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder="Name to save as…"
-          value={nameDraft}
-          onChangeText={setNameDraft}
-          accessibilityLabel="Name to save as"
-        />
-        <TouchableOpacity
-          style={[styles.button, styles.secondary]}
-          onPress={handleSave}
-        >
-          <Text style={styles.secondaryText}>Save</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.h3}>Load saved item</Text>
-      {items.length === 0 ? (
-        <Text style={styles.savedItemsEmpty}>Nothing saved yet.</Text>
-      ) : (
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.id}
-          style={styles.savedItemsList}
-          renderItem={({ item }) => (
-            <View style={styles.listItem}>
-              <Pressable
-                style={styles.savedItemsName}
-                onPress={() => handleLoad(item)}
-              >
-                <Text style={styles.itemNameText}>{item.name}</Text>
-              </Pressable>
-              <ClearButton onPress={() => handleDelete(item.id)}>
-                Delete
-              </ClearButton>
-            </View>
-          )}
-        />
-      )}
-      <View style={styles.savedItemsPanelActions}>
-        <ClearButton onPress={() => setOpen(false)}>Close</ClearButton>
-      </View>
-    </View>
-  );
-
   return (
-    <View style={styles.savedItems}>
-      <View style={styles.savedItemsHeader}>
-        <ClearButton onPress={handleNew}>New</ClearButton>
-        <TouchableOpacity style={styles.savedItemsToggle} onPress={toggleOpen}>
-          <View style={[styles.chevron, open && styles.chevronUp]} />
-        </TouchableOpacity>
+    <View>
+      {/* Saved Items Control Heading */}
+      <View style={sharedStyles.row}>
+        <BasicButton
+          onPress={handleNew}
+        >{`New ${camelToDescription(type)}`}</BasicButton>
+        <BasicButton
+          testID="manage-existing-button"
+          onPress={toggleOpen}
+        >{`Manage Existing ${camelToDescription(type)}`}</BasicButton>
       </View>
 
-      {isWebInline && open && (
-        <View
-          style={[
-            styles.savedItemsOverlayContainer,
-            { width: Math.min(360, width - 36) },
-          ]}
-        >
-          {savedItemsPanel}
-        </View>
-      )}
-
-      <Modal visible={open && !isWebInline} transparent animationType="fade">
-        <View
-          style={[
-            styles.confirmOverlay,
-            isWebSheet && styles.confirmOverlaySheet,
-          ]}
-        >
-          {savedItemsPanel}
+      <Modal
+        visible={open}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setOpen(false)}
+      >
+        <View style={styles.centeredView}>
+          <View
+            accessibilityRole="dialog"
+            accessibilityLabel="Manage Existing dialog"
+            accessibilityViewIsModal
+            style={[styles.modalView, sharedStyles.container]}
+          >
+            {/* Borrowing the saved items row style for moment, will likely need to change */}
+            <View style={styles.savedItemsRow}>
+              <Text
+                style={sharedStyles.heading1}
+              >{`Manage ${camelToDescription(type)}`}</Text>
+              <BasicButton
+                textAlignment={"center"}
+                onPress={() => setOpen(false)}
+              >
+                Close
+              </BasicButton>
+            </View>
+            <View style={sharedStyles.row}>
+              <TextInput
+                style={[fieldControlStyle()]}
+                placeholder="Name to save as…"
+                value={nameDraft}
+                onChangeText={setNameDraft}
+                accessibilityLabel="Name to save as"
+              />
+              <BasicButton onPress={handleSave}>Save</BasicButton>
+            </View>
+            <View style={[sharedStyles.column, sharedStyles.centered]}>
+              <Text style={sharedStyles.heading2}>Saved Items</Text>
+              {items.length === 0 ? (
+                <Text>Nothing saved yet.</Text>
+              ) : (
+                <FlatList
+                  style={{ width: "100%" }}
+                  data={items}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <SavedItemRecord
+                      item={item}
+                      onLoad={handleLoad}
+                      onDelete={handleDelete}
+                    />
+                  )}
+                />
+              )}
+            </View>
+          </View>
         </View>
       </Modal>
 
-      <Modal visible={confirmingNew} transparent animationType="fade">
-        <View style={styles.confirmOverlay}>
-          <View style={styles.confirmDialog}>
-            <Text style={styles.h3}>Save before starting new?</Text>
-            <Text
-              style={styles.p}
-            >{`"${loadedItem?.name}" has unsaved changes.`}</Text>
-            <View style={styles.confirmDialogActions}>
-              <ClearButton onPress={() => setConfirmingNew(false)}>
-                Cancel
-              </ClearButton>
-              <ClearButton
-                onPress={() => {
-                  setConfirmingNew(false);
-                  startNew();
-                }}
-              >
-                Discard
-              </ClearButton>
-
-              <Pressable
-                style={[styles.button, styles.secondary]}
-                onPress={async () => {
-                  if (loadedItem)
-                    onSaved?.(await saveItem(type, data, loadedItem.name));
-                  setConfirmingNew(false);
-                  startNew();
-                }}
-              >
-                <Text style={styles.secondaryText}>Save</Text>
-              </Pressable>
-            </View>
+      <Modal
+        visible={confirmingNew}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setConfirmingNew(false)}
+      >
+        <View>
+          <Text>Save before starting new?</Text>
+          <Text>{`"${loadedItem?.name}" has unsaved changes.`}</Text>
+          <View style={sharedStyles.row}>
+            <BasicButton onPress={() => setConfirmingNew(false)}>
+              Cancel
+            </BasicButton>
+            <BasicButton
+              onPress={() => {
+                setConfirmingNew(false);
+                startNew();
+              }}
+            >
+              Discard
+            </BasicButton>
+            <Pressable
+              accessibilityRole="button"
+              onPress={async () => {
+                if (loadedItem)
+                  onSaved?.(await saveItem(type, data, loadedItem.name));
+                setConfirmingNew(false);
+                startNew();
+              }}
+            >
+              <Text>Save</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -253,174 +256,87 @@ export function SavedItemsControl<T>({
 }
 
 const styles = StyleSheet.create({
-  savedItems: {
-    position: "relative",
-  },
-  savedItemsHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  savedItemsOverlayContainer: {
-    position: "absolute",
-    top: 48,
-    right: 0,
-    zIndex: 20,
-    width: 360,
-  },
-  button: {
-    borderRadius: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  secondary: {
-    backgroundColor: "#24231f",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  secondaryText: {
-    color: "#fffdf8",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  savedItemsToggle: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#fffdf8",
-    borderWidth: 1,
-    borderColor: "#24231f",
-    borderRadius: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  chevron: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 5,
-    borderRightWidth: 5,
-    borderTopWidth: 6,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderTopColor: "#24231f",
-  },
-  chevronUp: {
-    transform: [{ rotate: "180deg" }],
-  },
-  confirmOverlay: {
+  centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(36, 35, 31, 0.4)",
   },
-  confirmOverlaySheet: {
-    justifyContent: "flex-end",
-    alignItems: "stretch",
-  },
-  savedItemsPanel: {
-    backgroundColor: palette.panel,
+  modalView: {
+    margin: 20,
+    // backgroundColor: "white",
+    // borderRadius: 20,
     borderRadius: 4,
-    borderWidth: 1,
-    borderColor: palette.border,
-    padding: 24,
-    width: "90%",
-    maxWidth: 360,
-    maxHeight: 520,
-    flexDirection: "column",
-    shadowColor: "#24231f",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.18,
-    shadowRadius: 32,
-  },
-  savedItemsPanelInline: {
-    width: "100%",
-  },
-  savedItemsPanelSheet: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    width: "100%",
-    maxWidth: "100%",
-    maxHeight: "70%",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  savedItemsSaveRow: {
-    flexDirection: "row",
-    gap: 8,
-    marginBottom: 20,
-  },
-  savedItemsSaveRowSheet: {
-    flexDirection: "row-reverse",
-  },
-  input: {
-    flex: 1,
-    backgroundColor: "#faf8f2",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    fontSize: 13,
-    color: "#24231f",
-    height: 38,
-  },
-  h3: {
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-    color: "#24231f",
-    marginBottom: 10,
-  },
-  savedItemsEmpty: {
-    color: "#77746b",
-    fontSize: 13,
-  },
-  savedItemsList: {
-    flex: 1,
-  },
-  listItem: {
-    flexDirection: "row",
+    backgroundColor: "white",
+    padding: 35,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  savedItemsRow: {
+    ...sharedStyles.row,
     justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: 4,
-    paddingLeft: 12,
-    paddingVertical: 4,
-    marginBottom: 6,
+    alignItems: "center",
+    paddingVertical: 8,
+    width: "100%",
   },
-  savedItemsName: {
-    flex: 1,
-  },
-  itemNameText: {
-    fontSize: 13,
-    color: "#24231f",
-  },
-  savedItemsPanelActions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 12,
-  },
-  confirmDialog: {
-    backgroundColor: "#fffdf8",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: palette.border,
-    padding: 24,
-    width: "90%",
-    maxWidth: 360,
-  },
-  p: {
-    color: "#77746b",
-    fontSize: 13,
-  },
-  confirmDialogActions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 8,
-    paddingTop: 30,
-  },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: "white",
+  //   borderWidth: 1,
+  //   borderColor: "black",
+  //   borderRadius: 4,
+  //   width: "100%",
+  // },
+  // row: {
+  //   ...sharedStyles.row,
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   padding: 8,
+  // },
+  // modalBackdrop: {
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   padding: 16,
+  //   backgroundColor: "rgba(0, 0, 0, 0.5)",
+  // },
+  // modalHeading: {
+  //   ...sharedStyles.row,
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  // },
+  // saveRow: {
+  //   ...sharedStyles.row,
+  //   alignItems: "center",
+  //   paddingVertical: 8,
+  // },
+  // nameInput: {
+  //   flex: 1,
+  //   minWidth: 0,
+  // },
+  // savedItemsListContainer: {
+  //   flex: 1,
+  //   borderTopWidth: 1,
+  //   borderTopColor: "black",
+  //   width: "100%",
+  //   paddingTop: 8,
+  // },
+  // savedItemsControlBody: {
+  //   ...sharedStyles.column,
+  //   width: "90%",
+  //   maxWidth: 600,
+  //   height: "80%",
+  //   justifyContent: "flex-start",
+  //   backgroundColor: "white",
+  //   alignItems: "flex-start",
+  // },
+  // savedItemRecordRowButton: {
+  //   width: 80,
+  // },
 });
