@@ -35,7 +35,7 @@ The `test` script runs Jest in watch mode by default; the command above disables
 
 ### Reusable wizard
 
-`Wizard` and `WizardStep` in `src/components/Wizard.tsx` provide a linear, reusable flow. This component is not currently connected to the calculator screen.
+`Wizard` and `WizardStep` in `src/components/Wizard.tsx` provide a linear, reusable flow. The calculator screen uses this wizard for foot measurements, yarn profile, yarn tension, and construction.
 
 ```tsx
 <Wizard

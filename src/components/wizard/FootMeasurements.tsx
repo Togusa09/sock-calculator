@@ -7,6 +7,7 @@ import {
   type DisplayUnit,
   type Measurements,
 } from "@/lib/domain";
+import { fromCentimetres, toCentimetres } from "@/lib/units";
 import { fieldControlStyle } from "@/theme/styles";
 import { useState } from "react";
 import {
@@ -25,7 +26,7 @@ type MeasurementInputProps = {
   unit: DisplayUnit;
   value: number | undefined;
   required?: boolean;
-  onChange: (value: number) => void;
+  onChange: (value: number | undefined) => void;
 };
 
 function MeasurementInput({
@@ -41,8 +42,14 @@ function MeasurementInput({
         style={[fieldControlStyle(), styles.measurementControl]}
         accessibilityLabel={label}
         aria-required={required}
-        value={value?.toString() ?? ""}
-        onChangeText={(text) => onChange(Number(text) ?? 0)}
+        value={
+          value === undefined
+            ? ""
+            : String(Number(fromCentimetres(value, unit).toFixed(2)))
+        }
+        onChangeText={(text) =>
+          onChange(text === "" ? undefined : toCentimetres(Number(text), unit))
+        }
       />
     </LabeledUnitField>
   );
@@ -88,14 +95,14 @@ export function FootMeasurements({ measurements, unit, onChange }: Props) {
         unit={unit}
         value={measurements.footLengthCm}
         required
-        onChange={(cm) => onChange({ footLengthCm: cm })}
+        onChange={(cm) => onChange({ footLengthCm: cm ?? 0 })}
       />
       <MeasurementInput
         label="Ball circumference"
         unit={unit}
         value={measurements.footCircumferenceCm}
         required
-        onChange={(cm) => onChange({ footCircumferenceCm: cm })}
+        onChange={(cm) => onChange({ footCircumferenceCm: cm ?? 0 })}
       />
 
       <TouchableOpacity
