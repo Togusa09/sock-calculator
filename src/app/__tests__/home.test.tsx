@@ -7,14 +7,20 @@ jest.mock("expo-router", () => ({
   Link: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-beforeEach(() => {
-  AsyncStorage.clear();
+beforeEach(async () => {
+  jest.useFakeTimers();
+  await AsyncStorage.clear();
+});
+
+afterEach(() => {
+  jest.useRealTimers();
 });
 
 describe("home page", () => {
   it("shows every section and the summary on one page without tabs", async () => {
     await act(async () => {
       render(<Home />);
+      await jest.advanceTimersByTimeAsync(0);
     });
 
     expect(screen.getByText(/Foot measurements/)).toBeTruthy();
