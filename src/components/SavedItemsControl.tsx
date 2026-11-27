@@ -153,9 +153,9 @@ export function SavedItemsControl<T>({
           onPress={handleNew}
         >{`New ${camelToDescription(type)}`}</BasicButton>
         <BasicButton
-          testID="load-existing-button"
+          testID="manage-existing-button"
           onPress={toggleOpen}
-        >{`Load Existing ${camelToDescription(type)}`}</BasicButton>
+        >{`Manage Existing ${camelToDescription(type)}`}</BasicButton>
       </View>
 
       <Modal
@@ -167,7 +167,7 @@ export function SavedItemsControl<T>({
         <View style={styles.centeredView}>
           <View
             accessibilityRole="dialog"
-            accessibilityLabel="Load Existing dialog"
+            accessibilityLabel="Manage Existing dialog"
             accessibilityViewIsModal
             style={[styles.modalView, sharedStyles.container]}
           >
@@ -175,7 +175,7 @@ export function SavedItemsControl<T>({
             <View style={styles.savedItemsRow}>
               <Text
                 style={sharedStyles.heading1}
-              >{`Load Existing ${camelToDescription(type)}`}</Text>
+              >{`Manage ${camelToDescription(type)}`}</Text>
               <BasicButton
                 textAlignment={"center"}
                 onPress={() => setOpen(false)}

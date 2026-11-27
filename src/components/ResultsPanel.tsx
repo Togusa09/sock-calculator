@@ -3,6 +3,7 @@ import type { DisplayUnit } from "@/lib/domain";
 import { formatMeasurement } from "@/lib/units";
 import { sharedStyles } from "@/theme/styles";
 import { Text, View } from "react-native";
+import LabeledField from "./ui/LabeledField";
 
 type CalculationResult = ReturnType<typeof calculateStitches>;
 
@@ -24,11 +25,12 @@ function ResultMetric({
   source?: "entered" | "calculated";
 }) {
   return (
-    <View>
-      <Text>{label}</Text>
-      <Text>{formatMeasurement(value, unit)}</Text>
-      {source === "calculated" && <Text>calculated</Text>}
-    </View>
+    <LabeledField label={label}>
+      <Text>
+        {formatMeasurement(value, unit)}{" "}
+        {source === "calculated" && <Text>calculated</Text>}
+      </Text>
+    </LabeledField>
   );
 }
 
@@ -60,15 +62,18 @@ export function ResultsPanel({ result, unit, validation }: Props) {
       style={[sharedStyles.container, sharedStyles.bordered]}
       onLayout={(event) => {}}
     >
-      <Text style={sharedStyles.heading1}>Stitch plan</Text>
+      <Text style={[sharedStyles.heading1, sharedStyles.leftAligned]}>
+        Stitch plan
+      </Text>
 
       {validation.length > 0 && (
         <Text style={sharedStyles.error}>{validation[0]}</Text>
       )}
 
       <View>
-        <Text>Target foot circumference</Text>
-        <Text>{formatMeasurement(result.easedCircumferenceCm, unit)}</Text>
+        <LabeledField label="Target foot circumference">
+          <Text>{formatMeasurement(result.easedCircumferenceCm, unit)}</Text>
+        </LabeledField>
         <Text>
           {result.easePercent}% negative ease applied to{" "}
           {formatMeasurement(result.targetCircumferenceCm, unit)}
@@ -76,10 +81,13 @@ export function ResultsPanel({ result, unit, validation }: Props) {
       </View>
 
       <View>
-        <Text>Base stitches</Text>
-        <Text>{result.baseStitches.toFixed(1)}</Text>
-        <Text>Rounded stitches</Text>
-        <Text>{result.roundedStitches}</Text>
+        <LabeledField label="Base stitches">
+          <Text>{result.baseStitches.toFixed(1)}</Text>
+        </LabeledField>
+
+        <LabeledField label="Rounded stitches">
+          <Text>{result.roundedStitches}</Text>
+        </LabeledField>
         <Text>repeat-constrained</Text>
       </View>
 
@@ -105,7 +113,9 @@ export function ResultsPanel({ result, unit, validation }: Props) {
       </View>
 
       <View>
-        <Text>Section counts</Text>
+        <Text style={[sharedStyles.heading2, sharedStyles.leftAligned]}>
+          Section counts
+        </Text>
         <SectionRow
           label="Cuff"
           detail={sections.cuff.detail}

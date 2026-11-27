@@ -30,7 +30,7 @@ test("opens saved items in a modal and closes it after loading", async () => {
   );
 
   expect(screen.queryByLabelText("Name to save as")).toBeNull();
-  await fireEvent.press(screen.getByTestId("load-existing-button"));
+  await fireEvent.press(screen.getByTestId("manage-existing-button"));
 
   expect(await screen.findByLabelText("Name to save as")).toBeTruthy();
   await waitFor(() =>
@@ -53,7 +53,7 @@ test("closes the saved items modal with its close button", async () => {
     />,
   );
 
-  await fireEvent.press(screen.getByTestId("load-existing-button"));
+  await fireEvent.press(screen.getByTestId("manage-existing-button"));
   expect(await screen.findByLabelText("Name to save as")).toBeTruthy();
 
   await fireEvent.press(screen.getByRole("button", { name: "Close" }));

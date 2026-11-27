@@ -18,6 +18,17 @@ const styles = StyleSheet.create({
   centered: {
     justifyContent: "center",
     alignItems: "center",
+    textAlign: "center",
+  },
+  leftAligned: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    textAlign: "left",
+  },
+  rightAligned: {
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    textAlign: "right",
   },
   container: {
     // flex: 1,

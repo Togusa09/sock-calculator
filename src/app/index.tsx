@@ -23,7 +23,13 @@ import {
 } from "@/lib/domain";
 import { validateRecord } from "@/lib/validation";
 import { useMemo, useRef, useState } from "react";
-import { ScrollView, Text, View, type ScrollViewInstance } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  type ScrollViewInstance,
+} from "react-native";
 import { useDataPersistence } from "../hooks/UseDataPersistence";
 
 const displayUnits = [
@@ -49,6 +55,7 @@ export default function Home() {
 
   const scrollViewRef = useRef<ScrollViewInstance>(null);
   const [targetY, setTargetY] = useState(0);
+  const [wizardCompleted, setWizardCompleted] = useState(false);
 
   const handleScroll = () => {
     scrollViewRef.current?.scrollTo({
@@ -58,7 +65,10 @@ export default function Home() {
   };
 
   return (
-    <ScrollView style={sharedStyles.container} ref={scrollViewRef}>
+    <ScrollView
+      style={[styles.pageRoot, sharedStyles.container]}
+      ref={scrollViewRef}
+    >
       <View>
         <Text style={sharedStyles.title}>
           Sock calculator
@@ -127,6 +137,7 @@ export default function Home() {
           canAdvance={() => true}
           onFinish={() => {
             //setMessage("Wizard completed.");
+            setWizardCompleted(true);
             handleScroll();
           }}
         >
@@ -188,47 +199,6 @@ export default function Home() {
         </Wizard>
       </View>
 
-      {/* <View>
-        <FootMeasurements
-          measurements={record.measurements}
-          unit={unit}
-          onChange={updateMeasurements}
-        />
-        <YarnProfile
-          profile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
-          profileId={record.yarnProfileId}
-          onChange={(update) =>
-            updateRecord({
-              yarnProfile: {
-                ...(record.yarnProfile ?? DEFAULT_YARN_PROFILE),
-                ...update,
-              },
-            })
-          }
-          onSelect={(yarnProfile, yarnProfileId) =>
-            updateRecord({ yarnProfile, yarnProfileId })
-          }
-        />
-        <YarnTension
-          tension={record.tension}
-          yarnProfile={record.yarnProfile ?? DEFAULT_YARN_PROFILE}
-          yarnProfileId={record.yarnProfileId}
-          onChange={updateTension}
-        />
-        <Construction
-          construction={record.construction}
-          tensionNegativeEase={record.tension.negativeEasePercent}
-          onChange={updateConstruction}
-        />
-        <BasicButton
-          onPress={() => {
-            setRecord(DEFAULT_RECORD);
-            setMessage("Defaults restored.");
-          }}
-        >
-          Restore defaults
-        </BasicButton>
-      </View> */}
       {/* Marker for top of results panel */}
       <View
         onLayout={(event) => {
@@ -236,19 +206,13 @@ export default function Home() {
           setTargetY(layout.y);
         }}
       ></View>
-      <ResultsPanel result={result} unit={unit} validation={errors} />
+      {wizardCompleted && (
+        <ResultsPanel result={result} unit={unit} validation={errors} />
+      )}
     </ScrollView>
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//     maxWidth: 800,
-//     borderWidth: 1,
-//     borderColor: "#ccc",
-//     margin: 16,
-//   },
-// });
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  pageRoot: { flex: 1, padding: 16, maxWidth: 600, alignSelf: "center" },
+});
